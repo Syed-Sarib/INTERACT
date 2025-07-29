@@ -183,6 +183,13 @@
       }
       .modal-body {
         padding: 0 !important;
+        margin-top: 40px !important; /* Move content down on print */
+      }
+      #previewContent table {
+        margin-bottom: 2.5rem !important; /* Add more space below table */
+      }
+      #previewContent .mt-4 {
+        margin-top: 2.5rem !important; /* Add more space above signature */
       }
     }
   </style>
@@ -229,16 +236,24 @@
                       <label class="form-check-label" for="onSite">On Site</label>
                     </div>
                   </td>
-                  <td class="bg-light">Student ID & Dept.</td>
-                  <td><input type="text" class="form-control" name="student_id_dept" placeholder="ID & Dept."></td>
+                  <td class="bg-light">Student ID</td>
+                  <td><input type="text" class="form-control" name="student_id" placeholder="Student ID"></td>
                 </tr>
                 <tr>
-                  <td class="bg-light">
-                    Project Title <br><small>(*If applicable)</small>
-                  </td>
-                  <td><input type="text" class="form-control" name="project_title" placeholder="Project Title"></td>
+                  <td class="bg-light">Student Department</td>
+                  <td><input type="text" class="form-control" name="student_dept" placeholder="Department"></td>
                   <td class="bg-light">Faculty Supervisor</td>
                   <td><input type="text" class="form-control" name="faculty_supervisor" placeholder="Faculty name"></td>
+                </tr>
+                <tr>
+                  <td class="bg-light">Supervisor Email</td>
+                  <td><input type="email" class="form-control" name="supervisor_email" placeholder="Supervisor Email"></td>
+                  <td class="bg-light">Supervisor Contact</td>
+                  <td><input type="text" class="form-control" name="supervisor_contact" placeholder="Supervisor Contact"></td>
+                </tr>
+                <tr>
+                  <td class="bg-light">Project Title <br><small>(*If applicable)</small></td>
+                  <td colspan="3"><input type="text" class="form-control" name="project_title" placeholder="Project Title"></td>
                 </tr>
                 <tr>
                   <td class="bg-light">Host Institution</td>
@@ -246,7 +261,14 @@
                 </tr>
                 <tr>
                   <td class="bg-light">Site Supervisor</td>
-                  <td colspan="3"><input type="text" class="form-control" name="site_supervisor" placeholder="Supervisor name"></td>
+                  <td><input type="text" class="form-control" name="site_supervisor" placeholder="Supervisor name"></td>
+                  <td class="bg-light">Site Supervisor Email</td>
+                  <td><input type="email" class="form-control" name="site_supervisor_email" placeholder="Site Supervisor Email"></td>
+                </tr>
+                <tr>
+                  <td class="bg-light">Site Supervisor Contact</td>
+                  <td><input type="text" class="form-control" name="site_supervisor_contact" placeholder="Site Supervisor Contact"></td>
+                  <td></td><td></td>
                 </tr>
               </tbody>
             </table>
@@ -264,8 +286,12 @@
                 <input type="text" class="form-control" name="student_name" placeholder="Enter your name">
               </div>
               <div class="col-12">
-                <label class="form-label fw-semibold text-primary">Student ID & Dept.</label>
-                <input type="text" class="form-control" name="student_id_dept" placeholder="ID & Dept.">
+                <label class="form-label fw-semibold text-primary">Student ID</label>
+                <input type="text" class="form-control" name="student_id" placeholder="Student ID">
+              </div>
+              <div class="col-12">
+                <label class="form-label fw-semibold text-primary">Student Department</label>
+                <input type="text" class="form-control" name="student_dept" placeholder="Department">
               </div>
               <div class="col-12">
                 <label class="form-label fw-semibold text-primary">Internship Type <small>(Tick ✔ any one)</small></label>
@@ -279,12 +305,20 @@
                 </div>
               </div>
               <div class="col-12">
-                <label class="form-label fw-semibold text-primary">Project Title <small>(*If applicable)</small></label>
-                <input type="text" class="form-control" name="project_title" placeholder="Project Title">
-              </div>
-              <div class="col-12">
                 <label class="form-label fw-semibold text-primary">Faculty Supervisor</label>
                 <input type="text" class="form-control" name="faculty_supervisor" placeholder="Faculty name">
+              </div>
+              <div class="col-12">
+                <label class="form-label fw-semibold text-primary">Supervisor Email</label>
+                <input type="email" class="form-control" name="supervisor_email" placeholder="Supervisor Email">
+              </div>
+              <div class="col-12">
+                <label class="form-label fw-semibold text-primary">Supervisor Contact</label>
+                <input type="text" class="form-control" name="supervisor_contact" placeholder="Supervisor Contact">
+              </div>
+              <div class="col-12">
+                <label class="form-label fw-semibold text-primary">Project Title <small>(*If applicable)</small></label>
+                <input type="text" class="form-control" name="project_title" placeholder="Project Title">
               </div>
               <div class="col-12">
                 <label class="form-label fw-semibold text-primary">Host Institution</label>
@@ -293,6 +327,14 @@
               <div class="col-12">
                 <label class="form-label fw-semibold text-primary">Site Supervisor</label>
                 <input type="text" class="form-control" name="site_supervisor" placeholder="Supervisor name">
+              </div>
+              <div class="col-12">
+                <label class="form-label fw-semibold text-primary">Site Supervisor Email</label>
+                <input type="email" class="form-control" name="site_supervisor_email" placeholder="Site Supervisor Email">
+              </div>
+              <div class="col-12">
+                <label class="form-label fw-semibold text-primary">Site Supervisor Contact</label>
+                <input type="text" class="form-control" name="site_supervisor_contact" placeholder="Site Supervisor Contact">
               </div>
             </div>
           </div>
@@ -371,9 +413,10 @@
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 1px 6px rgba(0,0,0,0.04);
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.7rem;
   table-layout: fixed;
   width: 100%;
+  border-left: 5px solid #0d6efd !important;
 }
 #previewContent th, #previewContent td {
   word-break: break-word;
@@ -405,6 +448,18 @@
   font-size: 0.95em;
   margin-top: 2px;
   margin-bottom: 4px;
+}
+#previewContent .section-title-preview {
+  font-weight: 600;
+  color: #0d6efd;
+  font-size: 1.08rem;
+  margin-top: 1rem;
+  margin-bottom: 0.2rem;
+  padding-left: 0.7rem;
+  border-left: none;
+  background: none;
+  border-radius: 0;
+  display: inline-block;
 }
 </style>
 
@@ -451,10 +506,16 @@ document.addEventListener('DOMContentLoaded', function() {
   const requiredFields = [
     { name: 'project_id', label: 'Project ID' },
     { name: 'student_name', label: 'Student Name' },
-    { name: 'student_id_dept', label: 'Student ID & Dept.' },
+    { name: 'student_id', label: 'Student ID' },
+    { name: 'student_dept', label: 'Student Department' },
     { name: 'faculty_supervisor', label: 'Faculty Supervisor' },
+    { name: 'supervisor_email', label: 'Supervisor Email' },
+    { name: 'supervisor_contact', label: 'Supervisor Contact' },
+    { name: 'project_title', label: 'Project Title' },
     { name: 'host_institution', label: 'Host Institution' },
-    { name: 'site_supervisor', label: 'Site Supervisor' }
+    { name: 'site_supervisor', label: 'Site Supervisor' },
+    { name: 'site_supervisor_email', label: 'Site Supervisor Email' },
+    { name: 'site_supervisor_contact', label: 'Site Supervisor Contact' }
   ];
 
   function clearValidation() {
@@ -517,17 +578,38 @@ document.addEventListener('DOMContentLoaded', function() {
           Student Intern to fill the form and return the signed copy to the Departmental Internship Coordinator (DIC) no later than the 3<sup>rd</sup> week of May.
         </p>
       </div>
-      <table class="table table-bordered">
+      <div class="section-title-preview">Student Details</div>
+      <table class="table table-bordered mb-4">
         <tbody>
           <tr><th>Date</th><td colspan="3">${data.get('date') || ''}</td></tr>
           <tr><th>Project ID</th><td>${data.get('project_id') || ''}</td>
               <th>Student Name</th><td>${data.get('student_name') || ''}</td></tr>
           <tr><th>Internship Type</th><td colspan="3">${[...form.querySelectorAll('input[name="internship_type"]:checked')].map(i=>i.value).join(', ')}</td></tr>
-          <tr><th>Student ID & Dept.</th><td>${data.get('student_id_dept') || ''}</td>
-              <th>Project Title</th><td>${data.get('project_title') || ''}</td></tr>
+          <tr><th>Student ID</th><td>${data.get('student_id') || ''}</td>
+              <th>Student Department</th><td>${data.get('student_dept') || ''}</td></tr>
+        </tbody>
+      </table>
+      <div class="section-title-preview">Faculty Supervisor Details</div>
+      <table class="table table-bordered mb-4">
+        <tbody>
           <tr><th>Faculty Supervisor</th><td>${data.get('faculty_supervisor') || ''}</td>
-              <th>Host Institution</th><td>${data.get('host_institution') || ''}</td></tr>
-          <tr><th>Site Supervisor</th><td colspan="3">${data.get('site_supervisor') || ''}</td></tr>
+              <th>Supervisor Email</th><td>${data.get('supervisor_email') || ''}</td></tr>
+          <tr><th>Supervisor Contact</th><td>${data.get('supervisor_contact') || ''}</td><td></td><td></td></tr>
+        </tbody>
+      </table>
+      <div class="section-title-preview">Project & Host Institution</div>
+      <table class="table table-bordered mb-4">
+        <tbody>
+          <tr><th>Project Title</th><td colspan="3">${data.get('project_title') || ''}</td></tr>
+          <tr><th>Host Institution</th><td colspan="3">${data.get('host_institution') || ''}</td></tr>
+        </tbody>
+      </table>
+      <div class="section-title-preview">Site Supervisor Details</div>
+      <table class="table table-bordered mb-4">
+        <tbody>
+          <tr><th>Site Supervisor</th><td>${data.get('site_supervisor') || ''}</td>
+              <th>Site Supervisor Email</th><td>${data.get('site_supervisor_email') || ''}</td></tr>
+          <tr><th>Site Supervisor Contact</th><td>${data.get('site_supervisor_contact') || ''}</td><td></td><td></td></tr>
         </tbody>
       </table>
       ${signatureHtml}
