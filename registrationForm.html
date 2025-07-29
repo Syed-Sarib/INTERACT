@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AU Internship Portal - Registration</title>
+    <link rel="icon" href="./images/airLogo.png" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
+    <style>
+        .form-card {
+            border-radius: 18px;
+            box-shadow: 0 8px 50px rgba(0, 0, 0, 0.25), 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+        
+    </style>
+</head>
+
+<body style="background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(0,142,255,1) 100%);">
+    <div class="container-fluid vh-100 d-flex align-items-center">
+        <div class="row justify-content-center w-100">
+            <div class="col-lg-11 col-xl-10">
+                <!-- Single Card with Two Columns Inside (Mirrored Layout) -->
+                <div class="form-card bg-white overflow-hidden p-0" id="printArea">
+                    <div class="row g-0">
+                        <!-- Image Section - Left Side -->
+                        <div class="col-lg-6 d-none d-lg-block">
+                            <div class="p-4 d-flex align-items-center justify-content-center h-100">
+                                <div class="text-center">
+                                    <!-- Form Logo Image -->
+                                     <img src="./images/registrationForm.jpg" alt="Form Logo" class="img-fluid" style="max-width: 300px;">
+                                     
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Form Section - Right Side -->
+                        <div class="col-12 col-lg-6">
+                            <div class="p-3 p-md-4">
+                                <div class="text-center mb-3 mb-md-4">
+                                    <div>
+                                        <img src="images/airLogo.png" width="100" class="d-block mx-auto mb-2" alt="AU Logo">
+                                        <h4 class="fw-bold text-dark mb-1">AU Internship Portal</h4>
+                                        
+                                    </div>
+                                    <p class="text-muted small">Please fill in your details</p>
+                                </div>
+                                
+                                <form id="registrationForm" class="px-2 px-md-3">
+                                    <!-- Row 1: Student ID and Full Name -->
+                                    <div class="row g-3">
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                <label for="studentId" class="form-label fw-bold">Student ID</label>
+                                                <input type="text" class="form-control" id="studentId" placeholder="Enter your student ID" required>
+                                                <div class="text-danger small mt-1 d-none" id="studentIdError">The Student ID field is required.</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="mb-3">
+                                                <label for="fullName" class="form-label fw-bold">Full Name</label>
+                                                <input type="text" class="form-control" id="fullName" placeholder="Enter your full name" required>
+                                                <div class="text-danger small mt-1 d-none" id="fullNameError">The Full Name field is required.</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Row 2: CNIC, Mobile Number, and Email Address (all in one row, smaller fields) -->
+                                    <div class="row g-2">
+                                        <div class="col-md-4">
+                                            <div class="mb-2">
+                                                <label for="cnic" class="form-label fw-bold">CNIC</label>
+                                                <input type="text" class="form-control form-control-sm" id="cnic" placeholder="12345-1234567-1" maxlength="15" required>
+                                                <div class="text-danger small mt-1 d-none" id="cnicError">The CNIC field is required.</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="mb-2">
+                                                <label for="mobile" class="form-label fw-bold">Mobile Number</label>
+                                                <input type="tel" class="form-control form-control-sm" id="mobile" placeholder="03001234567" maxlength="11" required>
+                                                <div class="text-danger small mt-1 d-none" id="mobileError">The Mobile Number field is required.</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="mb-2">
+                                                <label for="email" class="form-label fw-bold">Email Address</label>
+                                                <input type="email" class="form-control form-control-sm" id="email" placeholder="Enter your email" required>
+                                                <div class="text-danger small mt-1 d-none" id="emailError">The Email Address field is required.</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Row 3: Password and Confirm Password (smaller fields) -->
+                                    <div class="row g-2">
+                                        <div class="col-md-6">
+                                            <div class="mb-2">
+                                                <label for="password" class="form-label fw-bold">Password</label>
+                                                <div class="input-group input-group-sm">
+                                                    <input type="password" class="form-control" id="password" placeholder="Create a password" required>
+                                                    <button class="btn btn-outline-secondary" type="button" id="togglePassword" tabindex="-1">
+                                                        <span id="togglePasswordIcon" class="bi bi-eye"></span>
+                                                    </button>
+                                                </div>
+                                                <div class="text-danger small mt-1 d-none" id="passwordError">The Password field is required.</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-2">
+                                                <label for="confirmPassword" class="form-label fw-bold">Confirm Password</label>
+                                                <div class="input-group input-group-sm">
+                                                    <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm your password" required>
+                                                    <button class="btn btn-outline-secondary" type="button" id="toggleConfirmPassword" tabindex="-1">
+                                                        <span id="toggleConfirmPasswordIcon" class="bi bi-eye"></span>
+                                                    </button>
+                                                </div>
+                                                <div class="text-danger small mt-1 d-none" id="confirmPasswordError">The Confirm Password field is required.</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="d-grid gap-2 mb-3">
+                                        <button type="submit" class="btn btn-primary" >Create Account</button>
+                                    </div>
+                                    
+                                    <div class="text-end">
+                                        <span class="text-dark small">Already have an account? </span><a href="loginForm.html" class="text-primary text-decoration-none fw-bold small">Login Here</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Password show/hide toggle
+        document.getElementById('togglePassword').addEventListener('click', function () {
+            const passwordInput = document.getElementById('password');
+            const icon = document.getElementById('togglePasswordIcon');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('bi-eye');
+                icon.classList.add('bi-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('bi-eye-slash');
+                icon.classList.add('bi-eye');
+            }
+        });
+        document.getElementById('toggleConfirmPassword').addEventListener('click', function () {
+            const passwordInput = document.getElementById('confirmPassword');
+            const icon = document.getElementById('toggleConfirmPasswordIcon');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('bi-eye');
+                icon.classList.add('bi-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('bi-eye-slash');
+                icon.classList.add('bi-eye');
+            }
+        });
+    </script>
+        </script>
+
+    <script>
+        integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
+        crossorigin="anonymous">
+        
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get all form fields
+            const studentId = document.getElementById('studentId');
+            const fullName = document.getElementById('fullName');
+            const cnic = document.getElementById('cnic');
+            const mobile = document.getElementById('mobile');
+            const email = document.getElementById('email');
+            const password = document.getElementById('password');
+            const confirmPassword = document.getElementById('confirmPassword');
+            
+            // Get error message elements
+            const studentIdError = document.getElementById('studentIdError');
+            const fullNameError = document.getElementById('fullNameError');
+            const cnicError = document.getElementById('cnicError');
+            const mobileError = document.getElementById('mobileError');
+            const emailError = document.getElementById('emailError');
+            const passwordError = document.getElementById('passwordError');
+            const confirmPasswordError = document.getElementById('confirmPasswordError');
+            
+            // Reset all error messages
+            [studentIdError, fullNameError, cnicError, mobileError, emailError, passwordError, confirmPasswordError].forEach(error => {
+                error.classList.add('d-none');
+            });
+            
+            let isValid = true;
+            
+            // Validate Student ID
+            if (!studentId.value.trim()) {
+                studentIdError.textContent = 'The Student ID field is required.';
+                studentIdError.classList.remove('d-none');
+                isValid = false;
+            }
+            
+            // Validate Full Name
+            if (!fullName.value.trim()) {
+                fullNameError.textContent = 'The Full Name field is required.';
+                fullNameError.classList.remove('d-none');
+                isValid = false;
+            }
+            
+            // Validate CNIC
+            if (!cnic.value.trim()) {
+                cnicError.textContent = 'The CNIC field is required.';
+                cnicError.classList.remove('d-none');
+                isValid = false;
+            } else if (!/^\d{5}-\d{7}-\d{1}$/.test(cnic.value.trim())) {
+                cnicError.textContent = 'Please enter a valid CNIC format (e.g., 12345-1234567-1).';
+                cnicError.classList.remove('d-none');
+                isValid = false;
+            }
+            
+            // Validate Mobile Number
+            if (!mobile.value.trim()) {
+                mobileError.textContent = 'The Mobile Number field is required.';
+                mobileError.classList.remove('d-none');
+                isValid = false;
+            } else if (!/^03\d{9}$/.test(mobile.value.trim())) {
+                mobileError.textContent = 'Please enter a valid Pakistani mobile number (e.g., 03001234567).';
+                mobileError.classList.remove('d-none');
+                isValid = false;
+            }
+            
+            // Validate Email
+            if (!email.value.trim()) {
+                emailError.textContent = 'The Email Address field is required.';
+                emailError.classList.remove('d-none');
+                isValid = false;
+            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
+                emailError.textContent = 'Please enter a valid email address.';
+                emailError.classList.remove('d-none');
+                isValid = false;
+            }
+            
+            // Validate Password
+            if (!password.value.trim()) {
+                passwordError.textContent = 'The Password field is required.';
+                passwordError.classList.remove('d-none');
+                isValid = false;
+            } else if (password.value.length < 6) {
+                passwordError.textContent = 'Password must be at least 6 characters long.';
+                passwordError.classList.remove('d-none');
+                isValid = false;
+            }
+            
+            // Validate Confirm Password
+            if (!confirmPassword.value.trim()) {
+                confirmPasswordError.textContent = 'The Confirm Password field is required.';
+                confirmPasswordError.classList.remove('d-none');
+                isValid = false;
+            } else if (password.value !== confirmPassword.value) {
+                confirmPasswordError.textContent = 'Passwords do not match.';
+                confirmPasswordError.classList.remove('d-none');
+                isValid = false;
+            }
+            
+            // If all validations pass
+            if (isValid) {
+                alert('Registration successful! All fields are valid.');
+                // Here you would normally submit the form to your server
+                // this.submit();
+            }
+        });
+        
+        // Add CNIC formatting on input
+        document.getElementById('cnic').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
+            
+            if (value.length <= 5) {
+                e.target.value = value;
+            } else if (value.length <= 12) {
+                e.target.value = value.substring(0, 5) + '-' + value.substring(5);
+            } else {
+                e.target.value = value.substring(0, 5) + '-' + value.substring(5, 12) + '-' + value.substring(12, 13);
+            }
+        });
+        
+        // Add Mobile Number formatting on input
+        document.getElementById('mobile').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
+            
+            // Limit to 11 digits and ensure it starts with 03
+            if (value.length > 11) {
+                value = value.substring(0, 11);
+            }
+            
+            e.target.value = value;
+        });
+    </script>
+
+</body>
+
+</html>

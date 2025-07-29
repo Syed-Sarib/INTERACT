@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="./images/airLogo.png" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        .form-card {
+            border-radius: 18px;
+            box-shadow: 0 8px 50px rgba(0, 0, 0, 0.25), 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+        
+        @media (max-width: 576px) {
+            .form-card {
+                border-radius: 12px;
+                margin: 0.5rem;
+            }
+            .container-fluid {
+                padding: 0.5rem;
+            }
+        }
+        
+        @media (max-width: 375px) {
+            .form-card {
+                border-radius: 8px;
+                margin: 0.25rem;
+            }
+        }
+    </style>
+</head>
+
+<body style="background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(0,142,255,1) 100%);">
+    <div class="container-fluid vh-100 d-flex align-items-center">
+        <div class="row justify-content-center w-100">
+            <div class="col-12 col-md-11 col-lg-10 col-xl-9">
+                <!-- Single Card with Two Columns Inside -->
+                <div class="form-card bg-white overflow-hidden p-0" id="printArea">
+                    <div class="row g-0">
+                        <!-- Form Section - Takes full width on mobile, half on desktop -->
+                        <div class="col-12 col-lg-6">
+                            <div class="p-3 p-sm-4 p-md-5">
+                                <div class="text-center mb-3 mb-md-4">
+                                    <div>
+                                        <img src="images/airLogo.png" width="80" class="d-block mx-auto mb-2 d-sm-none"
+                                            alt="AU Logo">
+                                        <img src="images/airLogo.png" width="100" class="d-none d-sm-block mx-auto mb-2"
+                                            alt="AU Logo">
+                                        <h4 class="fw-bold text-dark mb-1 fs-5 fs-sm-4">AU Internship Portal</h4>
+
+                                    </div>
+                                    <p class="text-muted small">Please enter your credentials</p>
+                                </div>
+
+                                <form id="formD" class="px-1 px-sm-2 px-md-3">
+                                    <div class="mb-3">
+                                        <label for="name" class="form-label fw-semibold">User Name</label>
+                                        <input type="text" class="form-control" id="name" placeholder="Enter Student ID" required>
+                                        <div class="text-danger small mt-1 d-none" id="nameError">The User Name field is required.</div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="password" class="form-label fw-semibold">Password</label>
+                                        <div class="input-group">
+                                            <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+                                            <button class="btn btn-outline-secondary" type="button" id="togglePassword" tabindex="-1">
+                                                <i id="togglePasswordIcon" class="bi bi-eye"></i>
+                                            </button>
+                                        </div>
+                                        <div class="text-danger small mt-1 d-none" id="passwordError">The Password field is required.</div>
+                                    </div>
+
+                                    <div class="d-grid gap-2 mb-3">
+                                        <a href="dashboard.html" class="btn btn-primary btn-lg">Login</a>
+                                    </div>
+
+                                    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center mb-3 gap-2">
+                                        <a href="#" class="text-muted text-decoration-none small">Forgot Password?</a>
+                                        <div class="text-center text-sm-end">
+                                            <span class="small">Don't have an account?</span>
+                                            <a href="registrationForm.html"
+                                                class="text-primary text-decoration-none fw-bold small d-block d-sm-inline ms-sm-1">Create Account</a>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Image Section - Hidden on mobile and small tablets -->
+                        <div class="col-lg-6 d-none d-lg-block">
+                            <div class="p-4 d-flex align-items-center justify-content-center h-100">
+                                <div class="text-center">
+                                    <!-- Form Logo Image -->
+                                    <img src="./images/formLogo.jpg" alt="Form Logo" class="img-fluid"
+                                        style="max-width: 300px;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
+        crossorigin="anonymous"></script>
+    <script>
+        // Eye icon toggle
+        document.getElementById('togglePassword').addEventListener('click', function () {
+            const pwd = document.getElementById('password');
+            const icon = document.getElementById('togglePasswordIcon');
+            if (pwd.type === 'password') {
+                pwd.type = 'text';
+                icon.classList.remove('bi-eye');
+                icon.classList.add('bi-eye-slash');
+            } else {
+                pwd.type = 'password';
+                icon.classList.remove('bi-eye-slash');
+                icon.classList.add('bi-eye');
+            }
+        });
+
+        // Form validation
+        document.getElementById('formD').addEventListener('submit', function (e) {
+            let valid = true;
+            const name = document.getElementById('name');
+            const password = document.getElementById('password');
+            const nameError = document.getElementById('nameError');
+            const passwordError = document.getElementById('passwordError');
+
+            // Username validation
+            if (!name.value.trim()) {
+                nameError.classList.remove('d-none');
+                valid = false;
+            } else {
+                nameError.classList.add('d-none');
+            }
+
+            // Password validation
+            if (!password.value.trim()) {
+                passwordError.classList.remove('d-none');
+                valid = false;
+            } else {
+                passwordError.classList.add('d-none');
+            }
+
+            if (!valid) {
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+
+</html>

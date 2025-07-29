@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Form E – Student Internship – Activity Log</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(135deg, #e0e7ff 0%, #f8fafc 100%);
+      min-height: 100vh;
+    }
+    .form-card {
+      border-radius: 18px;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.08), 0 1.5px 6px rgba(0,0,0,0.04);
+      padding: 2.5rem 2rem 2rem 2rem;
+      background: #fff;
+    }
+    .section-title {
+      font-size: 1.1rem;
+      color: #0d6efd;
+      border-left: 4px solid #0d6efd;
+      padding-left: 0.75rem;
+      margin-bottom: 0.5rem;
+      margin-top: 2rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    .form-control:focus {
+      box-shadow: 0 0 0 0.2rem rgba(13,110,253,.15);
+      border-color: #0d6efd;
+    }
+    .btn-custom {
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+      box-shadow: 0 2px 8px rgba(13,110,253,0.08);
+    }
+    .btn-custom:hover, .btn-custom:focus {
+      background: #0b5ed7 !important;
+      color: #fff !important;
+      box-shadow: 0 4px 16px rgba(13,110,253,0.15);
+    }
+    .week-row {
+      background-color: #f8f9fa;
+      font-weight: 600;
+    }
+    .signature-input {
+      width: 250px;
+      border-bottom: 1px solid #000;
+      border-top: none;
+      border-left: none;
+      border-right: none;
+      background: #f8fafc;
+      border-radius: 0;
+    }
+    
+    /* Signature Upload Styles - Minimal Custom CSS */
+    .signature-preview {
+      width: 150px;
+      height: 150px;
+      object-fit: contain;
+      display: none;
+    }
+    
+    .file-upload-btn input[type="file"] {
+      display: none;
+    }
+    
+    /* Mobile Responsive Styles */
+    @media (max-width: 768px) {
+      .form-card { 
+        padding: 1.5rem 1rem; 
+        margin: 0.5rem;
+      }
+      .section-title { 
+        font-size: 1rem; 
+        margin-top: 1.5rem;
+      }
+      
+      /* Hide table on mobile */
+      .desktop-table {
+        display: none !important;
+      }
+      
+      /* Show mobile layout */
+      .mobile-layout {
+        display: block !important;
+      }
+      
+      /* Mobile form styling */
+      .mobile-field {
+        margin-bottom: 1rem;
+      }
+      
+      .mobile-field label {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 0.5rem;
+        display: block;
+        font-size: 0.9rem;
+      }
+      
+      .mobile-field .form-control {
+        font-size: 16px; /* Prevents zoom on iOS */
+      }
+      
+      /* Mobile week cards */
+      .mobile-week-card {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border-left: 3px solid #0d6efd;
+      }
+      
+      .mobile-week-title {
+        font-weight: 600;
+        color: #0d6efd;
+        margin-bottom: 0.75rem;
+        font-size: 1rem;
+      }
+      
+      /* Date field responsive */
+      .date-container {
+        text-align: center !important;
+        margin-bottom: 1rem;
+      }
+      
+      .date-container input {
+        width: 100% !important;
+        max-width: 200px;
+      }
+      
+      /* Signature fields responsive */
+      .signature-container {
+        text-align: center;
+        margin-top: 1rem;
+      }
+      
+      .signature-container input {
+        width: 100% !important;
+        max-width: 300px;
+        margin-top: 0.5rem;
+      }
+      
+      /* Mobile signature preview */
+      .signature-preview {
+        width: 120px;
+        height: 120px;
+      }
+      
+      /* Button adjustments */
+      .btn-group-mobile {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+      
+      .btn-group-mobile .btn {
+        width: 100%;
+        padding: 0.75rem;
+        font-size: 1rem;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .form-card { 
+        padding: 1rem 0.75rem; 
+        margin: 0.25rem;
+      }
+      
+      h3 {
+        font-size: 1.25rem !important;
+      }
+      
+      .btn-group-mobile .btn {
+        padding: 0.875rem;
+        font-size: 1.05rem;
+      }
+    }
+    
+    /* Desktop table - hide on mobile */
+    @media (min-width: 769px) {
+      .mobile-layout {
+        display: none !important;
+      }
+      
+      .desktop-table {
+        display: table !important;
+      }
+    }
+    
+    @media print {
+      .no-print { display: none !important; }
+      .form-control, input[type="text"], textarea {
+        border: none !important;
+        box-shadow: none !important;
+        background: transparent !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container my-3 my-md-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-10 col-lg-8">
+      <form id="formE">
+        <div class="form-card" id="printArea">
+
+          <h3 class="text-center text-primary mb-3 mb-md-4 fw-bold">Form E – Student Internship – Activity Log</h3>
+
+          <p class="small mb-3 text-center text-secondary">
+            The Student Intern to fill the form and submit it to the Faculty Supervisor. The Faculty Supervisors are required to carefully review and evaluate the Student Intern's activity log. Please return the form by the end of internship before 10<sup>th</sup> of September every Year.
+          </p>
+
+          <div class="text-end small mb-3 date-container">
+            <label for="dateField" class="me-2">Date:</label>
+            <input type="date" class="form-control d-inline-block" style="width: 180px;" name="date" id="dateField">
+          </div>
+
+          <!-- Desktop Table Layout -->
+          <div class="table-responsive">
+            <table class="table table-bordered align-middle mb-4 desktop-table">
+              <tbody>
+                <tr>
+                  <td class="bg-light w-25">Student Intern Name</td>
+                  <td><input type="text" class="form-control" name="student_name" placeholder="Enter your name"></td>
+                  <td class="bg-light">Student ID & Dept.</td>
+                  <td><input type="text" class="form-control" name="student_id_dept" placeholder="ID & Dept."></td>
+                </tr>
+                <tr>
+                  <td class="bg-light">Host Institution</td>
+                  <td><input type="text" class="form-control" name="host_institution" placeholder="Institution name"></td>
+                  <td class="bg-light">Site Supervisor</td>
+                  <td><input type="text" class="form-control" name="site_supervisor" placeholder="Supervisor name"></td>
+                </tr>
+                <tr>
+                  <td class="bg-light">Faculty Supervisor</td>
+                  <td colspan="3"><input type="text" class="form-control" name="faculty_supervisor" placeholder="Faculty name"></td>
+                </tr>
+                <tr>
+                  <td class="bg-light">Internship Completion Date</td>
+                  <td colspan="3"><input type="date" class="form-control" name="completion_date"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Mobile Layout -->
+          <div class="mobile-layout" style="display: none;">
+            <div class="mobile-field">
+              <label for="mobile_student_name">Student Intern Name</label>
+              <input type="text" class="form-control" name="student_name" id="mobile_student_name" placeholder="Enter your name">
+            </div>
+            
+            <div class="mobile-field">
+              <label for="mobile_student_id_dept">Student ID & Dept.</label>
+              <input type="text" class="form-control" name="student_id_dept" id="mobile_student_id_dept" placeholder="ID & Dept.">
+            </div>
+            
+            <div class="mobile-field">
+              <label for="mobile_host_institution">Host Institution</label>
+              <input type="text" class="form-control" name="host_institution" id="mobile_host_institution" placeholder="Institution name">
+            </div>
+            
+            <div class="mobile-field">
+              <label for="mobile_site_supervisor">Site Supervisor</label>
+              <input type="text" class="form-control" name="site_supervisor" id="mobile_site_supervisor" placeholder="Supervisor name">
+            </div>
+            
+            <div class="mobile-field">
+              <label for="mobile_faculty_supervisor">Faculty Supervisor</label>
+              <input type="text" class="form-control" name="faculty_supervisor" id="mobile_faculty_supervisor" placeholder="Faculty name">
+            </div>
+            
+            <div class="mobile-field">
+              <label for="mobile_completion_date">Internship Completion Date</label>
+              <input type="date" class="form-control" name="completion_date" id="mobile_completion_date">
+            </div>
+          </div>
+
+          <!-- Weekly Activities - Desktop -->
+          <div class="table-responsive desktop-table">
+            <table class="table table-bordered">
+              <thead>
+                <tr class="week-row">
+                  <th style="width: 15%;">Weeks</th>
+                  <th>Tasks Performed</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="week-row">Week # 1</td>
+                  <td><textarea class="form-control" name="week_1" rows="3" placeholder="Describe tasks performed in week 1..."></textarea></td>
+                </tr>
+                <tr>
+                  <td class="week-row">Week # 2</td>
+                  <td><textarea class="form-control" name="week_2" rows="3" placeholder="Describe tasks performed in week 2..."></textarea></td>
+                </tr>
+                <tr>
+                  <td class="week-row">Week # 3</td>
+                  <td><textarea class="form-control" name="week_3" rows="3" placeholder="Describe tasks performed in week 3..."></textarea></td>
+                </tr>
+                <tr>
+                  <td class="week-row">Week # 4</td>
+                  <td><textarea class="form-control" name="week_4" rows="3" placeholder="Describe tasks performed in week 4..."></textarea></td>
+                </tr>
+                <tr>
+                  <td class="week-row">Week # 5</td>
+                  <td><textarea class="form-control" name="week_5" rows="3" placeholder="Describe tasks performed in week 5..."></textarea></td>
+                </tr>
+                <tr>
+                  <td class="week-row">Week # 6</td>
+                  <td><textarea class="form-control" name="week_6" rows="3" placeholder="Describe tasks performed in week 6..."></textarea></td>
+                </tr>
+                <tr>
+                  <td class="week-row">Week # 7</td>
+                  <td><textarea class="form-control" name="week_7" rows="3" placeholder="Describe tasks performed in week 7..."></textarea></td>
+                </tr>
+                <tr>
+                  <td class="week-row">Week # 8</td>
+                  <td><textarea class="form-control" name="week_8" rows="3" placeholder="Describe tasks performed in week 8..."></textarea></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Mobile Weekly Activities -->
+          <div class="mobile-layout" style="display: none;">
+            <div class="section-title">Weekly Activities</div>
+            
+            <div class="mobile-week-card">
+              <div class="mobile-week-title">Week # 1</div>
+              <textarea class="form-control" name="week_1" rows="3" placeholder="Describe tasks performed in week 1..."></textarea>
+            </div>
+            
+            <div class="mobile-week-card">
+              <div class="mobile-week-title">Week # 2</div>
+              <textarea class="form-control" name="week_2" rows="3" placeholder="Describe tasks performed in week 2..."></textarea>
+            </div>
+            
+            <div class="mobile-week-card">
+              <div class="mobile-week-title">Week # 3</div>
+              <textarea class="form-control" name="week_3" rows="3" placeholder="Describe tasks performed in week 3..."></textarea>
+            </div>
+            
+            <div class="mobile-week-card">
+              <div class="mobile-week-title">Week # 4</div>
+              <textarea class="form-control" name="week_4" rows="3" placeholder="Describe tasks performed in week 4..."></textarea>
+            </div>
+            
+            <div class="mobile-week-card">
+              <div class="mobile-week-title">Week # 5</div>
+              <textarea class="form-control" name="week_5" rows="3" placeholder="Describe tasks performed in week 5..."></textarea>
+            </div>
+            
+            <div class="mobile-week-card">
+              <div class="mobile-week-title">Week # 6</div>
+              <textarea class="form-control" name="week_6" rows="3" placeholder="Describe tasks performed in week 6..."></textarea>
+            </div>
+            
+            <div class="mobile-week-card">
+              <div class="mobile-week-title">Week # 7</div>
+              <textarea class="form-control" name="week_7" rows="3" placeholder="Describe tasks performed in week 7..."></textarea>
+            </div>
+            
+            <div class="mobile-week-card">
+              <div class="mobile-week-title">Week # 8</div>
+              <textarea class="form-control" name="week_8" rows="3" placeholder="Describe tasks performed in week 8..."></textarea>
+            </div>
+          </div>
+
+          <!-- Signature Section -->
+          <div class="row mt-4 mb-2">
+            <div class="col-md-4">
+              <div class="bg-light rounded p-3 mb-3 border-start border-primary border-3">
+                <h6 class="mb-2 fw-bold text-primary">Student-Intern Signature:</h6>
+                <div class="d-flex flex-column gap-2">
+                  <div class="flex-fill">
+                    <label class="form-label small">Upload Signature:</label>
+                    <div class="bg-secondary bg-opacity-10 border border-2 border-dashed rounded p-3 text-center cursor-pointer" 
+                         style="cursor: pointer;" onclick="document.getElementById('student_signature_file').click()">
+                      <input type="file" id="student_signature_file" accept="image/*" onchange="previewSignature(this, 'student_preview')">
+                      <label for="student_signature_file" class="small text-muted mb-0" style="cursor: pointer;">
+                        <i class="bi bi-cloud-upload me-1"></i>Choose Image
+                      </label>
+                    </div>
+                    <img id="student_preview" class="signature-preview border rounded mt-2 bg-light" alt="Student signature preview">
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="bg-light rounded p-3 mb-3 border-start border-primary border-3">
+                <h6 class="mb-2 fw-bold text-primary">Site Supervisor Signature:</h6>
+                <div class="d-flex flex-column gap-2">
+                  <div class="flex-fill">
+                    <label class="form-label small">Upload Signature:</label>
+                    <div class="bg-secondary bg-opacity-10 border border-2 border-dashed rounded p-3 text-center cursor-pointer" 
+                         style="cursor: pointer;" onclick="document.getElementById('site_signature_file').click()">
+                      <input type="file" id="site_signature_file" accept="image/*" onchange="previewSignature(this, 'site_preview')">
+                      <label for="site_signature_file" class="small text-muted mb-0" style="cursor: pointer;">
+                        <i class="bi bi-cloud-upload me-1"></i>Choose Image
+                      </label>
+                    </div>
+                    <img id="site_preview" class="signature-preview border rounded mt-2 bg-light" alt="Site supervisor signature preview">
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="bg-light rounded p-3 mb-3 border-start border-primary border-3">
+                <h6 class="mb-2 fw-bold text-primary">Faculty Supervisor Signature:</h6>
+                <div class="d-flex flex-column gap-2">
+                  <div class="flex-fill">
+                    <label class="form-label small">Upload Signature:</label>
+                    <div class="bg-secondary bg-opacity-10 border border-2 border-dashed rounded p-3 text-center cursor-pointer" 
+                         style="cursor: pointer;" onclick="document.getElementById('faculty_signature_file').click()">
+                      <input type="file" id="faculty_signature_file" accept="image/*" onchange="previewSignature(this, 'faculty_preview')">
+                      <label for="faculty_signature_file" class="small text-muted mb-0" style="cursor: pointer;">
+                        <i class="bi bi-cloud-upload me-1"></i>Choose Image
+                      </label>
+                    </div>
+                    <img id="faculty_preview" class="signature-preview border rounded mt-2 bg-light" alt="Faculty supervisor signature preview">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="text-center mt-4 no-print">
+          <div class="d-md-block d-none">
+            <button type="button" class="btn btn-primary btn-custom me-3" id="previewBtn">
+              <i class="bi bi-eye me-1"></i> Preview
+            </button>
+            <button type="button" class="btn btn-success btn-custom me-3" id="printBtn">
+              <i class="bi bi-printer me-1"></i> Print
+            </button>
+            <button type="submit" class="btn btn-outline-primary btn-custom me-3" id="submitBtn">
+              <i class="bi bi-check-circle me-1"></i> Submit
+            </button>
+            <button type="reset" class="btn btn-outline-secondary btn-custom">
+              <i class="bi bi-arrow-clockwise me-1"></i> Reset
+            </button>
+          </div>
+          
+          <div class="d-md-none btn-group-mobile">
+            <button type="button" class="btn btn-primary btn-custom" id="previewBtnMobile">
+              <i class="bi bi-eye me-2"></i> Preview
+            </button>
+            <button type="button" class="btn btn-success btn-custom" id="printBtnMobile">
+              <i class="bi bi-printer me-2"></i> Print
+            </button>
+            <button type="submit" class="btn btn-outline-primary btn-custom" id="submitBtnMobile">
+              <i class="bi bi-check-circle me-2"></i> Submit
+            </button>
+            <button type="reset" class="btn btn-outline-secondary btn-custom">
+              <i class="bi bi-arrow-clockwise me-2"></i> Reset
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Preview Modal -->
+<div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="previewModalLabel">Activity Log Preview</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="previewContent" style="background: #f8fafc;">
+        <!-- Preview content will be injected here -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+/* Preview Modal Enhancements */
+#previewContent {
+  padding: 2rem 1.5rem;
+  background: #f8fafc;
+  border-radius: 16px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+  font-size: 1.05rem;
+  word-break: break-word;
+}
+#previewContent table {
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+  margin-bottom: 1.5rem;
+  table-layout: fixed;
+  width: 100%;
+}
+#previewContent th, #previewContent td {
+  word-break: break-word;
+  white-space: pre-line;
+  vertical-align: top;
+  padding: 10px 8px;
+}
+#previewContent .section-title {
+  font-weight: 600;
+  color: #0d6efd;
+  font-size: 1.08rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  border-left: 4px solid #0d6efd;
+  padding-left: 0.7rem;
+  background: #e7f1ff;
+  border-radius: 6px;
+  display: inline-block;
+}
+#previewContent div {
+  margin-bottom: 0.7rem;
+}
+
+/* Mobile preview styles */
+@media (max-width: 768px) {
+  .modal-dialog {
+    margin: 0.5rem;
+    max-width: none;
+  }
+  
+  #previewContent {
+    padding: 1rem;
+    font-size: 0.95rem;
+  }
+  
+  #previewContent table {
+    font-size: 0.85rem;
+  }
+  
+  #previewContent th, #previewContent td {
+    padding: 6px 4px;
+  }
+  
+  #previewContent .section-title {
+    font-size: 1rem;
+    margin-top: 1rem;
+  }
+  
+  /* Mobile signature preview in modal */
+  #previewContent .row .col-md-4 {
+    margin-bottom: 1rem;
+  }
+  
+  #previewContent img[alt*="signature"] {
+    width: 120px !important;
+    height: 120px !important;
+  }
+  
+  #previewContent div[style*="width: 150px"] {
+    width: 120px !important;
+    height: 120px !important;
+  }
+}
+
+.input-error {
+  border-color: #dc3545 !important;
+  box-shadow: 0 0 0 0.2rem rgba(220,53,69,.15) !important;
+}
+.error-message {
+  color: #dc3545;
+  font-size: 0.95em;
+  margin-top: 2px;
+  margin-bottom: 4px;
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.getElementById('formE');
+  const previewModal = new bootstrap.Modal(document.getElementById('previewModal'));
+
+  // Signature preview function
+  function previewSignature(input, previewId) {
+    const file = input.files[0];
+    const preview = document.getElementById(previewId);
+    
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        alert('Please select a valid image file.');
+        input.value = '';
+        return;
+      }
+      
+      // Validate file size (max 2MB)
+      if (file.size > 2 * 1024 * 1024) {
+        alert('File size must be less than 2MB.');
+        input.value = '';
+        return;
+      }
+      
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        preview.src = e.target.result;
+        preview.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    } else {
+      preview.style.display = 'none';
+      preview.src = '';
+    }
+  }
+
+  // Make previewSignature globally accessible
+  window.previewSignature = previewSignature;
+  const requiredFields = [
+    { name: 'student_name', label: 'Student Intern Name' },
+    { name: 'student_id_dept', label: 'Student ID & Dept.' },
+    { name: 'host_institution', label: 'Host Institution' },
+    { name: 'site_supervisor', label: 'Site Supervisor' },
+    { name: 'faculty_supervisor', label: 'Faculty Supervisor' },
+    { name: 'completion_date', label: 'Internship Completion Date' },
+    { name: 'week_1', label: 'Week 1 Activities' },
+    { name: 'week_2', label: 'Week 2 Activities' },
+    { name: 'week_3', label: 'Week 3 Activities' },
+    { name: 'week_4', label: 'Week 4 Activities' },
+    { name: 'week_5', label: 'Week 5 Activities' },
+    { name: 'week_6', label: 'Week 6 Activities' }
+  ];
+
+  function clearValidation() {
+    form.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+    form.querySelectorAll('.error-message').forEach(el => el.remove());
+  }
+
+  function showError(input, message) {
+    input.classList.add('input-error');
+    let error = document.createElement('div');
+    error.className = 'error-message';
+    error.innerText = message;
+    input.parentElement.appendChild(error);
+  }
+
+  function validateForm() {
+    clearValidation();
+    let valid = true;
+    let firstInvalid = null;
+    for (const field of requiredFields) {
+      let input = form.querySelector(`[name="${field.name}"]`);
+      if (!input || !input.value.trim()) {
+        showError(input, `${field.label} is required.`);
+        if (!firstInvalid) firstInvalid = input;
+        valid = false;
+      }
+    }
+    if (firstInvalid) {
+      firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      firstInvalid.focus();
+    }
+    return valid;
+  }
+
+  function previewForm(e) {
+    if (!validateForm()) {
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
+    }
+    const data = new FormData(form);
+    
+    // Generate weekly activities preview
+    let weeklyHtml = '';
+    for (let i = 1; i <= 8; i++) {
+      const weekData = data.get(`week_${i}`) || '';
+      if (weekData.trim()) {
+        weeklyHtml += `<tr><td class="fw-bold">Week # ${i}</td><td>${weekData.replace(/\n/g, '<br>')}</td></tr>`;
+      }
+    }
+    
+    // Get signature images
+    const studentSignature = document.getElementById('student_preview').src;
+    const siteSignature = document.getElementById('site_preview').src;
+    const facultySignature = document.getElementById('faculty_preview').src;
+    
+    // Generate signature preview HTML
+    let signatureHtml = '<div class="row mt-4">';
+    
+    signatureHtml += '<div class="col-md-4 text-center">';
+    signatureHtml += '<div><strong>Student-Intern Signature:</strong></div>';
+    if (studentSignature && studentSignature !== window.location.href) {
+      signatureHtml += `<img src="${studentSignature}" style="width: 150px; height: 150px; object-fit: contain; border: 1px solid #dee2e6; border-radius: 4px; margin-top: 0.5rem; background: #f8f9fa;" alt="Student signature">`;
+    } else {
+      signatureHtml += '<div style="width: 150px; height: 150px; border: 1px dashed #6c757d; border-radius: 4px; margin: 0.5rem auto; display: flex; align-items: center; justify-content: center; color: #6c757d; font-size: 0.8rem;">No signature uploaded</div>';
+    }
+    signatureHtml += '</div>';
+    
+    signatureHtml += '<div class="col-md-4 text-center">';
+    signatureHtml += '<div><strong>Site Supervisor Signature:</strong></div>';
+    if (siteSignature && siteSignature !== window.location.href) {
+      signatureHtml += `<img src="${siteSignature}" style="width: 150px; height: 150px; object-fit: contain; border: 1px solid #dee2e6; border-radius: 4px; margin-top: 0.5rem; background: #f8f9fa;" alt="Site supervisor signature">`;
+    } else {
+      signatureHtml += '<div style="width: 150px; height: 150px; border: 1px dashed #6c757d; border-radius: 4px; margin: 0.5rem auto; display: flex; align-items: center; justify-content: center; color: #6c757d; font-size: 0.8rem;">No signature uploaded</div>';
+    }
+    signatureHtml += '</div>';
+    
+    signatureHtml += '<div class="col-md-4 text-center">';
+    signatureHtml += '<div><strong>Faculty Supervisor Signature:</strong></div>';
+    if (facultySignature && facultySignature !== window.location.href) {
+      signatureHtml += `<img src="${facultySignature}" style="width: 150px; height: 150px; object-fit: contain; border: 1px solid #dee2e6; border-radius: 4px; margin-top: 0.5rem; background: #f8f9fa;" alt="Faculty supervisor signature">`;
+    } else {
+      signatureHtml += '<div style="width: 150px; height: 150px; border: 1px dashed #6c757d; border-radius: 4px; margin: 0.5rem auto; display: flex; align-items: center; justify-content: center; color: #6c757d; font-size: 0.8rem;">No signature uploaded</div>';
+    }
+    signatureHtml += '</div>';
+    signatureHtml += '</div>';
+    
+    let html = `
+      <table class="table table-bordered">
+        <tbody>
+          <tr><th>Date</th><td colspan="3">${data.get('date') || ''}</td></tr>
+          <tr><th>Student Intern Name</th><td>${data.get('student_name') || ''}</td>
+              <th>Student ID & Dept.</th><td>${data.get('student_id_dept') || ''}</td></tr>
+          <tr><th>Host Institution</th><td>${data.get('host_institution') || ''}</td>
+              <th>Site Supervisor</th><td>${data.get('site_supervisor') || ''}</td></tr>
+          <tr><th>Faculty Supervisor</th><td colspan="3">${data.get('faculty_supervisor') || ''}</td></tr>
+          <tr><th>Internship Completion Date</th><td colspan="3">${data.get('completion_date') || ''}</td></tr>
+        </tbody>
+      </table>
+      <div class="section-title mt-4">Weekly Activities</div>
+      <table class="table table-bordered">
+        <thead>
+          <tr><th style="width: 20%;">Week</th><th>Tasks Performed</th></tr>
+        </thead>
+        <tbody>
+          ${weeklyHtml}
+        </tbody>
+      </table>
+      ${signatureHtml}
+    `;
+    document.getElementById('previewContent').innerHTML = html;
+    previewModal.show();
+    return true;
+  }
+
+  function printForm(e) {
+    if (!validateForm()) {
+      e.preventDefault();
+      return false;
+    }
+    window.print();
+  }
+
+  function submitForm(e) {
+    e.preventDefault();
+    if (!validateForm()) return false;
+    alert('Form submitted successfully!');
+    form.reset();
+    clearValidation();
+  }
+
+  document.getElementById('previewBtn').addEventListener('click', previewForm);
+  document.getElementById('printBtn').addEventListener('click', printForm);
+  
+  // Mobile button events
+  document.getElementById('previewBtnMobile').addEventListener('click', previewForm);
+  document.getElementById('printBtnMobile').addEventListener('click', printForm);
+  
+  form.addEventListener('submit', submitForm);
+  
+  // Sync form values between desktop and mobile layouts
+  function syncFormValues() {
+    const fields = [
+      'student_name', 'student_id_dept', 'host_institution', 
+      'site_supervisor', 'faculty_supervisor', 'completion_date'
+    ];
+    
+    fields.forEach(fieldName => {
+      const desktopInput = form.querySelector(`input[name="${fieldName}"]:not([id^="mobile_"])`);
+      const mobileInput = form.querySelector(`input[id="mobile_${fieldName}"]`);
+      
+      if (desktopInput && mobileInput) {
+        desktopInput.addEventListener('input', () => {
+          mobileInput.value = desktopInput.value;
+        });
+        
+        mobileInput.addEventListener('input', () => {
+          desktopInput.value = mobileInput.value;
+        });
+      }
+    });
+    
+    // Sync textarea fields (weekly activities)
+    for (let i = 1; i <= 8; i++) {
+      const desktopTextarea = form.querySelector(`textarea[name="week_${i}"]:not([id^="mobile_"])`);
+      const mobileTextarea = form.querySelector(`textarea[name="week_${i}"]`);
+      
+      if (desktopTextarea && mobileTextarea && desktopTextarea !== mobileTextarea) {
+        desktopTextarea.addEventListener('input', () => {
+          mobileTextarea.value = desktopTextarea.value;
+        });
+        
+        mobileTextarea.addEventListener('input', () => {
+          desktopTextarea.value = mobileTextarea.value;
+        });
+      }
+    }
+  }
+  
+  // Initialize form sync
+  syncFormValues();
+});
+</script>
+
+</body>
+</html>

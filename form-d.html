@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Form D – Student Internship – Progress Form</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(135deg, #e0e7ff 0%, #f8fafc 100%);
+      min-height: 100vh;
+    }
+    .form-card {
+      border-radius: 18px;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.08), 0 1.5px 6px rgba(0,0,0,0.04);
+      padding: 2.5rem 2rem 2rem 2rem;
+      background: #fff;
+    }
+    .section-title {
+      font-size: 1.1rem;
+      color: #0d6efd;
+      border-left: 4px solid #0d6efd;
+      padding-left: 0.75rem;
+      margin-bottom: 0.5rem;
+      margin-top: 2rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    .square-radio {
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border: 2px solid #6c757d;
+      border-radius: 3px;
+      background-color: #fff;
+      cursor: pointer;
+      position: relative;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .square-radio:checked {
+      background-color: #0d6efd;
+      border-color: #0d6efd;
+    }
+    .square-radio:checked::after {
+      content: '✓';
+      color: #fff;
+      font-size: 14px;
+      position: absolute;
+      top: -2px;
+      left: 3px;
+    }
+    .form-control:focus {
+      box-shadow: 0 0 0 0.2rem rgba(13,110,253,.15);
+      border-color: #0d6efd;
+    }
+    .btn-custom {
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+      box-shadow: 0 2px 8px rgba(13,110,253,0.08);
+    }
+    .btn-custom:hover, .btn-custom:focus {
+      background: #0b5ed7 !important;
+      color: #fff !important;
+      box-shadow: 0 4px 16px rgba(13,110,253,0.15);
+    }
+    /* Mobile Responsive Styles */
+    @media (max-width: 768px) {
+      .form-card { 
+        padding: 1.5rem 1rem; 
+        margin: 0.5rem;
+      }
+      .section-title { 
+        font-size: 1rem; 
+        margin-top: 1.5rem;
+      }
+      
+      /* Hide table on mobile */
+      .desktop-table {
+        display: none !important;
+      }
+      
+      /* Show mobile layout */
+      .mobile-layout {
+        display: block !important;
+      }
+      
+      /* Mobile form styling */
+      .mobile-field {
+        margin-bottom: 1rem;
+      }
+      
+      .mobile-field label {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 0.5rem;
+        display: block;
+        font-size: 0.9rem;
+      }
+      
+      .mobile-field .form-control {
+        font-size: 16px; /* Prevents zoom on iOS */
+      }
+      
+      /* Radio button group styling for mobile */
+      .mobile-radio-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-top: 0.5rem;
+      }
+      
+      .mobile-radio-item {
+        display: flex;
+        align-items: center;
+        flex: 1;
+        min-width: fit-content;
+      }
+      
+      .mobile-radio-item label {
+        margin-bottom: 0 !important;
+        margin-left: 0.5rem;
+        font-weight: 500;
+      }
+      
+      /* Date field responsive */
+      .date-container {
+        text-align: center !important;
+        margin-bottom: 1rem;
+      }
+      
+      .date-container input {
+        width: 100% !important;
+        max-width: 200px;
+      }
+      
+      /* Signature field responsive */
+      .signature-container {
+        text-align: center;
+      }
+      
+      .signature-container input {
+        width: 100% !important;
+        max-width: 300px;
+        margin-top: 0.5rem;
+      }
+      
+      /* Button adjustments */
+      .btn-group-mobile {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+      
+      .btn-group-mobile .btn {
+        width: 100%;
+        padding: 0.75rem;
+        font-size: 1rem;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .form-card { 
+        padding: 1rem 0.75rem; 
+        margin: 0.25rem;
+      }
+      
+      h3 {
+        font-size: 1.25rem !important;
+      }
+      
+      .btn-group-mobile .btn {
+        padding: 0.875rem;
+        font-size: 1.05rem;
+      }
+    }
+    
+    /* Desktop table - hide on mobile */
+    @media (min-width: 769px) {
+      .mobile-layout {
+        display: none !important;
+      }
+      
+      .desktop-table {
+        display: table !important;
+      }
+    }
+    
+    /* Signature Upload Styles - Minimal Custom CSS */
+    .signature-preview {
+      width: 150px;
+      height: 150px;
+      object-fit: contain;
+      display: none;
+    }
+    
+    .file-upload-btn input[type="file"] {
+      display: none;
+    }
+    
+    @media print {
+      .no-print { display: none !important; }
+      .form-control, input[type="text"], textarea {
+        border: none !important;
+        box-shadow: none !important;
+        background: transparent !important;
+      }
+      input[type="radio"] {
+        pointer-events: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-10 col-lg-8">
+      <form id="formD">
+        <div class="form-card" id="printArea">
+
+          <h3 class="text-center text-primary mb-4 fw-bold">Form D – Student Internship – Progress Form</h3>
+
+          <p class="small mb-3 text-center text-secondary">
+            Student Intern to fill the form and return the signed copy to the Faculty Supervisor during the 2<sup>nd</sup>, 4<sup>th</sup>, and 6<sup>th</sup>/8<sup>th</sup> weeks of the internship period of the Summer Semester.
+          </p>
+
+          <div class="text-end small mb-3 date-container">
+            <label for="dateField" class="me-2">Date:</label>
+            <input type="date" class="form-control d-inline-block" style="width: 180px;" name="date" id="dateField">
+          </div>
+
+          <!-- Desktop Table Layout -->
+          <table class="table table-bordered align-middle mb-4 desktop-table">
+            <tbody>
+              <tr>
+                <td class="bg-light w-25">Student Intern Name</td>
+                <td><input type="text" class="form-control" name="student_name" placeholder="Enter your name"></td>
+                <td class="bg-light">Student ID and Dept.</td>
+                <td><input type="text" class="form-control" name="student_id_dept" placeholder="ID & Dept."></td>
+              </tr>
+              <tr>
+                <td class="bg-light">Host Institution</td>
+                <td><input type="text" class="form-control" name="host_institution" placeholder="Institution name"></td>
+                <td class="bg-light">Site Supervisor</td>
+                <td><input type="text" class="form-control" name="site_supervisor" placeholder="Supervisor name"></td>
+              </tr>
+              <tr>
+                <td class="bg-light">Faculty Supervisor</td>
+                <td><input type="text" class="form-control" name="faculty_supervisor" placeholder="Faculty name"></td>
+                <td class="bg-light">Reporting Period</td>
+                <td><input type="text" class="form-control" name="reporting_period" placeholder="e.g. 2nd week"></td>
+              </tr>
+              <tr>
+                <td class="bg-light">
+                  Progress Report Number <br><small>(Select one)</small>
+                </td>
+                <td class="text-center">
+                  <input type="radio" class="square-radio me-1" name="report_week" value="2nd" id="week2">
+                  <label for="week2">2<sup>nd</sup> Wk</label>
+                </td>
+                <td class="text-center">
+                  <input type="radio" class="square-radio me-1" name="report_week" value="4th" id="week4">
+                  <label for="week4">4<sup>th</sup> Wk</label>
+                </td>
+                <td class="text-center">
+                  <input type="radio" class="square-radio me-1" name="report_week" value="6th8th" id="week68">
+                  <label for="week68">6<sup>th</sup>/8<sup>th</sup> Wk</label>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Mobile Layout -->
+          <div class="mobile-layout" style="display: none;">
+            <div class="mobile-field">
+              <label for="mobile_student_name">Student Intern Name</label>
+              <input type="text" class="form-control" name="student_name" id="mobile_student_name" placeholder="Enter your name">
+            </div>
+            
+            <div class="mobile-field">
+              <label for="mobile_student_id_dept">Student ID and Dept.</label>
+              <input type="text" class="form-control" name="student_id_dept" id="mobile_student_id_dept" placeholder="ID & Dept.">
+            </div>
+            
+            <div class="mobile-field">
+              <label for="mobile_host_institution">Host Institution</label>
+              <input type="text" class="form-control" name="host_institution" id="mobile_host_institution" placeholder="Institution name">
+            </div>
+            
+            <div class="mobile-field">
+              <label for="mobile_site_supervisor">Site Supervisor</label>
+              <input type="text" class="form-control" name="site_supervisor" id="mobile_site_supervisor" placeholder="Supervisor name">
+            </div>
+            
+            <div class="mobile-field">
+              <label for="mobile_faculty_supervisor">Faculty Supervisor</label>
+              <input type="text" class="form-control" name="faculty_supervisor" id="mobile_faculty_supervisor" placeholder="Faculty name">
+            </div>
+            
+            <div class="mobile-field">
+              <label for="mobile_reporting_period">Reporting Period</label>
+              <input type="text" class="form-control" name="reporting_period" id="mobile_reporting_period" placeholder="e.g. 2nd week">
+            </div>
+            
+            <div class="mobile-field">
+              <label>Progress Report Number <small>(Select one)</small></label>
+              <div class="mobile-radio-group">
+                <div class="mobile-radio-item">
+                  <input type="radio" class="square-radio" name="report_week" value="2nd" id="mobile_week2">
+                  <label for="mobile_week2">2<sup>nd</sup> Wk</label>
+                </div>
+                <div class="mobile-radio-item">
+                  <input type="radio" class="square-radio" name="report_week" value="4th" id="mobile_week4">
+                  <label for="mobile_week4">4<sup>th</sup> Wk</label>
+                </div>
+                <div class="mobile-radio-item">
+                  <input type="radio" class="square-radio" name="report_week" value="6th8th" id="mobile_week68">
+                  <label for="mobile_week68">6<sup>th</sup>/8<sup>th</sup> Wk</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-title">a) <u>Tasks Assigned & Performed</u> <span class="text-muted small">(Includes assigned duties and completed tasks)</span></div>
+          <textarea class="form-control mb-4" name="tasks_assigned" rows="4" placeholder="Describe tasks assigned and performed..."></textarea>
+
+          <div class="section-title">b) <u>Learning Experience</u> <span class="text-muted small">(Skills and Knowledge gained)</span></div>
+          <textarea class="form-control mb-4" name="learning_experience" rows="4" placeholder="Describe your learning experience..."></textarea>
+
+          <div class="section-title">c) <u>Limitations & Challenges</u> <span class="text-muted small">(Challenges, limitations, and obstacles)</span></div>
+          <textarea class="form-control mb-4" name="limitations_challenges" rows="4" placeholder="Describe any limitations or challenges..."></textarea>
+
+          <div class="mt-4 mb-2">
+            <div class="bg-light rounded p-3 mb-3 border-start border-primary border-3">
+              <h6 class="mb-3 fw-bold text-primary">Student Intern Signature:</h6>
+              <div class="d-flex flex-column gap-2">
+                <div class="flex-fill">
+                  <label class="form-label small">Upload Signature:</label>
+                  <div class="bg-secondary bg-opacity-10 border border-2 border-dashed rounded p-3 text-center" 
+                       style="cursor: pointer;" onclick="document.getElementById('signature_file').click()">
+                    <input type="file" id="signature_file" accept="image/*" onchange="previewSignature(this, 'signature_preview')">
+                    <label for="signature_file" class="small text-muted mb-0" style="cursor: pointer;">
+                      <i class="bi bi-cloud-upload me-1"></i>Choose Image
+                    </label>
+                  </div>
+                  <img id="signature_preview" class="signature-preview border rounded mt-2 bg-light" alt="Student signature preview">
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="text-center mt-4 no-print">
+          <div class="d-md-block d-none">
+            <button type="button" class="btn btn-primary btn-custom me-3" id="previewBtn">
+              <i class="bi bi-eye me-1" ></i> Preview
+            </button>
+            <button type="button" class="btn btn-success btn-custom me-3" id="printBtn">
+              <i class="bi bi-printer me-1"></i> Print
+            </button>
+            <button type="submit" class="btn btn-outline-primary btn-custom me-3" id="submitBtn">
+              <i class="bi bi-check-circle me-1"></i> Submit
+            </button>
+            <button type="reset" class="btn btn-outline-secondary btn-custom">
+              <i class="bi bi-arrow-clockwise me-1"></i> Reset
+            </button>
+          </div>
+          
+          <div class="d-md-none btn-group-mobile">
+            <button type="button" class="btn btn-primary btn-custom" id="previewBtnMobile">
+              <i class="bi bi-eye me-2"></i> Preview
+            </button>
+            <button type="button" class="btn btn-success btn-custom" id="printBtnMobile">
+              <i class="bi bi-printer me-2"></i> Print
+            </button>
+            <button type="submit" class="btn btn-outline-primary btn-custom" id="submitBtnMobile">
+              <i class="bi bi-check-circle me-2"></i> Submit
+            </button>
+            <button type="reset" class="btn btn-outline-secondary btn-custom">
+              <i class="bi bi-arrow-clockwise me-2"></i> Reset
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Preview Modal -->
+<div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="previewModalLabel">Progress Form Preview</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="previewContent" style="background: #f8fafc;">
+        <!-- Preview content will be injected here -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+/* Preview Modal Enhancements */
+#previewContent {
+  padding: 2rem 1.5rem;
+  background: #f8fafc;
+  border-radius: 16px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+  font-size: 1.05rem;
+  word-break: break-word;
+}
+#previewContent table {
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+  margin-bottom: 1.5rem;
+  table-layout: fixed;
+  width: 100%;
+}
+#previewContent th, #previewContent td {
+  word-break: break-word;
+  white-space: pre-line;
+  vertical-align: top;
+  padding: 10px 8px;
+}
+#previewContent .section-title {
+  font-weight: 600;
+  color: #0d6efd;
+  font-size: 1.08rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  border-left: 4px solid #0d6efd;
+  padding-left: 0.7rem;
+  background: #e7f1ff;
+  border-radius: 6px;
+  display: inline-block;
+}
+#previewContent div {
+  margin-bottom: 0.7rem;
+}
+
+/* Mobile preview styles */
+@media (max-width: 768px) {
+  .modal-dialog {
+    margin: 0.5rem;
+    max-width: none;
+  }
+  
+  #previewContent {
+    padding: 1rem;
+    font-size: 0.95rem;
+  }
+  
+  #previewContent table {
+    font-size: 0.85rem;
+  }
+  
+  #previewContent th, #previewContent td {
+    padding: 6px 4px;
+  }
+  
+  #previewContent .section-title {
+    font-size: 1rem;
+    margin-top: 1rem;
+  }
+}
+
+.input-error {
+  border-color: #dc3545 !important;
+  box-shadow: 0 0 0 0.2rem rgba(220,53,69,.15) !important;
+}
+.error-message {
+  color: #dc3545;
+  font-size: 0.95em;
+  margin-top: 2px;
+  margin-bottom: 4px;
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.getElementById('formD');
+  const previewModal = new bootstrap.Modal(document.getElementById('previewModal'));
+
+  // Signature preview function
+  function previewSignature(input, previewId) {
+    const file = input.files[0];
+    const preview = document.getElementById(previewId);
+    
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        alert('Please select a valid image file.');
+        input.value = '';
+        return;
+      }
+      
+      // Validate file size (max 2MB)
+      if (file.size > 2 * 1024 * 1024) {
+        alert('File size must be less than 2MB.');
+        input.value = '';
+        return;
+      }
+      
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        preview.src = e.target.result;
+        preview.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    } else {
+      preview.style.display = 'none';
+      preview.src = '';
+    }
+  }
+
+  // Make previewSignature globally accessible
+  window.previewSignature = previewSignature;
+  const requiredFields = [
+    { name: 'student_name', label: 'Student Intern Name' },
+    { name: 'student_id_dept', label: 'Student ID and Dept.' },
+    { name: 'host_institution', label: 'Host Institution' },
+    { name: 'site_supervisor', label: 'Site Supervisor' },
+    { name: 'faculty_supervisor', label: 'Faculty Supervisor' },
+    { name: 'reporting_period', label: 'Reporting Period' },
+    { name: 'report_week', label: 'Progress Report Number' },
+    { name: 'tasks_assigned', label: 'Tasks Assigned & Performed' },
+    { name: 'learning_experience', label: 'Learning Experience' },
+    { name: 'limitations_challenges', label: 'Limitations & Challenges' }
+  ];
+
+  function clearValidation() {
+    form.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+    form.querySelectorAll('.error-message').forEach(el => el.remove());
+  }
+
+  function showError(input, message) {
+    input.classList.add('input-error');
+    let error = document.createElement('div');
+    error.className = 'error-message';
+    error.innerText = message;
+    if (input.type === 'radio') {
+      // For radio, show error after the last radio in the group
+      const radios = form.querySelectorAll(`input[name="${input.name}"]`);
+      radios[radios.length-1].parentElement.appendChild(error);
+    } else {
+      input.parentElement.appendChild(error);
+    }
+  }
+
+  function validateForm() {
+    clearValidation();
+    let valid = true;
+    let firstInvalid = null;
+    for (const field of requiredFields) {
+      let input = form.querySelector(`[name="${field.name}"]`);
+      if (!input) continue;
+      if (input.type === 'radio') {
+        const checked = form.querySelector(`input[name="${field.name}"]:checked`);
+        if (!checked) {
+          showError(input, `${field.label} is required.`);
+          if (!firstInvalid) firstInvalid = input;
+          valid = false;
+        }
+      } else if (!input.value.trim()) {
+        showError(input, `${field.label} is required.`);
+        if (!firstInvalid) firstInvalid = input;
+        valid = false;
+      }
+    }
+    if (firstInvalid) {
+      firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      firstInvalid.focus();
+    }
+    return valid;
+  }
+
+  function previewForm(e) {
+    if (!validateForm()) {
+      // Prevent modal from opening
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
+    }
+    const data = new FormData(form);
+    let html = `
+      <table class="table table-bordered">
+        <tbody>
+          <tr><th>Date</th><td colspan="3">${data.get('date') || ''}</td></tr>
+          <tr><th>Student Intern Name</th><td>${data.get('student_name') || ''}</td>
+              <th>Student ID and Dept.</th><td>${data.get('student_id_dept') || ''}</td></tr>
+          <tr><th>Host Institution</th><td>${data.get('host_institution') || ''}</td>
+              <th>Site Supervisor</th><td>${data.get('site_supervisor') || ''}</td></tr>
+          <tr><th>Faculty Supervisor</th><td>${data.get('faculty_supervisor') || ''}</td>
+              <th>Reporting Period</th><td>${data.get('reporting_period') || ''}</td></tr>
+          <tr>
+            <th>Progress Report Number</th>
+            <td colspan="3">${data.get('report_week') || ''}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="section-title mt-4">a) Tasks Assigned & Performed</div>
+      <div>${(data.get('tasks_assigned') || '').replace(/\n/g, '<br>')}</div>
+      <div class="section-title mt-4">b) Learning Experience</div>
+      <div>${(data.get('learning_experience') || '').replace(/\n/g, '<br>')}</div>
+      <div class="section-title mt-4">c) Limitations & Challenges</div>
+      <div>${(data.get('limitations_challenges') || '').replace(/\n/g, '<br>')}</div>
+      <div class="mt-4"><strong>Signature:</strong> Please see uploaded signature image above</div>
+    `;
+    document.getElementById('previewContent').innerHTML = html;
+    previewModal.show();
+    return true;
+  }
+
+  function printForm(e) {
+    if (!validateForm()) {
+      e.preventDefault();
+      return false;
+    }
+    window.print();
+  }
+
+  function submitForm(e) {
+    e.preventDefault();
+    if (!validateForm()) return false;
+    // You can replace this with actual submit logic
+    alert('Form submitted successfully!');
+    form.reset();
+    clearValidation();
+  }
+
+  document.getElementById('previewBtn').addEventListener('click', previewForm);
+  document.getElementById('printBtn').addEventListener('click', printForm);
+  
+  // Mobile button events
+  document.getElementById('previewBtnMobile').addEventListener('click', previewForm);
+  document.getElementById('printBtnMobile').addEventListener('click', printForm);
+  
+  form.addEventListener('submit', submitForm);
+  
+  // Sync form values between desktop and mobile layouts
+  function syncFormValues() {
+    const fields = [
+      'student_name', 'student_id_dept', 'host_institution', 
+      'site_supervisor', 'faculty_supervisor', 'reporting_period'
+    ];
+    
+    fields.forEach(fieldName => {
+      const desktopInput = form.querySelector(`input[name="${fieldName}"]:not([id^="mobile_"])`);
+      const mobileInput = form.querySelector(`input[id="mobile_${fieldName}"]`);
+      
+      if (desktopInput && mobileInput) {
+        desktopInput.addEventListener('input', () => {
+          mobileInput.value = desktopInput.value;
+        });
+        
+        mobileInput.addEventListener('input', () => {
+          desktopInput.value = mobileInput.value;
+        });
+      }
+    });
+    
+    // Sync radio buttons
+    const desktopRadios = form.querySelectorAll('input[name="report_week"]:not([id^="mobile_"])');
+    const mobileRadios = form.querySelectorAll('input[name="report_week"][id^="mobile_"]');
+    
+    desktopRadios.forEach((radio, index) => {
+      radio.addEventListener('change', () => {
+        if (radio.checked && mobileRadios[index]) {
+          mobileRadios[index].checked = true;
+        }
+      });
+    });
+    
+    mobileRadios.forEach((radio, index) => {
+      radio.addEventListener('change', () => {
+        if (radio.checked && desktopRadios[index]) {
+          desktopRadios[index].checked = true;
+        }
+      });
+    });
+  }
+  
+  // Initialize form sync
+  syncFormValues();
+});
+</script>
+
+</body>
+</html>
