@@ -16,7 +16,7 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f5f8fa;
+            background-color: #f8f9fa;
             font-size: 0.95rem;
         }
         
@@ -27,18 +27,19 @@
             padding-bottom: 0.5rem !important;
         }
         
+
         .sidebar {
             background-color: white;
             border-right: 1px solid var(--border-color);
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
-            padding-top: 60px !important;
+            padding-top: 10px !important;
             width: 210px !important;
         }
         
         @media (max-width: 576px) {
             .sidebar {
                 width: 180px !important;
-                padding-top: 50px !important;
+                padding-top: 8px !important;
             }
         }
         
@@ -81,22 +82,69 @@
             color: white;
         }
         
+        /* Sidebar close button styling */
+        #sidebarClose {
+            border: none;
+            background: transparent;
+            transition: all 0.2s;
+            border-radius: 4px;
+        }
+        
+        #sidebarClose:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white !important;
+        }
+        
+        /* Sidebar header styling */
+        .sidebar-header {
+            background-color: var(--primary-color);
+            padding: 0.75rem;
+            margin: -10px -16px 1rem -16px;
+            border-radius: 10;
+        }
+        
+        .sidebar-header h6 {
+            color: white !important;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        
         /* Hide sidebar by default for all screen sizes */
         #sidebar {
             transform: translateX(-100%);
             transition: transform 0.3s ease;
+            z-index: 1050;
         }
         #sidebar.show {
             transform: translateX(0);
         }
         
-        /* Adjust main content when sidebar is hidden/shown */
+        /* Fade overlay background */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 1040;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        
+        .sidebar-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        /* Remove margin adjustments - content stays in place */
         .container-fluid {
-            transition: margin-left 0.3s ease;
+            transition: none;
         }
         
         .container-fluid.sidebar-expanded {
-            margin-left: 210px !important;
+            margin-left: 0 !important;
         }
         
         @media (max-width: 991.98px) {
@@ -109,13 +157,40 @@
             .container-fluid.sidebar-expanded {
                 margin-left: 0 !important;
             }
+            
+            .sidebar {
+                width: 180px !important;
+                padding-top: 50px !important;
+            }
         }
         .card {
             font-size: 0.97rem;
             padding: 0.5rem 0.5rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1) !important;
+        }
+        
         .card-title {
             font-size: 1.05rem;
+        }
+        
+        @media (min-width: 992px) {
+            .card-title {
+                font-size: 1.1rem;
+            }
+            
+            .card-body p {
+                font-size: 0.85rem !important;
+            }
+            
+            .btn {
+                font-size: 0.85rem !important;
+                padding: 0.6rem 1.2rem !important;
+            }
         }
         .alert {
             font-size: 0.97rem;
@@ -124,11 +199,207 @@
         .container-fluid {
             margin-left: 0 !important; /* Start with no margin since sidebar is hidden */
             margin-top: 62px !important;
-            padding: 1rem 1rem !important;
+            padding: 1.5rem 2rem !important;
+            max-width: none !important;
+        }
+        
+        /* Better utilization of large screens */
+        @media (min-width: 1200px) {
+            .container-fluid {
+                padding: 2rem 3rem !important;
+            }
+            
+            #dashboard-content .row.g-2.g-sm-3 {
+                gap: 1.5rem !important;
+            }
+            
+            .card {
+                padding: 1rem !important;
+            }
+            
+            .card-body {
+                padding: 1.5rem !important;
+            }
+        }
+        
+        @media (min-width: 1400px) {
+            .container-fluid {
+                padding: 2.5rem 4rem !important;
+            }
+            
+            #dashboard-content .row.g-2.g-sm-3 {
+                gap: 2rem !important;
+            }
         }
         h3.fw-bold {
             font-size: 1.25rem;
             margin-bottom: 1rem !important;
+        }
+        
+        /* Form content styling */
+        #form-content {
+            animation: fadeIn 0.3s ease-in;
+        }
+        
+        #dashboard-content {
+            animation: fadeIn 0.3s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Override form styles when loaded in dashboard */
+        #form-container .container-fluid {
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+        
+        #form-container .form-card {
+            margin: 0;
+            border-radius: 12px;
+        }
+        
+        /* Loading spinner styling */
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+        }
+        
+        /* Form preview styles */
+        .section-title-preview {
+            font-size: 1.1rem;
+            color: #0d6efd;
+            border-left: 4px solid #0d6efd;
+            padding-left: 0.75rem;
+            margin-bottom: 0.5rem;
+            margin-top: 2rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        
+        .table-bordered th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #495057;
+            border: 1px solid #dee2e6;
+            padding: 0.75rem;
+            vertical-align: middle;
+            width: 25%;
+        }
+        
+        .table-bordered td {
+            border: 1px solid #dee2e6;
+            padding: 0.75rem;
+            vertical-align: middle;
+        }
+        
+        /* Modal styling */
+        .modal-body {
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        
+        .modal-dialog {
+            max-width: 800px;
+        }
+        
+        /* Completely disable modal backdrop */
+        .modal-backdrop {
+            display: none !important;
+        }
+        
+        .modal {
+            z-index: 1050;
+            background: rgba(0, 0, 0, 0.5) !important; /* Add background directly to modal */
+        }
+        
+        /* Remove all fade effects */
+        .modal.fade,
+        .modal-backdrop.fade {
+            opacity: 1 !important;
+            transition: none !important;
+        }
+        
+        .modal.fade .modal-dialog {
+            transition: none !important;
+            transform: none !important;
+        }
+        
+        .modal.show .modal-dialog {
+            transform: none !important;
+        }
+        
+        /* Prevent body scroll lock issues */
+        body.modal-open {
+            overflow: auto !important;
+            padding-right: 0 !important;
+        }
+        
+        /* Print styles for modal content */
+        @media print {
+            /* Hide everything except the modal content when printing */
+            body * {
+                visibility: hidden;
+            }
+            
+            .modal,
+            .modal * {
+                visibility: visible;
+            }
+            
+            .modal {
+                position: static !important;
+                z-index: auto !important;
+                background: white !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                box-shadow: none !important;
+            }
+            
+            .modal-dialog {
+                max-width: none !important;
+                margin: 0 !important;
+                width: 100% !important;
+                height: auto !important;
+            }
+            
+            .modal-content {
+                border: none !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
+            }
+            
+            .modal-header,
+            .modal-footer {
+                display: none !important;
+            }
+            
+            .modal-body {
+                padding: 20px !important;
+                max-height: none !important;
+                overflow: visible !important;
+            }
+            
+            /* Ensure preview content prints properly */
+            #previewContent {
+                background: white !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                padding: 0 !important;
+            }
+            
+            /* Print table styles */
+            .table {
+                page-break-inside: avoid;
+            }
+            
+            .table th,
+            .table td {
+                padding: 8px !important;
+                border: 1px solid #000 !important;
+            }
         }
     </style>
 </head>
@@ -148,35 +419,48 @@
 
     </header>
 
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
     <!-- Sidebar -->
-    <nav class="sidebar h-100 position-fixed start-0 d-flex flex-column py-2 py-sm-2 px-1 px-sm-2" id="sidebar" style="top: 0; z-index: 1020;">
-        <div class="px-1 mb-2 mb-sm-3">
-            <h6 class="text-muted fw-semibold mb-1 mb-sm-2 small">INTERNSHIP FORMS</h6>
+    <nav class="sidebar h-100 position-fixed start-0 d-flex flex-column py-2 py-sm-2 px-2 px-sm-3" id="sidebar" style="top: 0;">
+        <div class="d-flex justify-content-between align-items-center mt-1 sidebar-header">
+            <h6 class="fw-semibold mb-0 small">INTERNSHIP FORMS</h6>
+            <button class="btn btn-sm text-white p-1" id="sidebarClose" title="Close sidebar">
+                <i class="bi bi-x-lg"></i>
+            </button>
         </div>
         <ul class="nav flex-column w-100">
             <li class="nav-item">
-                <a href="form-b.html" class="nav-link active py-1 py-sm-2 px-1 px-sm-2 small">
+                <a href="#" class="nav-link py-1 py-sm-2 px-1 px-sm-2 small" data-form="dashboard">
+                    <i class="bi bi-house me-1 me-sm-2"></i>
+                    <span class="d-none d-sm-inline">Dashboard</span>
+                    <span class="d-sm-none">Home</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link py-1 py-sm-2 px-1 px-sm-2 small" data-form="form-b">
                     <i class="bi bi-file-earmark-text me-1 me-sm-2"></i>
                     <span class="d-none d-sm-inline">Internship Approval Form (Form B)</span>
                     <span class="d-sm-none">Form B</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="form-c.html" class="nav-link py-1 py-sm-2 px-1 px-sm-2 small">
+                <a href="#" class="nav-link py-1 py-sm-2 px-1 px-sm-2 small" data-form="form-c">
                     <i class="bi bi-file-earmark-bar-graph me-1 me-sm-2"></i>
                     <span class="d-none d-sm-inline">Site Supervisor Evaluation (Form C)</span>
                     <span class="d-sm-none">Form C</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="form-d.html" class="nav-link py-1 py-sm-2 px-1 px-sm-2 small">
+                <a href="#" class="nav-link py-1 py-sm-2 px-1 px-sm-2 small" data-form="form-d">
                     <i class="bi bi-file-earmark-ruled me-1 me-sm-2"></i>
                     <span class="d-none d-sm-inline">Weekly Progress Form (Form D)</span>
                     <span class="d-sm-none">Form D</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="form-e.html" class="nav-link py-1 py-sm-2 px-1 px-sm-2 small">
+                <a href="#" class="nav-link py-1 py-sm-2 px-1 px-sm-2 small" data-form="form-e">
                     <i class="bi bi-journal-text me-1 me-sm-2"></i>
                     <span class="d-none d-sm-inline">Weekly Activity Log (Form E)</span>
                     <span class="d-sm-none">Form E</span>
@@ -192,92 +476,105 @@
         </div>
     </nav>
 
-    <!-- Main Content (empty for now) -->
+    <!-- Main Content -->
     <div class="container-fluid py-1 py-sm-2 px-1 px-sm-2">
-        <div class="row mb-2 mb-sm-3">
-            <div class="col-12">
-                <h3 class="fw-bold mb-2 mb-sm-3 fs-5 fs-sm-4">Dashboard</h3>
-                <div class="alert alert-info d-flex align-items-center py-2 px-2 px-sm-3" role="alert">
-                    <i class="bi bi-info-circle-fill me-2 fs-6 fs-sm-5"></i>
-                    <div class="small">
-                        Welcome to the AU Internship Portal. Complete all required forms: Form B (Approval), Form C (Site Supervisor Evaluation), Form D (Weekly Progress), and Form E (Activity Log).
+        <!-- Dynamic Content Area -->
+        <div id="main-content">
+            <!-- Dashboard Content (Default) -->
+            <div id="dashboard-content">
+                <div class="row mb-2 mb-sm-3">
+                    <div class="col-12">
+                        <h3 class="fw-bold mb-2 mb-sm-3 fs-5 fs-sm-4">Dashboard</h3>
+                        <div class="alert alert-info d-flex align-items-center py-2 px-2 px-sm-3" role="alert">
+                            <i class="bi bi-info-circle-fill me-2 fs-6 fs-sm-5"></i>
+                            <div class="small">
+                                Welcome to the AU Internship Portal. Complete all required forms: Form B (Approval), Form C (Site Supervisor Evaluation), Form D (Weekly Progress), and Form E (Activity Log).
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        
-        <div class="row g-2 g-sm-3">
-            <div class="col-lg-3 col-md-6">
-                <div class="card h-100 border-0 shadow-sm">
-                    <div class="card-body p-2">
-                        <div class="d-flex justify-content-between align-items-start">
-                            <div class="flex-grow-1 me-2">
-                                <h6 class="card-title mb-1 small fw-semibold">Internship Approval Form (Form B)</h6>
-                                <p class="text-muted mb-1" style="font-size: 0.75rem;">Submit to Faculty Supervisor</p>
+                
+                <div class="row g-2 g-sm-3">
+                    <div class="col-lg-3 col-md-6">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body p-2">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="flex-grow-1 me-2">
+                                        <h6 class="card-title mb-1 small fw-semibold">Internship Approval Form (Form B)</h6>
+                                        <p class="text-muted mb-1" style="font-size: 0.75rem;">Submit to Faculty Supervisor</p>
+                                    </div>
+                                    <span class="badge bg-primary rounded-pill" style="font-size: 0.65rem;">Available</span>
+                                </div>
+                                <div class="d-grid gap-1 mt-2">
+                                    <a href="#" class="btn btn-outline-primary btn-sm py-1" style="font-size: 0.75rem;" data-form="form-b">Complete Form</a>
+                                </div>
                             </div>
-                            <span class="badge bg-primary rounded-pill" style="font-size: 0.65rem;">Available</span>
                         </div>
-                        <div class="d-grid gap-1 mt-2">
-                            <a href="form-b.html" class="btn btn-outline-primary btn-sm py-1" style="font-size: 0.75rem;">Complete Form</a>
+                    </div>
+                    
+                    <div class="col-lg-3 col-md-6">
+                        <div class="card h-100 border-0 shadow-sm opacity-75">
+                            <div class="card-body p-2">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="flex-grow-1 me-2">
+                                        <h6 class="card-title mb-1 small fw-semibold text-muted">Site Supervisor Evaluation (Form C)</h6>
+                                        <p class="text-muted mb-1" style="font-size: 0.75rem;">Completed by Site Supervisor</p>
+                                    </div>
+                                    <span class="badge bg-secondary rounded-pill" style="font-size: 0.65rem;">Locked</span>
+                                </div>
+                                <div class="d-grid gap-1 mt-2">
+                                    <button class="btn btn-outline-secondary btn-sm py-1 disabled" style="font-size: 0.75rem;" disabled>
+                                        <i class="bi bi-lock me-1"></i>Locked
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-3 col-md-6">
+                        <div class="card h-100 border-0 shadow-sm opacity-75">
+                            <div class="card-body p-2">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="flex-grow-1 me-2">
+                                        <h6 class="card-title mb-1 small fw-semibold text-muted">Weekly Progress Form (Form D)</h6>
+                                        <p class="text-muted mb-1" style="font-size: 0.75rem;">Submit weekly to Supervisor</p>
+                                    </div>
+                                    <span class="badge bg-secondary rounded-pill" style="font-size: 0.65rem;">Locked</span>
+                                </div>
+                                <div class="d-grid gap-1 mt-2">
+                                    <button class="btn btn-outline-secondary btn-sm py-1 disabled" style="font-size: 0.75rem;" disabled>
+                                        <i class="bi bi-lock me-1"></i>Locked
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-3 col-md-6">
+                        <div class="card h-100 border-0 shadow-sm opacity-75">
+                            <div class="card-body p-2">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="flex-grow-1 me-2">
+                                        <h6 class="card-title mb-1 small fw-semibold text-muted">Weekly Activity Log (Form E)</h6>
+                                        <p class="text-muted mb-1" style="font-size: 0.75rem;">Maintain for internship duration</p>
+                                    </div>
+                                    <span class="badge bg-secondary rounded-pill" style="font-size: 0.65rem;">Locked</span>
+                                </div>
+                                <div class="d-grid gap-1 mt-2">
+                                    <button class="btn btn-outline-secondary btn-sm py-1 disabled" style="font-size: 0.75rem;" disabled>
+                                        <i class="bi bi-lock me-1"></i>Locked
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <div class="col-lg-3 col-md-6">
-                <div class="card h-100 border-0 shadow-sm opacity-75">
-                    <div class="card-body p-2">
-                        <div class="d-flex justify-content-between align-items-start">
-                            <div class="flex-grow-1 me-2">
-                                <h6 class="card-title mb-1 small fw-semibold text-muted">Site Supervisor Evaluation (Form C)</h6>
-                                <p class="text-muted mb-1" style="font-size: 0.75rem;">Completed by Site Supervisor</p>
-                            </div>
-                            <span class="badge bg-secondary rounded-pill" style="font-size: 0.65rem;">Locked</span>
-                        </div>
-                        <div class="d-grid gap-1 mt-2">
-                            <button class="btn btn-outline-secondary btn-sm py-1 disabled" style="font-size: 0.75rem;" disabled>
-                                <i class="bi bi-lock me-1"></i>Locked
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-lg-3 col-md-6">
-                <div class="card h-100 border-0 shadow-sm opacity-75">
-                    <div class="card-body p-2">
-                        <div class="d-flex justify-content-between align-items-start">
-                            <div class="flex-grow-1 me-2">
-                                <h6 class="card-title mb-1 small fw-semibold text-muted">Weekly Progress Form (Form D)</h6>
-                                <p class="text-muted mb-1" style="font-size: 0.75rem;">Submit weekly to Supervisor</p>
-                            </div>
-                            <span class="badge bg-secondary rounded-pill" style="font-size: 0.65rem;">Locked</span>
-                        </div>
-                        <div class="d-grid gap-1 mt-2">
-                            <button class="btn btn-outline-secondary btn-sm py-1 disabled" style="font-size: 0.75rem;" disabled>
-                                <i class="bi bi-lock me-1"></i>Locked
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-lg-3 col-md-6">
-                <div class="card h-100 border-0 shadow-sm opacity-75">
-                    <div class="card-body p-2">
-                        <div class="d-flex justify-content-between align-items-start">
-                            <div class="flex-grow-1 me-2">
-                                <h6 class="card-title mb-1 small fw-semibold text-muted">Weekly Activity Log (Form E)</h6>
-                                <p class="text-muted mb-1" style="font-size: 0.75rem;">Maintain for internship duration</p>
-                            </div>
-                            <span class="badge bg-secondary rounded-pill" style="font-size: 0.65rem;">Locked</span>
-                        </div>
-                        <div class="d-grid gap-1 mt-2">
-                            <button class="btn btn-outline-secondary btn-sm py-1 disabled" style="font-size: 0.75rem;" disabled>
-                                <i class="bi bi-lock me-1"></i>Locked
-                            </button>
-                        </div>
-                    </div>
+            <!-- Form Content Area (Hidden by default) -->
+            <div id="form-content" style="display: none;">
+                <div id="form-container">
+                    <!-- Form content will be loaded here -->
                 </div>
             </div>
         </div>
@@ -287,16 +584,463 @@
     <script>
         // Sidebar toggle for all screen sizes
         const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
         const mainContent = document.querySelector('.container-fluid');
         const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebarClose = document.getElementById('sidebarClose');
+        
+        // Dashboard navigation elements
+        const dashboardContent = document.getElementById('dashboard-content');
+        const formContent = document.getElementById('form-content');
+        const formContainer = document.getElementById('form-container');
+        
+        function toggleSidebar() {
+            sidebar.classList.toggle('show');
+            sidebarOverlay.classList.toggle('show');
+        }
+        
+        function closeSidebar() {
+            sidebar.classList.remove('show');
+            sidebarOverlay.classList.remove('show');
+        }
         
         sidebarToggle?.addEventListener('click', function() {
-            sidebar.classList.toggle('show');
-            mainContent.classList.toggle('sidebar-expanded');
+            toggleSidebar();
         });
         
-        // Initialize Bootstrap tooltips
+        // Close sidebar when clicking close button
+        sidebarClose?.addEventListener('click', function() {
+            closeSidebar();
+        });
+        
+        // Close sidebar when clicking overlay
+        sidebarOverlay?.addEventListener('click', function() {
+            closeSidebar();
+        });
+        
+        // Close sidebar when pressing Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && sidebar.classList.contains('show')) {
+                closeSidebar();
+            }
+        });
+        
+        // Navigation handling
+        function showDashboard() {
+            // Clean up any modal states
+            cleanupModals();
+            
+            dashboardContent.style.display = 'block';
+            formContent.style.display = 'none';
+            
+            // Update sidebar active state
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            document.querySelector('[data-form="dashboard"]').classList.add('active');
+            
+            // Close sidebar
+            closeSidebar();
+        }
+        
+        function showForm(formId) {
+            // Clean up any modal states
+            cleanupModals();
+            
+            dashboardContent.style.display = 'none';
+            formContent.style.display = 'block';
+            
+            // Update sidebar active state
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            document.querySelector(`[data-form="${formId}"]`).classList.add('active');
+            
+            // Load form content
+            loadFormContent(formId);
+            
+            // Close sidebar
+            closeSidebar();
+        }
+        
+        function cleanupModals() {
+            // Remove any lingering modal backdrops
+            const backdrops = document.querySelectorAll('.modal-backdrop');
+            backdrops.forEach(backdrop => backdrop.remove());
+            
+            // Reset body styles
+            document.body.classList.remove('modal-open');
+            document.body.style.overflow = '';
+            document.body.style.paddingRight = '';
+            
+            // Hide any open modals
+            const openModals = document.querySelectorAll('.modal.show');
+            openModals.forEach(modal => {
+                const bsModal = bootstrap.Modal.getInstance(modal);
+                if (bsModal) {
+                    bsModal.hide();
+                }
+            });
+        }
+        
+        async function loadFormContent(formId) {
+            try {
+                formContainer.innerHTML = '<div class="text-center py-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>';
+                
+                const fileName = `${formId}.html`;
+                
+                const response = await fetch(fileName);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const htmlText = await response.text();
+                
+                // Parse the HTML and extract the content
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(htmlText, 'text/html');
+                
+                // Get the form content (everything inside the body)
+                const bodyContent = doc.querySelector('body').innerHTML;
+                
+                // Extract and apply styles first
+                const styles = doc.querySelectorAll('style');
+                styles.forEach(style => {
+                    const styleElement = document.createElement('style');
+                    styleElement.textContent = style.textContent;
+                    document.head.appendChild(styleElement);
+                });
+                
+                // Remove script tags from content but save them for later execution
+                let cleanContent = bodyContent.replace(/<script[\s\S]*?<\/script>/gi, '');
+                
+                // Load the content
+                formContainer.innerHTML = cleanContent;
+                
+                // Remove fade class from any modals to prevent backdrop issues
+                const modals = formContainer.querySelectorAll('.modal.fade');
+                modals.forEach(modal => {
+                    modal.classList.remove('fade');
+                    console.log("Removed fade class from modal:", modal.id);
+                });
+                
+                // Extract and execute scripts
+                const scripts = doc.querySelectorAll('script');
+                scripts.forEach(script => {
+                    if (script.src) {
+                        // External script - load it if not already loaded
+                        if (!document.querySelector(`script[src="${script.src}"]`)) {
+                            const newScript = document.createElement('script');
+                            newScript.src = script.src;
+                            newScript.onload = () => {
+                                console.log(`External script loaded: ${script.src}`);
+                            };
+                            document.head.appendChild(newScript);
+                        }
+                    } else if (script.textContent) {
+                        // Inline script - execute it
+                        try {
+                            // Create a new script element and execute it
+                            const newScript = document.createElement('script');
+                            newScript.textContent = script.textContent;
+                            document.body.appendChild(newScript);
+                            // Remove it immediately after execution
+                            document.body.removeChild(newScript);
+                        } catch (e) {
+                            console.error('Error executing script:', e);
+                        }
+                    }
+                });
+                
+                // Re-execute any initialization code that might be needed
+                setTimeout(() => {
+                    initializeFormScripts(formId);
+                }, 100);
+                
+            } catch (error) {
+                console.error('Error loading form:', error);
+                formContainer.innerHTML = `
+                    <div class="alert alert-danger" role="alert">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        Error loading form. Please try again.
+                    </div>
+                `;
+            }
+        }
+        
+        function initializeFormScripts(formId) {
+            // Initialize any form-specific JavaScript
+            // This function can be expanded based on the specific needs of each form
+            
+            // Clean up any existing modal backdrops
+            const existingBackdrops = document.querySelectorAll('.modal-backdrop');
+            existingBackdrops.forEach(backdrop => backdrop.remove());
+            document.body.classList.remove('modal-open');
+            document.body.style.overflow = '';
+            document.body.style.paddingRight = '';
+            
+            // Set current date for forms
+            const currentDateElements = document.querySelectorAll('#currentDate, #supervisorCurrentDate');
+            currentDateElements.forEach(element => {
+                if (element) {
+                    const today = new Date();
+                    const formattedDate = today.toISOString().split('T')[0];
+                    element.textContent = formattedDate;
+                }
+            });
+            
+            // Set hidden date fields
+            const dateFields = document.querySelectorAll('#dateField, #supervisorDateField');
+            dateFields.forEach(field => {
+                if (field) {
+                    const today = new Date();
+                    const formattedDate = today.toISOString().split('T')[0];
+                    field.value = formattedDate;
+                }
+            });
+            
+            // Initialize any specific form functionality
+            switch(formId) {
+                case 'form-b':
+                    initializeFormB();
+                    break;
+                case 'form-c':
+                    initializeFormC();
+                    break;
+                case 'form-d':
+                    initializeFormD();
+                    break;
+                case 'form-e':
+                    initializeFormE();
+                    break;
+            }
+        }
+        
+        // Form-specific initialization functions (to be expanded as needed)
+        function initializeFormB() {
+            console.log("Initializing Form B in dashboard");
+            
+            // Wait a bit for the content to be fully loaded
+            setTimeout(() => {
+                // Re-initialize Form B functionality
+                const form = document.getElementById('formB');
+                const previewBtn = document.getElementById('previewBtn');
+                const previewModalElement = document.getElementById('previewModal');
+                const printBtn = document.getElementById('printBtnModal');
+                
+                console.log("Form found:", !!form);
+                console.log("Preview button found:", !!previewBtn);
+                console.log("Modal element found:", !!previewModalElement);
+                
+                // Initialize Bootstrap modal with proper configuration
+                let previewModal;
+                if (previewModalElement) {
+                    // Remove fade class if it exists
+                    previewModalElement.classList.remove('fade');
+                    
+                    previewModal = new bootstrap.Modal(previewModalElement, {
+                        backdrop: false,  // Completely disable backdrop
+                        keyboard: true,
+                        focus: true
+                    });
+                    console.log("Bootstrap modal initialized in dashboard without backdrop");
+                }
+
+                // Set current date
+                const today = new Date();
+                const displayDate = today.toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                });
+                
+                const currentDateElement = document.getElementById('currentDate');
+                const dateFieldElement = document.getElementById('dateField');
+                
+                if (currentDateElement) currentDateElement.textContent = displayDate;
+                if (dateFieldElement) dateFieldElement.value = today.toISOString().split('T')[0];
+
+                // Preview function
+                function showPreview() {
+                    console.log("Generating preview...");
+                    
+                    if (!previewModal) {
+                        alert("Modal not initialized. Please refresh the page.");
+                        return;
+                    }
+                    
+                    const data = new FormData(form);
+                    
+                    // Generate agreement preview HTML
+                    const agreementChecked = form.querySelector('input[name="student_agreement"]:checked');
+                    const agreementHtml = `
+                      <div class="mt-4 text-center">
+                        <div><strong>Student Agreement:</strong></div>
+                        ${agreementChecked ? 
+                          '<div class="text-success mt-2"><i class="bi bi-check-circle me-1"></i>Student has agreed to the terms and conditions</div>' :
+                          '<div class="text-muted mt-2"><i class="bi bi-dash-circle me-1"></i>Agreement pending</div>'
+                        }
+                      </div>
+                    `;
+                    
+                    const html = `
+                      <div class="text-center mb-4">
+                        <h3 class="text-primary fw-bold mb-3">Form B – Student Internship – Approval Form</h3>
+                        <p class="small text-secondary mb-0">
+                          Student Intern to fill the form and return the signed copy to the Departmental Internship Coordinator (DIC) no later than the 3<sup>rd</sup> week of May.
+                        </p>
+                      </div>
+                      <div class="section-title-preview">Student Details</div>
+                      <table class="table table-bordered mb-4">
+                        <tbody>
+                          <tr><th>Date</th><td colspan="3">${displayDate}</td></tr>
+                          <tr><th>Project ID</th><td>${data.get('project_id') || 'Not filled'}</td>
+                              <th>Student Name</th><td>${data.get('student_name') || 'Not filled'}</td></tr>
+                          <tr><th>Internship Type</th><td colspan="3">${[...form.querySelectorAll('input[name="internship_type"]:checked')].map(i=>i.value).join(', ') || 'Not selected'}</td></tr>
+                          <tr><th>Student ID</th><td>${data.get('student_id') || 'Not filled'}</td>
+                              <th>Student Department</th><td>${data.get('student_dept') || 'Not filled'}</td></tr>
+                        </tbody>
+                      </table>
+                      <div class="section-title-preview">Faculty Supervisor Details</div>
+                      <table class="table table-bordered mb-4">
+                        <tbody>
+                          <tr><th>Faculty Supervisor</th><td>${data.get('faculty_supervisor') || 'Not filled'}</td>
+                              <th>Supervisor Email</th><td>${data.get('supervisor_email') || 'Not filled'}</td></tr>
+                          <tr><th>Supervisor Contact</th><td>${data.get('supervisor_contact') || 'Not filled'}</td><td></td><td></td></tr>
+                        </tbody>
+                      </table>
+                      <div class="section-title-preview">Project & Host Institution</div>
+                      <table class="table table-bordered mb-4">
+                        <tbody>
+                          <tr><th>Project Title</th><td colspan="3">${data.get('project_title') || 'Not filled'}</td></tr>
+                          <tr><th>Host Institution</th><td colspan="3">${data.get('host_institution') || 'Not filled'}</td></tr>
+                        </tbody>
+                      </table>
+                      <div class="section-title-preview">Site Supervisor Details</div>
+                      <table class="table table-bordered mb-4">
+                        <tbody>
+                          <tr><th>Site Supervisor</th><td>${data.get('site_supervisor') || 'Not filled'}</td>
+                              <th>Site Supervisor Email</th><td>${data.get('site_supervisor_email') || 'Not filled'}</td></tr>
+                          <tr><th>Site Supervisor Contact</th><td>${data.get('site_supervisor_contact') || 'Not filled'}</td><td></td><td></td></tr>
+                        </tbody>
+                      </table>
+                      ${agreementHtml}
+                    `;
+                    
+                    const previewContent = document.getElementById('previewContent');
+                    if (previewContent) {
+                        previewContent.innerHTML = html;
+                        
+                        // Ensure the modal is properly shown
+                        try {
+                            // Completely remove any backdrop elements
+                            const existingBackdrops = document.querySelectorAll('.modal-backdrop');
+                            existingBackdrops.forEach(backdrop => backdrop.remove());
+                            
+                            // Reset body to prevent scroll lock
+                            document.body.classList.remove('modal-open');
+                            document.body.style.overflow = 'auto';
+                            document.body.style.paddingRight = '0';
+                            
+                            previewModal.show();
+                            console.log("Preview modal shown in dashboard!");
+                            
+                            // Immediately remove any backdrop that Bootstrap might create
+                            setTimeout(() => {
+                                const backdrops = document.querySelectorAll('.modal-backdrop');
+                                backdrops.forEach(backdrop => backdrop.remove());
+                                document.body.classList.remove('modal-open');
+                                document.body.style.overflow = 'auto';
+                            }, 50);
+                            
+                        } catch (error) {
+                            console.error("Error showing modal:", error);
+                            alert("Error displaying preview. Please try again.");
+                        }
+                    } else {
+                        console.error("Preview content element not found");
+                    }
+                }
+
+                // Event listeners
+                if (previewBtn) {
+                    // Remove any existing event listeners
+                    previewBtn.replaceWith(previewBtn.cloneNode(true));
+                    const newPreviewBtn = document.getElementById('previewBtn');
+                    
+                    newPreviewBtn.addEventListener('click', function(e) {
+                        console.log("Preview button clicked in dashboard!");
+                        e.preventDefault();
+                        e.stopPropagation();
+                        showPreview();
+                    });
+                    console.log("Preview button event listener added in dashboard");
+                }
+                
+                if (printBtn) {
+                    printBtn.replaceWith(printBtn.cloneNode(true));
+                    const newPrintBtn = document.getElementById('printBtnModal');
+                    
+                    newPrintBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        
+                        // Give a small delay to ensure modal content is fully rendered
+                        setTimeout(() => {
+                            // Ensure the modal is visible and content is loaded
+                            if (previewModalElement && previewModalElement.classList.contains('show')) {
+                                console.log("Printing modal content...");
+                                window.print();
+                            } else {
+                                console.error("Modal not visible for printing");
+                                alert("Please ensure the preview is open before printing.");
+                            }
+                        }, 100);
+                    });
+                    console.log("Print button event listener added in dashboard");
+                }
+                
+                if (form) {
+                    form.addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        alert('Form submitted successfully!');
+                    });
+                    console.log("Form submit event listener added in dashboard");
+                }
+            }, 300);
+        }
+        
+        function initializeFormC() {
+            // Form C specific initialization
+        }
+        
+        function initializeFormD() {
+            // Form D specific initialization
+        }
+        
+        function initializeFormE() {
+            // Form E specific initialization
+        }
+        
+        // Event listeners
+        document.addEventListener('click', function(e) {
+            const formLink = e.target.closest('[data-form]');
+            if (formLink) {
+                e.preventDefault();
+                const formId = formLink.getAttribute('data-form');
+                
+                if (formId === 'dashboard') {
+                    showDashboard();
+                } else {
+                    showForm(formId);
+                }
+            }
+        });
+        
+        // Initialize dashboard on load
         document.addEventListener('DOMContentLoaded', function() {
+            showDashboard();
+            
+            // Initialize Bootstrap tooltips
             const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
             tooltipTriggerList.map(function(tooltipTriggerEl) {
                 return new bootstrap.Tooltip(tooltipTriggerEl);

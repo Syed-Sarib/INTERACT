@@ -7,14 +7,68 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
   <style>
     body {
-      background: linear-gradient(135deg, #e0e7ff 0%, #f8fafc 100%);
+      background: #fff;
       min-height: 100vh;
+      margin: 0;
+      padding: 0;
     }
     .form-card {
-      border-radius: 18px;
-      box-shadow: 0 4px 32px rgba(0,0,0,0.08), 0 1.5px 6px rgba(0,0,0,0.04);
-      padding: 2.5rem 2rem 2rem 2rem;
-      background: #fff;
+      padding: 0;
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      border-radius: 0;
+    }
+    
+    @media (max-width: 768px) {
+      .form-card { 
+        padding: 0;
+        margin: 0;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .form-card { 
+        padding: 0;
+        margin: 0;
+      }
+      
+      h3 {
+        font-size: 1.1rem !important;
+        line-height: 1.3;
+      }
+      
+      .section-title { 
+        font-size: 0.95rem; 
+        margin-top: 1.25rem;
+        padding-left: 0.5rem;
+      }
+      
+      .key-section {
+        padding: 0.75rem;
+        font-size: 0.85rem;
+        margin: 1rem 0;
+      }
+      
+      .evaluation-item {
+        padding: 0.75rem;
+        margin-bottom: 0.75rem;
+      }
+      
+      .evaluation-question {
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+        line-height: 1.3;
+      }
+      
+      .form-check-label {
+        font-size: 0.9rem;
+      }
+      
+      .btn {
+        font-size: 0.9rem;
+        padding: 0.6rem 1rem;
+      }
     }
     .section-title {
       font-size: 1.1rem;
@@ -66,193 +120,46 @@
       margin: 1.5rem 0;
       border-left: 4px solid #0d6efd;
     }
-    .signature-input {
-      width: 250px;
-      border-bottom: 1px solid #000;
-      border-top: none;
-      border-left: none;
-      border-right: none;
-      background: #f8fafc;
-      border-radius: 0;
+    /* Minimal Custom CSS - Using Bootstrap grid only */
+    .evaluation-item {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-left: 3px solid #0d6efd;
     }
     
-    /* Signature Upload Styles - Minimal Custom CSS */
-    .signature-preview {
-      width: 150px;
-      height: 150px;
-      object-fit: contain;
-      display: none;
+    .evaluation-question {
+      font-weight: 600;
+      color: #495057;
+      margin-bottom: 0.75rem;
     }
     
-    .file-upload-btn input[type="file"] {
-      display: none;
-    }
-    
-    /* Mobile Responsive Styles */
-    @media (max-width: 768px) {
-      .form-card { 
-        padding: 1.5rem 1rem; 
-        margin: 0.5rem;
-      }
-      .section-title { 
-        font-size: 1rem; 
-        margin-top: 1.5rem;
-      }
-      
-      /* Hide table on mobile */
-      .desktop-table {
-        display: none !important;
-      }
-      
-      /* Show mobile layout */
-      .mobile-layout {
-        display: block !important;
-      }
-      
-      /* Mobile form styling */
-      .mobile-field {
-        margin-bottom: 1rem;
-      }
-      
-      .mobile-field label {
-        font-weight: 600;
-        color: #495057;
-        margin-bottom: 0.5rem;
-        display: block;
-        font-size: 0.9rem;
-      }
-      
-      .mobile-field .form-control {
-        font-size: 16px; /* Prevents zoom on iOS */
-      }
-      
-      /* Mobile evaluation items */
-      .mobile-eval-item {
-        background: #f8f9fa;
-        border-radius: 8px;
-        padding: 1rem;
-        margin-bottom: 1rem;
-        border-left: 3px solid #0d6efd;
-      }
-      
-      .mobile-eval-question {
-        font-weight: 600;
-        color: #495057;
-        margin-bottom: 0.75rem;
-        font-size: 0.9rem;
-      }
-      
-      .mobile-rating-group {
-        display: flex;
-        justify-content: space-between;
-        gap: 0.5rem;
-      }
-      
-      .mobile-rating-item {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        flex: 1;
-      }
-      
-      .mobile-rating-item input {
-        margin-bottom: 0.25rem;
-      }
-      
-      .mobile-rating-item label {
-        font-size: 0.8rem;
-        font-weight: 500;
-        text-align: center;
-        margin: 0;
-      }
-      
-      /* Date field responsive */
-      .date-container {
-        text-align: center !important;
-        margin-bottom: 1rem;
-      }
-      
-      .date-container input {
-        width: 100% !important;
-        max-width: 200px;
-      }
-      
-      /* Signature fields responsive */
-      .signature-container {
-        text-align: center;
-        margin-top: 1rem;
-      }
-      
-      .signature-container input {
-        width: 100% !important;
-        max-width: 300px;
-        margin-top: 0.5rem;
-      }
-      
-      /* Duration radio responsive */
-      .duration-mobile {
-        display: flex;
-        gap: 1rem;
-        justify-content: center;
-        flex-wrap: wrap;
-      }
-      
-      .duration-mobile .form-check {
-        margin: 0;
-      }
-      
-      /* Button adjustments */
-      .btn-group-mobile {
-        display: flex;
-        flex-direction: column;
-        gap: 0.75rem;
-      }
-      
-      .btn-group-mobile .btn {
-        width: 100%;
-        padding: 0.75rem;
-        font-size: 1rem;
-      }
-      
-      /* Key section mobile */
-      .key-section {
-        padding: 0.75rem;
-        font-size: 0.85rem;
-      }
+    /* Make radio buttons more touch-friendly on mobile */
+    .form-check-input {
+      margin-top: 0.125rem;
     }
     
     @media (max-width: 576px) {
-      .form-card { 
-        padding: 1rem 0.75rem; 
-        margin: 0.25rem;
+      .d-flex.gap-4 {
+        gap: 0.75rem !important;
+        justify-content: space-between !important;
       }
       
-      h3 {
-        font-size: 1.25rem !important;
+      .form-check {
+        flex: 1;
+        text-align: center;
       }
       
-      .btn-group-mobile .btn {
-        padding: 0.875rem;
-        font-size: 1.05rem;
+      .form-check-input {
+        margin: 0 auto 0.25rem auto;
+        display: block;
       }
       
-      .mobile-rating-group {
-        gap: 0.25rem;
-      }
-      
-      .mobile-rating-item label {
-        font-size: 0.75rem;
-      }
-    }
-    
-    /* Desktop table - hide on mobile */
-    @media (min-width: 769px) {
-      .mobile-layout {
-        display: none !important;
-      }
-      
-      .desktop-table {
-        display: table !important;
+      .form-check-label {
+        display: block;
+        text-align: center;
+        margin: 0;
       }
     }
     
@@ -267,15 +174,67 @@
         pointer-events: none;
       }
     }
+    
+    /* Large screen optimizations */
+    @media (min-width: 1200px) {
+      .container-fluid {
+        padding: 2rem 4rem !important;
+      }
+      .table {
+        font-size: 1rem;
+      }
+      .form-control {
+        font-size: 1rem;
+        padding: 0.75rem 1rem;
+      }
+      h3 {
+        font-size: 2rem !important;
+        margin-bottom: 2rem !important;
+      }
+      .section-title {
+        font-size: 1.25rem;
+        margin-top: 2.5rem;
+        margin-bottom: 1rem;
+      }
+    }
+    
+    @media (min-width: 1400px) {
+      .container-fluid {
+        padding: 3rem 6rem !important;
+      }
+      .table {
+        font-size: 1.1rem;
+      }
+      .table td, .table th {
+        padding: 1rem !important;
+      }
+      .form-control {
+        font-size: 1.1rem;
+        padding: 1rem 1.25rem;
+      }
+      h3 {
+        font-size: 2.5rem !important;
+        margin-bottom: 3rem !important;
+      }
+      .section-title {
+        font-size: 1.5rem;
+        margin-top: 3rem;
+        margin-bottom: 1.5rem;
+      }
+      .key-section {
+        font-size: 1.1rem;
+        padding: 1.5rem;
+      }
+    }
   </style>
 </head>
 <body>
 
-<div class="container my-3 my-md-5">
-  <div class="row justify-content-center">
-    <div class="col-12 col-md-10 col-lg-8">
+<div class="container-fluid px-0 my-0">
+  <div class="row justify-content-center g-0">
+    <div class="col-12">
       <form id="formC">
-        <div class="form-card" id="printArea">
+        <div class="form-card px-2 px-md-4 py-3" id="printArea">
 
           <h3 class="text-center text-primary mb-3 mb-md-4 fw-bold">Form C – Site Supervisor – Evaluation Form</h3>
 
@@ -283,113 +242,63 @@
             The Site Supervisor is required to complete the form and return the signed copy to the Faculty Supervisor either through official email or by post in a sealed and stamped envelope at the conclusion of the internship period during the Summer Semester.
           </p>
 
-          <div class="text-end small mb-3 date-container">
-            <label for="dateField" class="me-2">Date:</label>
-            <input type="date" class="form-control d-inline-block" style="width: 180px;" name="date" id="dateField">
+          <div class="text-end small mb-3">
+            <div class="d-flex justify-content-end align-items-center flex-wrap gap-2">
+              <label class="fw-bold mb-0">Date:</label>
+              <span class="form-control d-inline-block text-center" style="width: 180px; background-color: #f8f9fa;" id="currentDate"></span>
+            </div>
+            <input type="hidden" name="date" id="dateField">
           </div>
-
-          <!-- Desktop Table Layout -->
-          <div class="table-responsive">
-            <table class="table table-bordered align-middle mb-4 desktop-table">
-              <tbody>
-                <tr>
-                  <td class="bg-light w-25">Site Supervisor</td>
-                  <td><input type="text" class="form-control" name="site_supervisor" placeholder="Enter supervisor name"></td>
-                  <td class="bg-light">Designation</td>
-                  <td><input type="text" class="form-control" name="designation" placeholder="Enter designation"></td>
-                </tr>
-                <tr>
-                  <td class="bg-light">Host Institution</td>
-                  <td colspan="3"><input type="text" class="form-control" name="host_institution" placeholder="Enter institution name"></td>
-                </tr>
-                <tr>
-                  <td class="bg-light">Student Intern Name</td>
-                  <td colspan="3"><input type="text" class="form-control" name="student_name" placeholder="Enter student name"></td>
-                </tr>
-                <tr>
-                  <td class="bg-light">Student Program</td>
-                  <td><input type="text" class="form-control" name="student_program" placeholder="Enter program"></td>
-                  <td class="bg-light">Semester</td>
-                  <td><input type="text" class="form-control" name="semester" placeholder="Enter semester"></td>
-                </tr>
-                <tr>
-                  <td class="bg-light">Starting Date of Internship</td>
-                  <td><input type="date" class="form-control" name="start_date"></td>
-                  <td class="bg-light">Ending Date of Internship</td>
-                  <td><input type="date" class="form-control" name="end_date"></td>
-                </tr>
-                <tr>
-                  <td class="bg-light">Internship Duration <small>(Circle any one)</small></td>
-                  <td class="text-center">
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="radio" name="duration" value="6" id="duration6">
-                      <label class="form-check-label" for="duration6">6 Weeks</label>
-                    </div>
-                  </td>
-                  <td class="text-center">
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="radio" name="duration" value="8" id="duration8">
-                      <label class="form-check-label" for="duration8">8 Weeks</label>
-                    </div>
-                  </td>
-                  <td></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <!-- Mobile Layout -->
-          <div class="mobile-layout" style="display: none;">
-            <div class="mobile-field">
-              <label for="mobile_site_supervisor">Site Supervisor</label>
-              <input type="text" class="form-control" name="site_supervisor" id="mobile_site_supervisor" placeholder="Enter supervisor name">
+          
+          <!-- Bootstrap Grid Layout - Responsive for all screen sizes -->
+          <div class="row g-3 mb-4">
+            <div class="col-12 col-md-6">
+              <label class="form-label fw-semibold">Site Supervisor</label>
+              <input type="text" class="form-control" name="site_supervisor" placeholder="Enter supervisor name">
+            </div>
+            <div class="col-12 col-md-6 ">
+              <label class="form-label fw-semibold">Designation</label>
+              <input type="text" class="form-control" name="designation" placeholder="Enter designation">
             </div>
             
-            <div class="mobile-field">
-              <label for="mobile_designation">Designation</label>
-              <input type="text" class="form-control" name="designation" id="mobile_designation" placeholder="Enter designation">
+            <div class="col-12">
+              <label class="form-label fw-semibold">Host Institution</label>
+              <input type="text" class="form-control" name="host_institution" placeholder="Enter institution name">
             </div>
             
-            <div class="mobile-field">
-              <label for="mobile_host_institution">Host Institution</label>
-              <input type="text" class="form-control" name="host_institution" id="mobile_host_institution" placeholder="Enter institution name">
+            <div class="col-12">
+              <label class="form-label fw-semibold">Student Intern Name</label>
+              <input type="text" class="form-control" name="student_name" placeholder="Enter student name">
             </div>
             
-            <div class="mobile-field">
-              <label for="mobile_student_name">Student Intern Name</label>
-              <input type="text" class="form-control" name="student_name" id="mobile_student_name" placeholder="Enter student name">
+            <div class="col-12 col-md-6">
+              <label class="form-label fw-semibold">Student Program</label>
+              <input type="text" class="form-control" name="student_program" placeholder="Enter program">
+            </div>
+            <div class="col-12 col-md-6">
+              <label class="form-label fw-semibold">Semester</label>
+              <input type="text" class="form-control" name="semester" placeholder="Enter semester">
             </div>
             
-            <div class="mobile-field">
-              <label for="mobile_student_program">Student Program</label>
-              <input type="text" class="form-control" name="student_program" id="mobile_student_program" placeholder="Enter program">
+            <div class="col-12">
+              <label class="form-label fw-semibold">Starting Date of Internship</label>
+              <input type="text" class="form-control" name="start_date" placeholder="Enter starting date">
+            </div>
+            <div class="col-12">
+              <label class="form-label fw-semibold">Ending Date of Internship</label>
+              <input type="text" class="form-control" name="end_date" placeholder="Enter ending date">
             </div>
             
-            <div class="mobile-field">
-              <label for="mobile_semester">Semester</label>
-              <input type="text" class="form-control" name="semester" id="mobile_semester" placeholder="Enter semester">
-            </div>
-            
-            <div class="mobile-field">
-              <label for="mobile_start_date">Starting Date of Internship</label>
-              <input type="date" class="form-control" name="start_date" id="mobile_start_date">
-            </div>
-            
-            <div class="mobile-field">
-              <label for="mobile_end_date">Ending Date of Internship</label>
-              <input type="date" class="form-control" name="end_date" id="mobile_end_date">
-            </div>
-            
-            <div class="mobile-field">
-              <label>Internship Duration <small>(Select any one)</small></label>
-              <div class="duration-mobile">
+            <div class="col-12">
+              <label class="form-label fw-semibold">Internship Duration <small>(Select any one)</small></label>
+              <div class="d-flex gap-4 flex-wrap">
                 <div class="form-check">
-                  <input class="form-check-input" type="radio" name="duration" value="6" id="mobile_duration6">
-                  <label class="form-check-label" for="mobile_duration6">6 Weeks</label>
+                  <input class="form-check-input" type="radio" name="duration" value="6" id="duration6">
+                  <label class="form-check-label" for="duration6">6 Weeks</label>
                 </div>
                 <div class="form-check">
-                  <input class="form-check-input" type="radio" name="duration" value="8" id="mobile_duration8">
-                  <label class="form-check-label" for="mobile_duration8">8 Weeks</label>
+                  <input class="form-check-input" type="radio" name="duration" value="8" id="duration8">
+                  <label class="form-check-label" for="duration8">8 Weeks</label>
                 </div>
               </div>
             </div>
@@ -411,374 +320,294 @@
             </div>
           </div>
 
-          <!-- Evaluation Criteria - Desktop -->
+          <!-- Evaluation Criteria -->
           <div class="section-title">Circle the number that best describes the Student Intern's Performance</div>
           
-          <div class="table-responsive desktop-table">
-            <table class="table table-bordered evaluation-table">
-              <thead>
-                <tr>
-                  <th style="width: 60%;">Criteria</th>
-                  <th>1</th>
-                  <th>2</th>
-                  <th>3</th>
-                  <th>4</th>
-                  <th>5</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="criteria-text">1. Arrives to work on time / Available online as per schedule</td>
-                  <td><input type="radio" class="rating-radio" name="rating_1" value="1"></td>
-                  <td><input type="radio" class="rating-radio" name="rating_1" value="2"></td>
-                  <td><input type="radio" class="rating-radio" name="rating_1" value="3"></td>
-                  <td><input type="radio" class="rating-radio" name="rating_1" value="4"></td>
-                  <td><input type="radio" class="rating-radio" name="rating_1" value="5"></td>
-                </tr>
-                <tr>
-                  <td class="criteria-text">2. Demonstrates respect for organizational staff, policies, and norms</td>
-                  <td><input type="radio" class="rating-radio" name="rating_2" value="1"></td>
-                  <td><input type="radio" class="rating-radio" name="rating_2" value="2"></td>
-                  <td><input type="radio" class="rating-radio" name="rating_2" value="3"></td>
-                  <td><input type="radio" class="rating-radio" name="rating_2" value="4"></td>
-                  <td><input type="radio" class="rating-radio" name="rating_2" value="5"></td>
-                </tr>
-                <tr>
-                  <td class="criteria-text">3. Shows requisite understanding and ability to learn about organizational work</td>
-                  <td><input type="radio" class="rating-radio" name="rating_3" value="1"></td>
-                  <td><input type="radio" class="rating-radio" name="rating_3" value="2"></td>
-                  <td><input type="radio" class="rating-radio" name="rating_3" value="3"></td>
-                  <td><input type="radio" class="rating-radio" name="rating_3" value="4"></td>
-                  <td><input type="radio" class="rating-radio" name="rating_3" value="5"></td>
-                </tr>
-                <tr>
-                  <td class="criteria-text">4. Exhibits necessary skills required at the workplace</td>
-                  <td><input type="radio" class="rating-radio" name="rating_4" value="1"></td>
-                  <td><input type="radio" class="rating-radio" name="rating_4" value="2"></td>
-                  <td><input type="radio" class="rating-radio" name="rating_4" value="3"></td>
-                  <td><input type="radio" class="rating-radio" name="rating_4" value="4"></td>
-                  <td><input type="radio" class="rating-radio" name="rating_4" value="5"></td>
-                </tr>
-                <tr>
-                  <td class="criteria-text">5. Conducts self professionally in all work-related scenarios</td>
-                  <td><input type="radio" class="rating-radio" name="rating_5" value="1"></td>
-                  <td><input type="radio" class="rating-radio" name="rating_5" value="2"></td>
-                  <td><input type="radio" class="rating-radio" name="rating_5" value="3"></td>
-                  <td><input type="radio" class="rating-radio" name="rating_5" value="4"></td>
-                  <td><input type="radio" class="rating-radio" name="rating_5" value="5"></td>
-                </tr>
-                <tr>
-                  <td class="criteria-text">6. Takes initiative and seeks opportunities to make contributions</td>
-                  <td><input type="radio" class="rating-radio" name="rating_6" value="1"></td>
-                  <td><input type="radio" class="rating-radio" name="rating_6" value="2"></td>
-                  <td><input type="radio" class="rating-radio" name="rating_6" value="3"></td>
-                  <td><input type="radio" class="rating-radio" name="rating_6" value="4"></td>
-                  <td><input type="radio" class="rating-radio" name="rating_6" value="5"></td>
-                </tr>
-                <tr>
-                  <td class="criteria-text">7. Completes tasks and reports to supervisor on time</td>
-                  <td><input type="radio" class="rating-radio" name="rating_7" value="1"></td>
-                  <td><input type="radio" class="rating-radio" name="rating_7" value="2"></td>
-                  <td><input type="radio" class="rating-radio" name="rating_7" value="3"></td>
-                  <td><input type="radio" class="rating-radio" name="rating_7" value="4"></td>
-                  <td><input type="radio" class="rating-radio" name="rating_7" value="5"></td>
-                </tr>
-                <tr>
-                  <td class="criteria-text">8. Demonstrates the ability to work with others in a team</td>
-                  <td><input type="radio" class="rating-radio" name="rating_8" value="1"></td>
-                  <td><input type="radio" class="rating-radio" name="rating_8" value="2"></td>
-                  <td><input type="radio" class="rating-radio" name="rating_8" value="3"></td>
-                  <td><input type="radio" class="rating-radio" name="rating_8" value="4"></td>
-                  <td><input type="radio" class="rating-radio" name="rating_8" value="5"></td>
-                </tr>
-                <tr>
-                  <td class="criteria-text">9. Proves to be Reliable and Dependable</td>
-                  <td><input type="radio" class="rating-radio" name="rating_9" value="1"></td>
-                  <td><input type="radio" class="rating-radio" name="rating_9" value="2"></td>
-                  <td><input type="radio" class="rating-radio" name="rating_9" value="3"></td>
-                  <td><input type="radio" class="rating-radio" name="rating_9" value="4"></td>
-                  <td><input type="radio" class="rating-radio" name="rating_9" value="5"></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <!-- Mobile Evaluation Layout -->
-          <div class="mobile-layout" style="display: none;">
-            <div class="mobile-eval-item">
-              <div class="mobile-eval-question">1. Arrives to work on time / Available online as per schedule</div>
-              <div class="mobile-rating-group">
-                <div class="mobile-rating-item">
-                  <input type="radio" class="rating-radio" name="rating_1" value="1" id="mobile_rating_1_1">
-                  <label for="mobile_rating_1_1">1</label>
-                </div>
-                <div class="mobile-rating-item">
-                  <input type="radio" class="rating-radio" name="rating_1" value="2" id="mobile_rating_1_2">
-                  <label for="mobile_rating_1_2">2</label>
-                </div>
-                <div class="mobile-rating-item">
-                  <input type="radio" class="rating-radio" name="rating_1" value="3" id="mobile_rating_1_3">
-                  <label for="mobile_rating_1_3">3</label>
-                </div>
-                <div class="mobile-rating-item">
-                  <input type="radio" class="rating-radio" name="rating_1" value="4" id="mobile_rating_1_4">
-                  <label for="mobile_rating_1_4">4</label>
-                </div>
-                <div class="mobile-rating-item">
-                  <input type="radio" class="rating-radio" name="rating_1" value="5" id="mobile_rating_1_5">
-                  <label for="mobile_rating_1_5">5</label>
+          <!-- Bootstrap Grid Layout for Evaluation Criteria -->
+          <div class="row g-3 mb-4">
+            <div class="col-12">
+              <div class="evaluation-item">
+                <div class="evaluation-question">1. Arrives to work on time / Available online as per schedule</div>
+                <div class="d-flex gap-4 flex-wrap justify-content-center">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating_1" value="1" id="rating_1_1">
+                    <label class="form-check-label" for="rating_1_1">1</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating_1" value="2" id="rating_1_2">
+                    <label class="form-check-label" for="rating_1_2">2</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating_1" value="3" id="rating_1_3">
+                    <label class="form-check-label" for="rating_1_3">3</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating_1" value="4" id="rating_1_4">
+                    <label class="form-check-label" for="rating_1_4">4</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating_1" value="5" id="rating_1_5">
+                    <label class="form-check-label" for="rating_1_5">5</label>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div class="mobile-eval-item">
-              <div class="mobile-eval-question">2. Demonstrates respect for organizational staff, policies, and norms</div>
-              <div class="mobile-rating-group">
-                <div class="mobile-rating-item">
-                  <input type="radio" class="rating-radio" name="rating_2" value="1" id="mobile_rating_2_1">
-                  <label for="mobile_rating_2_1">1</label>
-                </div>
-                <div class="mobile-rating-item">
-                  <input type="radio" class="rating-radio" name="rating_2" value="2" id="mobile_rating_2_2">
-                  <label for="mobile_rating_2_2">2</label>
-                </div>
-                <div class="mobile-rating-item">
-                  <input type="radio" class="rating-radio" name="rating_2" value="3" id="mobile_rating_2_3">
-                  <label for="mobile_rating_2_3">3</label>
-                </div>
-                <div class="mobile-rating-item">
-                  <input type="radio" class="rating-radio" name="rating_2" value="4" id="mobile_rating_2_4">
-                  <label for="mobile_rating_2_4">4</label>
-                </div>
-                <div class="mobile-rating-item">
-                  <input type="radio" class="rating-radio" name="rating_2" value="5" id="mobile_rating_2_5">
-                  <label for="mobile_rating_2_5">5</label>
-                </div>
-              </div>
-            </div>
-
-            <div class="mobile-eval-item">
-              <div class="mobile-eval-question">3. Shows requisite understanding and ability to learn about organizational work</div>
-              <div class="mobile-rating-group">
-                <div class="mobile-rating-item">
-                  <input type="radio" class="rating-radio" name="rating_3" value="1" id="mobile_rating_3_1">
-                  <label for="mobile_rating_3_1">1</label>
-                </div>
-                <div class="mobile-rating-item">
-                  <input type="radio" class="rating-radio" name="rating_3" value="2" id="mobile_rating_3_2">
-                  <label for="mobile_rating_3_2">2</label>
-                </div>
-                <div class="mobile-rating-item">
-                  <input type="radio" class="rating-radio" name="rating_3" value="3" id="mobile_rating_3_3">
-                  <label for="mobile_rating_3_3">3</label>
-                </div>
-                <div class="mobile-rating-item">
-                  <input type="radio" class="rating-radio" name="rating_3" value="4" id="mobile_rating_3_4">
-                  <label for="mobile_rating_3_4">4</label>
-                </div>
-                <div class="mobile-rating-item">
-                  <input type="radio" class="rating-radio" name="rating_3" value="5" id="mobile_rating_3_5">
-                  <label for="mobile_rating_3_5">5</label>
+            <div class="col-12">
+              <div class="evaluation-item">
+                <div class="evaluation-question">2. Demonstrates respect for organizational staff, policies, and norms</div>
+                <div class="d-flex gap-4 flex-wrap justify-content-center">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating_2" value="1" id="rating_2_1">
+                    <label class="form-check-label" for="rating_2_1">1</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating_2" value="2" id="rating_2_2">
+                    <label class="form-check-label" for="rating_2_2">2</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating_2" value="3" id="rating_2_3">
+                    <label class="form-check-label" for="rating_2_3">3</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating_2" value="4" id="rating_2_4">
+                    <label class="form-check-label" for="rating_2_4">4</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating_2" value="5" id="rating_2_5">
+                    <label class="form-check-label" for="rating_2_5">5</label>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div class="mobile-eval-item">
-              <div class="mobile-eval-question">4. Exhibits necessary skills required at the workplace</div>
-              <div class="mobile-rating-group">
-                <div class="mobile-rating-item">
-                  <input type="radio" class="rating-radio" name="rating_4" value="1" id="mobile_rating_4_1">
-                  <label for="mobile_rating_4_1">1</label>
-                </div>
-                <div class="mobile-rating-item">
-                  <input type="radio" class="rating-radio" name="rating_4" value="2" id="mobile_rating_4_2">
-                  <label for="mobile_rating_4_2">2</label>
-                </div>
-                <div class="mobile-rating-item">
-                  <input type="radio" class="rating-radio" name="rating_4" value="3" id="mobile_rating_4_3">
-                  <label for="mobile_rating_4_3">3</label>
-                </div>
-                <div class="mobile-rating-item">
-                  <input type="radio" class="rating-radio" name="rating_4" value="4" id="mobile_rating_4_4">
-                  <label for="mobile_rating_4_4">4</label>
-                </div>
-                <div class="mobile-rating-item">
-                  <input type="radio" class="rating-radio" name="rating_4" value="5" id="mobile_rating_4_5">
-                  <label for="mobile_rating_4_5">5</label>
-                </div>
-              </div>
-            </div>
-
-            <div class="mobile-eval-item">
-              <div class="mobile-eval-question">5. Conducts self professionally in all work-related scenarios</div>
-              <div class="mobile-rating-group">
-                <div class="mobile-rating-item">
-                  <input type="radio" class="rating-radio" name="rating_5" value="1" id="mobile_rating_5_1">
-                  <label for="mobile_rating_5_1">1</label>
-                </div>
-                <div class="mobile-rating-item">
-                  <input type="radio" class="rating-radio" name="rating_5" value="2" id="mobile_rating_5_2">
-                  <label for="mobile_rating_5_2">2</label>
-                </div>
-                <div class="mobile-rating-item">
-                  <input type="radio" class="rating-radio" name="rating_5" value="3" id="mobile_rating_5_3">
-                  <label for="mobile_rating_5_3">3</label>
-                </div>
-                <div class="mobile-rating-item">
-                  <input type="radio" class="rating-radio" name="rating_5" value="4" id="mobile_rating_5_4">
-                  <label for="mobile_rating_5_4">4</label>
-                </div>
-                <div class="mobile-rating-item">
-                  <input type="radio" class="rating-radio" name="rating_5" value="5" id="mobile_rating_5_5">
-                  <label for="mobile_rating_5_5">5</label>
+            <div class="col-12">
+              <div class="evaluation-item">
+                <div class="evaluation-question">3. Shows requisite understanding and ability to learn about organizational work</div>
+                <div class="d-flex gap-4 flex-wrap justify-content-center">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating_3" value="1" id="rating_3_1">
+                    <label class="form-check-label" for="rating_3_1">1</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating_3" value="2" id="rating_3_2">
+                    <label class="form-check-label" for="rating_3_2">2</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating_3" value="3" id="rating_3_3">
+                    <label class="form-check-label" for="rating_3_3">3</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating_3" value="4" id="rating_3_4">
+                    <label class="form-check-label" for="rating_3_4">4</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating_3" value="5" id="rating_3_5">
+                    <label class="form-check-label" for="rating_3_5">5</label>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div class="mobile-eval-item">
-              <div class="mobile-eval-question">6. Takes initiative and seeks opportunities to make contributions</div>
-              <div class="mobile-rating-group">
-                <div class="mobile-rating-item">
-                  <input type="radio" class="rating-radio" name="rating_6" value="1" id="mobile_rating_6_1">
-                  <label for="mobile_rating_6_1">1</label>
-                </div>
-                <div class="mobile-rating-item">
-                  <input type="radio" class="rating-radio" name="rating_6" value="2" id="mobile_rating_6_2">
-                  <label for="mobile_rating_6_2">2</label>
-                </div>
-                <div class="mobile-rating-item">
-                  <input type="radio" class="rating-radio" name="rating_6" value="3" id="mobile_rating_6_3">
-                  <label for="mobile_rating_6_3">3</label>
-                </div>
-                <div class="mobile-rating-item">
-                  <input type="radio" class="rating-radio" name="rating_6" value="4" id="mobile_rating_6_4">
-                  <label for="mobile_rating_6_4">4</label>
-                </div>
-                <div class="mobile-rating-item">
-                  <input type="radio" class="rating-radio" name="rating_6" value="5" id="mobile_rating_6_5">
-                  <label for="mobile_rating_6_5">5</label>
-                </div>
-              </div>
-            </div>
-
-            <div class="mobile-eval-item">
-              <div class="mobile-eval-question">7. Completes tasks and reports to supervisor on time</div>
-              <div class="mobile-rating-group">
-                <div class="mobile-rating-item">
-                  <input type="radio" class="rating-radio" name="rating_7" value="1" id="mobile_rating_7_1">
-                  <label for="mobile_rating_7_1">1</label>
-                </div>
-                <div class="mobile-rating-item">
-                  <input type="radio" class="rating-radio" name="rating_7" value="2" id="mobile_rating_7_2">
-                  <label for="mobile_rating_7_2">2</label>
-                </div>
-                <div class="mobile-rating-item">
-                  <input type="radio" class="rating-radio" name="rating_7" value="3" id="mobile_rating_7_3">
-                  <label for="mobile_rating_7_3">3</label>
-                </div>
-                <div class="mobile-rating-item">
-                  <input type="radio" class="rating-radio" name="rating_7" value="4" id="mobile_rating_7_4">
-                  <label for="mobile_rating_7_4">4</label>
-                </div>
-                <div class="mobile-rating-item">
-                  <input type="radio" class="rating-radio" name="rating_7" value="5" id="mobile_rating_7_5">
-                  <label for="mobile_rating_7_5">5</label>
+            <div class="col-12">
+              <div class="evaluation-item">
+                <div class="evaluation-question">4. Exhibits necessary skills required at the workplace</div>
+                <div class="d-flex gap-4 flex-wrap justify-content-center">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating_4" value="1" id="rating_4_1">
+                    <label class="form-check-label" for="rating_4_1">1</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating_4" value="2" id="rating_4_2">
+                    <label class="form-check-label" for="rating_4_2">2</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating_4" value="3" id="rating_4_3">
+                    <label class="form-check-label" for="rating_4_3">3</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating_4" value="4" id="rating_4_4">
+                    <label class="form-check-label" for="rating_4_4">4</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating_4" value="5" id="rating_4_5">
+                    <label class="form-check-label" for="rating_4_5">5</label>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div class="mobile-eval-item">
-              <div class="mobile-eval-question">8. Demonstrates the ability to work with others in a team</div>
-              <div class="mobile-rating-group">
-                <div class="mobile-rating-item">
-                  <input type="radio" class="rating-radio" name="rating_8" value="1" id="mobile_rating_8_1">
-                  <label for="mobile_rating_8_1">1</label>
-                </div>
-                <div class="mobile-rating-item">
-                  <input type="radio" class="rating-radio" name="rating_8" value="2" id="mobile_rating_8_2">
-                  <label for="mobile_rating_8_2">2</label>
-                </div>
-                <div class="mobile-rating-item">
-                  <input type="radio" class="rating-radio" name="rating_8" value="3" id="mobile_rating_8_3">
-                  <label for="mobile_rating_8_3">3</label>
-                </div>
-                <div class="mobile-rating-item">
-                  <input type="radio" class="rating-radio" name="rating_8" value="4" id="mobile_rating_8_4">
-                  <label for="mobile_rating_8_4">4</label>
-                </div>
-                <div class="mobile-rating-item">
-                  <input type="radio" class="rating-radio" name="rating_8" value="5" id="mobile_rating_8_5">
-                  <label for="mobile_rating_8_5">5</label>
+            <div class="col-12">
+              <div class="evaluation-item">
+                <div class="evaluation-question">5. Conducts self professionally in all work-related scenarios</div>
+                <div class="d-flex gap-4 flex-wrap justify-content-center">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating_5" value="1" id="rating_5_1">
+                    <label class="form-check-label" for="rating_5_1">1</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating_5" value="2" id="rating_5_2">
+                    <label class="form-check-label" for="rating_5_2">2</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating_5" value="3" id="rating_5_3">
+                    <label class="form-check-label" for="rating_5_3">3</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating_5" value="4" id="rating_5_4">
+                    <label class="form-check-label" for="rating_5_4">4</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating_5" value="5" id="rating_5_5">
+                    <label class="form-check-label" for="rating_5_5">5</label>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div class="mobile-eval-item">
-              <div class="mobile-eval-question">9. Proves to be Reliable and Dependable</div>
-              <div class="mobile-rating-group">
-                <div class="mobile-rating-item">
-                  <input type="radio" class="rating-radio" name="rating_9" value="1" id="mobile_rating_9_1">
-                  <label for="mobile_rating_9_1">1</label>
+            <div class="col-12">
+              <div class="evaluation-item">
+                <div class="evaluation-question">6. Takes initiative and seeks opportunities to make contributions</div>
+                <div class="d-flex gap-4 flex-wrap justify-content-center">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating_6" value="1" id="rating_6_1">
+                    <label class="form-check-label" for="rating_6_1">1</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating_6" value="2" id="rating_6_2">
+                    <label class="form-check-label" for="rating_6_2">2</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating_6" value="3" id="rating_6_3">
+                    <label class="form-check-label" for="rating_6_3">3</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating_6" value="4" id="rating_6_4">
+                    <label class="form-check-label" for="rating_6_4">4</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating_6" value="5" id="rating_6_5">
+                    <label class="form-check-label" for="rating_6_5">5</label>
+                  </div>
                 </div>
-                <div class="mobile-rating-item">
-                  <input type="radio" class="rating-radio" name="rating_9" value="2" id="mobile_rating_9_2">
-                  <label for="mobile_rating_9_2">2</label>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="evaluation-item">
+                <div class="evaluation-question">7. Completes tasks and reports to supervisor on time</div>
+                <div class="d-flex gap-4 flex-wrap justify-content-center">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating_7" value="1" id="rating_7_1">
+                    <label class="form-check-label" for="rating_7_1">1</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating_7" value="2" id="rating_7_2">
+                    <label class="form-check-label" for="rating_7_2">2</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating_7" value="3" id="rating_7_3">
+                    <label class="form-check-label" for="rating_7_3">3</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating_7" value="4" id="rating_7_4">
+                    <label class="form-check-label" for="rating_7_4">4</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating_7" value="5" id="rating_7_5">
+                    <label class="form-check-label" for="rating_7_5">5</label>
+                  </div>
                 </div>
-                <div class="mobile-rating-item">
-                  <input type="radio" class="rating-radio" name="rating_9" value="3" id="mobile_rating_9_3">
-                  <label for="mobile_rating_9_3">3</label>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="evaluation-item">
+                <div class="evaluation-question">8. Demonstrates the ability to work with others in a team</div>
+                <div class="d-flex gap-4 flex-wrap justify-content-center">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating_8" value="1" id="rating_8_1">
+                    <label class="form-check-label" for="rating_8_1">1</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating_8" value="2" id="rating_8_2">
+                    <label class="form-check-label" for="rating_8_2">2</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating_8" value="3" id="rating_8_3">
+                    <label class="form-check-label" for="rating_8_3">3</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating_8" value="4" id="rating_8_4">
+                    <label class="form-check-label" for="rating_8_4">4</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating_8" value="5" id="rating_8_5">
+                    <label class="form-check-label" for="rating_8_5">5</label>
+                  </div>
                 </div>
-                <div class="mobile-rating-item">
-                  <input type="radio" class="rating-radio" name="rating_9" value="4" id="mobile_rating_9_4">
-                  <label for="mobile_rating_9_4">4</label>
-                </div>
-                <div class="mobile-rating-item">
-                  <input type="radio" class="rating-radio" name="rating_9" value="5" id="mobile_rating_9_5">
-                  <label for="mobile_rating_9_5">5</label>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="evaluation-item">
+                <div class="evaluation-question">9. Proves to be Reliable and Dependable</div>
+                <div class="d-flex gap-4 flex-wrap justify-content-center">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating_9" value="1" id="rating_9_1">
+                    <label class="form-check-label" for="rating_9_1">1</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating_9" value="2" id="rating_9_2">
+                    <label class="form-check-label" for="rating_9_2">2</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating_9" value="3" id="rating_9_3">
+                    <label class="form-check-label" for="rating_9_3">3</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating_9" value="4" id="rating_9_4">
+                    <label class="form-check-label" for="rating_9_4">4</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rating_9" value="5" id="rating_9_5">
+                    <label class="form-check-label" for="rating_9_5">5</label>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Signature Section -->
-          <div class="row mt-4 mb-2">
-            <div class="col-md-6">
-              <div class="bg-light rounded p-3 mb-3 border-start border-primary border-3">
-                <h6 class="mb-3 fw-bold text-primary">Supervisor's Signature:</h6>
-                <div class="d-flex flex-column gap-3">
-                  <div>
-                    <label class="form-label small">Upload Signature:</label>
-                    <div class="bg-secondary bg-opacity-10 border border-2 border-dashed rounded p-3 text-center" 
-                         style="cursor: pointer;" onclick="document.getElementById('supervisor_signature_file').click()">
-                      <input type="file" id="supervisor_signature_file" accept="image/*" onchange="previewSignature(this, 'supervisor_preview')">
-                      <label for="supervisor_signature_file" class="small text-muted mb-0" style="cursor: pointer;">
-                        <i class="bi bi-cloud-upload me-1"></i>Choose Image
-                      </label>
+          <!-- Agreement Section -->
+          <div class="mt-4 mb-2">
+            <div class="bg-light rounded p-3 mb-3 border-start border-primary border-3">
+              <h6 class="mb-3 fw-bold text-primary">Supervisor Agreement:</h6>
+              <div class="row g-3">
+                <div class="col-12">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="supervisor_agreement" id="supervisorAgreement" required>
+                    <label class="form-check-label" for="supervisorAgreement">
+                      I acknowledge that the information provided in this evaluation is accurate and complete. I agree to supervise the student intern according to the terms and conditions of the internship program.
+                    </label>
+                  </div>
+                </div>
+                
+                <div class="col-12">
+                  <div class="text-end small">
+                    <div class="d-flex justify-content-end align-items-center flex-wrap gap-2">
+                      <label class="fw-bold mb-0">Date:</label>
+                      <span class="form-control d-inline-block text-center" style="width: 180px; background-color: #f8f9fa;" id="supervisorCurrentDate"></span>
                     </div>
-                    <img id="supervisor_preview" class="signature-preview border rounded mt-2 bg-light" alt="Supervisor signature preview">
-                  </div>
-                  
-                  <div>
-                    <label class="form-label small">Date:</label>
-                    <input type="date" class="form-control" name="supervisor_date">
-                  </div>
-                  <div>
-                    <label class="form-label small">Contact Number:</label>
-                    <input type="text" class="form-control" name="contact_number" placeholder="Enter contact">
-                  </div>
-                  <div>
-                    <label class="form-label small">Official Email:</label>
-                    <input type="email" class="form-control" name="official_email" placeholder="Enter email">
+                    <input type="hidden" name="supervisor_date" id="supervisorDateField">
                   </div>
                 </div>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="text-center">
-                <span class="small fw-semibold">Official Stamp:</span>
-                <div class="mt-2 border border-2 border-dashed rounded d-flex align-items-center justify-content-center text-muted" 
-                     style="height: 100px;">
-                  <small>Official Stamp Area</small>
+                <div class="col-12 col-md-6">
+                  <label class="form-label small">Contact Number:</label>
+                  <input type="text" class="form-control" name="contact_number" placeholder="Enter contact">
+                </div>
+                <div class="col-12 col-md-6">
+                  <label class="form-label small">Official Email:</label>
+                  <input type="email" class="form-control" name="official_email" placeholder="Enter email">
                 </div>
               </div>
             </div>
@@ -787,33 +616,18 @@
         </div>
 
         <div class="text-center mt-4 no-print">
-          <div class="d-md-block d-none">
-            <button type="button" class="btn btn-primary btn-custom me-3" id="previewBtn">
+          <div class="d-flex flex-wrap gap-2 justify-content-center">
+            <button type="button" class="btn btn-primary btn-custom" id="previewBtn">
               <i class="bi bi-eye me-1"></i> Preview
             </button>
-            <button type="button" class="btn btn-success btn-custom me-3" id="printBtn">
+            <button type="button" class="btn btn-success btn-custom" id="printBtn">
               <i class="bi bi-printer me-1"></i> Print
             </button>
-            <button type="submit" class="btn btn-outline-primary btn-custom me-3" id="submitBtn">
+            <button type="submit" class="btn btn-outline-primary btn-custom" id="submitBtn">
               <i class="bi bi-check-circle me-1"></i> Submit
             </button>
             <button type="reset" class="btn btn-outline-secondary btn-custom">
               <i class="bi bi-arrow-clockwise me-1"></i> Reset
-            </button>
-          </div>
-          
-          <div class="d-md-none btn-group-mobile">
-            <button type="button" class="btn btn-primary btn-custom" id="previewBtnMobile">
-              <i class="bi bi-eye me-2"></i> Preview
-            </button>
-            <button type="button" class="btn btn-success btn-custom" id="printBtnMobile">
-              <i class="bi bi-printer me-2"></i> Print
-            </button>
-            <button type="submit" class="btn btn-outline-primary btn-custom" id="submitBtnMobile">
-              <i class="bi bi-check-circle me-2"></i> Submit
-            </button>
-            <button type="reset" class="btn btn-outline-secondary btn-custom">
-              <i class="bi bi-arrow-clockwise me-2"></i> Reset
             </button>
           </div>
         </div>
@@ -925,40 +739,16 @@ document.addEventListener('DOMContentLoaded', function() {
   const form = document.getElementById('formC');
   const previewModal = new bootstrap.Modal(document.getElementById('previewModal'));
 
-  // Signature preview function
-  function previewSignature(input, previewId) {
-    const file = input.files[0];
-    const preview = document.getElementById(previewId);
-    
-    if (file) {
-      // Validate file type
-      if (!file.type.startsWith('image/')) {
-        alert('Please select a valid image file.');
-        input.value = '';
-        return;
-      }
-      
-      // Validate file size (max 2MB)
-      if (file.size > 2 * 1024 * 1024) {
-        alert('File size must be less than 2MB.');
-        input.value = '';
-        return;
-      }
-      
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        preview.src = e.target.result;
-        preview.style.display = 'block';
-      };
-      reader.readAsDataURL(file);
-    } else {
-      preview.style.display = 'none';
-      preview.src = '';
-    }
-  }
+    // Set current date
+  const today = new Date();
+  const formattedDate = today.toISOString().split('T')[0]; // YYYY-MM-DD format
+  document.getElementById('currentDate').textContent = formattedDate;
+  document.getElementById('dateField').value = formattedDate;
+  
+  // Set supervisor date
+  document.getElementById('supervisorCurrentDate').textContent = formattedDate;
+  document.getElementById('supervisorDateField').value = formattedDate;
 
-  // Make previewSignature globally accessible
-  window.previewSignature = previewSignature;
   const requiredFields = [
     { name: 'site_supervisor', label: 'Site Supervisor' },
     { name: 'designation', label: 'Designation' },
@@ -978,9 +768,9 @@ document.addEventListener('DOMContentLoaded', function() {
     { name: 'rating_7', label: 'Rating 7' },
     { name: 'rating_8', label: 'Rating 8' },
     { name: 'rating_9', label: 'Rating 9' },
-    { name: 'supervisor_date', label: 'Supervisor Date' },
     { name: 'contact_number', label: 'Contact Number' },
-    { name: 'official_email', label: 'Official Email' }
+    { name: 'official_email', label: 'Official Email' },
+    { name: 'supervisor_agreement', label: 'Supervisor Agreement' }
   ];
 
   function clearValidation() {
@@ -1010,9 +800,25 @@ document.addEventListener('DOMContentLoaded', function() {
       let input = form.querySelector(`[name="${field.name}"]`);
       if (!input) continue;
       if (input.type === 'radio') {
-        const checked = form.querySelector(`input[name="${field.name}"]:checked`);
-        if (!checked) {
-          showError(input, `${field.label} is required.`);
+        // Check if duration is selected
+        if (field.name === 'duration') {
+          const checked = form.querySelector(`input[name="duration"]:checked`);
+          if (!checked) {
+            showError(input, `${field.label} is required.`);
+            if (!firstInvalid) firstInvalid = input;
+            valid = false;
+          }
+        } else {
+          const checked = form.querySelector(`input[name="${field.name}"]:checked`);
+          if (!checked) {
+            showError(input, `${field.label} is required.`);
+            if (!firstInvalid) firstInvalid = input;
+            valid = false;
+          }
+        }
+      } else if (input.type === 'checkbox') {
+        if (!input.checked) {
+          showError(input, `${field.label} must be accepted.`);
           if (!firstInvalid) firstInvalid = input;
           valid = false;
         }
@@ -1036,6 +842,9 @@ document.addEventListener('DOMContentLoaded', function() {
       return false;
     }
     const data = new FormData(form);
+    
+    // Get duration value
+    let duration = data.get('duration');
     
     // Generate evaluation ratings preview
     let ratingsHtml = '';
@@ -1067,7 +876,7 @@ document.addEventListener('DOMContentLoaded', function() {
               <th>Semester</th><td>${data.get('semester') || ''}</td></tr>
           <tr><th>Starting Date</th><td>${data.get('start_date') || ''}</td>
               <th>Ending Date</th><td>${data.get('end_date') || ''}</td></tr>
-          <tr><th>Internship Duration</th><td colspan="3">${data.get('duration') ? data.get('duration') + ' Weeks' : ''}</td></tr>
+          <tr><th>Internship Duration</th><td colspan="3">${duration ? duration + ' Weeks' : ''}</td></tr>
         </tbody>
       </table>
       <div class="section-title mt-4">Evaluation Ratings</div>
@@ -1080,8 +889,11 @@ document.addEventListener('DOMContentLoaded', function() {
         </tbody>
       </table>
       <div class="mt-4">
-        <div><strong>Signature:</strong> Please see uploaded signature image above</div>
-        <div><strong>Date:</strong> ${data.get('supervisor_date') || ''}</div>
+        <div class="mt-4 text-center">
+          <div><strong>Supervisor Agreement:</strong></div>
+          <div class="text-success mt-2"><i class="bi bi-check-circle me-1"></i>Supervisor has agreed to the terms and conditions</div>
+        </div>
+        <div><strong>Date:</strong> ${data.get('supervisor_date') || formattedDate}</div>
         <div><strong>Contact Number:</strong> ${data.get('contact_number') || ''}</div>
         <div><strong>Official Email:</strong> ${data.get('official_email') || ''}</div>
       </div>
@@ -1110,79 +922,7 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('previewBtn').addEventListener('click', previewForm);
   document.getElementById('printBtn').addEventListener('click', printForm);
   
-  // Mobile button events
-  document.getElementById('previewBtnMobile').addEventListener('click', previewForm);
-  document.getElementById('printBtnMobile').addEventListener('click', printForm);
-  
   form.addEventListener('submit', submitForm);
-  
-  // Sync form values between desktop and mobile layouts
-  function syncFormValues() {
-    const fields = [
-      'site_supervisor', 'designation', 'host_institution', 'student_name',
-      'student_program', 'semester', 'start_date', 'end_date'
-    ];
-    
-    fields.forEach(fieldName => {
-      const desktopInput = form.querySelector(`input[name="${fieldName}"]:not([id^="mobile_"])`);
-      const mobileInput = form.querySelector(`input[id="mobile_${fieldName}"]`);
-      
-      if (desktopInput && mobileInput) {
-        desktopInput.addEventListener('input', () => {
-          mobileInput.value = desktopInput.value;
-        });
-        
-        mobileInput.addEventListener('input', () => {
-          desktopInput.value = mobileInput.value;
-        });
-      }
-    });
-    
-    // Sync duration radio buttons
-    const desktopDurationRadios = form.querySelectorAll('input[name="duration"]:not([id^="mobile_"])');
-    const mobileDurationRadios = form.querySelectorAll('input[name="duration"][id^="mobile_"]');
-    
-    desktopDurationRadios.forEach((radio, index) => {
-      radio.addEventListener('change', () => {
-        if (radio.checked && mobileDurationRadios[index]) {
-          mobileDurationRadios[index].checked = true;
-        }
-      });
-    });
-    
-    mobileDurationRadios.forEach((radio, index) => {
-      radio.addEventListener('change', () => {
-        if (radio.checked && desktopDurationRadios[index]) {
-          desktopDurationRadios[index].checked = true;
-        }
-      });
-    });
-    
-    // Sync rating radio buttons (1-9)
-    for (let i = 1; i <= 9; i++) {
-      const desktopRatings = form.querySelectorAll(`input[name="rating_${i}"]:not([id^="mobile_"])`);
-      const mobileRatings = form.querySelectorAll(`input[name="rating_${i}"][id^="mobile_"]`);
-      
-      desktopRatings.forEach((radio, index) => {
-        radio.addEventListener('change', () => {
-          if (radio.checked && mobileRatings[index]) {
-            mobileRatings[index].checked = true;
-          }
-        });
-      });
-      
-      mobileRatings.forEach((radio, index) => {
-        radio.addEventListener('change', () => {
-          if (radio.checked && desktopRatings[index]) {
-            desktopRatings[index].checked = true;
-          }
-        });
-      });
-    }
-  }
-  
-  // Initialize form sync
-  syncFormValues();
 });
 </script>
 

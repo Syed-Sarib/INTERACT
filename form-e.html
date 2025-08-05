@@ -7,14 +7,17 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
   <style>
     body {
-      background: linear-gradient(135deg, #e0e7ff 0%, #f8fafc 100%);
+      background: #fff;
       min-height: 100vh;
+      margin: 0;
+      padding: 0;
     }
     .form-card {
-      border-radius: 18px;
-      box-shadow: 0 4px 32px rgba(0,0,0,0.08), 0 1.5px 6px rgba(0,0,0,0.04);
-      padding: 2.5rem 2rem 2rem 2rem;
-      background: #fff;
+      padding: 0;
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      border-radius: 0;
     }
     .section-title {
       font-size: 1.1rem;
@@ -197,15 +200,63 @@
         background: transparent !important;
       }
     }
+    
+    /* Large screen optimizations */
+    @media (min-width: 1200px) {
+      .container-fluid {
+        padding: 2rem 4rem !important;
+      }
+      .table {
+        font-size: 1rem;
+      }
+      .form-control {
+        font-size: 1rem;
+        padding: 0.75rem 1rem;
+      }
+      h3 {
+        font-size: 2rem !important;
+        margin-bottom: 2rem !important;
+      }
+      .section-title {
+        font-size: 1.25rem;
+        margin-top: 2.5rem;
+        margin-bottom: 1rem;
+      }
+    }
+    
+    @media (min-width: 1400px) {
+      .container-fluid {
+        padding: 3rem 6rem !important;
+      }
+      .table {
+        font-size: 1.1rem;
+      }
+      .table td, .table th {
+        padding: 1rem !important;
+      }
+      .form-control {
+        font-size: 1.1rem;
+        padding: 1rem 1.25rem;
+      }
+      h3 {
+        font-size: 2.5rem !important;
+        margin-bottom: 3rem !important;
+      }
+      .section-title {
+        font-size: 1.5rem;
+        margin-top: 3rem;
+        margin-bottom: 1.5rem;
+      }
+    }
   </style>
 </head>
 <body>
 
-<div class="container my-3 my-md-5">
-  <div class="row justify-content-center">
-    <div class="col-12 col-md-10 col-lg-8">
+<div class="container-fluid px-0 my-0">
+  <div class="row justify-content-center g-0">
+    <div class="col-12">
       <form id="formE">
-        <div class="form-card" id="printArea">
+        <div class="form-card px-2 px-md-4 py-3" id="printArea">
 
           <h3 class="text-center text-primary mb-3 mb-md-4 fw-bold">Form E – Student Internship – Activity Log</h3>
 
@@ -370,61 +421,40 @@
             </div>
           </div>
 
-          <!-- Signature Section -->
+          <!-- Agreement Section -->
           <div class="row mt-4 mb-2">
             <div class="col-md-4">
               <div class="bg-light rounded p-3 mb-3 border-start border-primary border-3">
-                <h6 class="mb-2 fw-bold text-primary">Student-Intern Signature:</h6>
-                <div class="d-flex flex-column gap-2">
-                  <div class="flex-fill">
-                    <label class="form-label small">Upload Signature:</label>
-                    <div class="bg-secondary bg-opacity-10 border border-2 border-dashed rounded p-3 text-center cursor-pointer" 
-                         style="cursor: pointer;" onclick="document.getElementById('student_signature_file').click()">
-                      <input type="file" id="student_signature_file" accept="image/*" onchange="previewSignature(this, 'student_preview')">
-                      <label for="student_signature_file" class="small text-muted mb-0" style="cursor: pointer;">
-                        <i class="bi bi-cloud-upload me-1"></i>Choose Image
-                      </label>
-                    </div>
-                    <img id="student_preview" class="signature-preview border rounded mt-2 bg-light" alt="Student signature preview">
-                  </div>
+                <h6 class="mb-2 fw-bold text-primary">Student-Intern Agreement:</h6>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="student_agreement" id="studentAgreement" required>
+                  <label class="form-check-label" for="studentAgreement">
+                    I acknowledge that the information provided in this evaluation is accurate and I agree to the terms and conditions of the internship program.
+                  </label>
                 </div>
               </div>
             </div>
             
             <div class="col-md-4">
               <div class="bg-light rounded p-3 mb-3 border-start border-primary border-3">
-                <h6 class="mb-2 fw-bold text-primary">Site Supervisor Signature:</h6>
-                <div class="d-flex flex-column gap-2">
-                  <div class="flex-fill">
-                    <label class="form-label small">Upload Signature:</label>
-                    <div class="bg-secondary bg-opacity-10 border border-2 border-dashed rounded p-3 text-center cursor-pointer" 
-                         style="cursor: pointer;" onclick="document.getElementById('site_signature_file').click()">
-                      <input type="file" id="site_signature_file" accept="image/*" onchange="previewSignature(this, 'site_preview')">
-                      <label for="site_signature_file" class="small text-muted mb-0" style="cursor: pointer;">
-                        <i class="bi bi-cloud-upload me-1"></i>Choose Image
-                      </label>
-                    </div>
-                    <img id="site_preview" class="signature-preview border rounded mt-2 bg-light" alt="Site supervisor signature preview">
-                  </div>
+                <h6 class="mb-2 fw-bold text-primary">Site Supervisor Agreement:</h6>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="site_agreement" id="siteAgreement" required>
+                  <label class="form-check-label" for="siteAgreement">
+                    I confirm the evaluation of the student intern and agree to supervise according to program requirements.
+                  </label>
                 </div>
               </div>
             </div>
             
             <div class="col-md-4">
               <div class="bg-light rounded p-3 mb-3 border-start border-primary border-3">
-                <h6 class="mb-2 fw-bold text-primary">Faculty Supervisor Signature:</h6>
-                <div class="d-flex flex-column gap-2">
-                  <div class="flex-fill">
-                    <label class="form-label small">Upload Signature:</label>
-                    <div class="bg-secondary bg-opacity-10 border border-2 border-dashed rounded p-3 text-center cursor-pointer" 
-                         style="cursor: pointer;" onclick="document.getElementById('faculty_signature_file').click()">
-                      <input type="file" id="faculty_signature_file" accept="image/*" onchange="previewSignature(this, 'faculty_preview')">
-                      <label for="faculty_signature_file" class="small text-muted mb-0" style="cursor: pointer;">
-                        <i class="bi bi-cloud-upload me-1"></i>Choose Image
-                      </label>
-                    </div>
-                    <img id="faculty_preview" class="signature-preview border rounded mt-2 bg-light" alt="Faculty supervisor signature preview">
-                  </div>
+                <h6 class="mb-2 fw-bold text-primary">Faculty Supervisor Agreement:</h6>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="faculty_agreement" id="facultyAgreement" required>
+                  <label class="form-check-label" for="facultyAgreement">
+                    I acknowledge the evaluation and agree to the final assessment of the student intern's performance.
+                  </label>
                 </div>
               </div>
             </div>
@@ -632,7 +662,10 @@ document.addEventListener('DOMContentLoaded', function() {
     { name: 'week_3', label: 'Week 3 Activities' },
     { name: 'week_4', label: 'Week 4 Activities' },
     { name: 'week_5', label: 'Week 5 Activities' },
-    { name: 'week_6', label: 'Week 6 Activities' }
+    { name: 'week_6', label: 'Week 6 Activities' },
+    { name: 'student_agreement', label: 'Student Agreement' },
+    { name: 'site_agreement', label: 'Site Supervisor Agreement' },
+    { name: 'faculty_agreement', label: 'Faculty Supervisor Agreement' }
   ];
 
   function clearValidation() {
@@ -654,7 +687,14 @@ document.addEventListener('DOMContentLoaded', function() {
     let firstInvalid = null;
     for (const field of requiredFields) {
       let input = form.querySelector(`[name="${field.name}"]`);
-      if (!input || !input.value.trim()) {
+      if (!input) continue;
+      if (input.type === 'checkbox') {
+        if (!input.checked) {
+          showError(input, `${field.label} must be accepted.`);
+          if (!firstInvalid) firstInvalid = input;
+          valid = false;
+        }
+      } else if (!input.value.trim()) {
         showError(input, `${field.label} is required.`);
         if (!firstInvalid) firstInvalid = input;
         valid = false;
@@ -684,41 +724,39 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
     
-    // Get signature images
-    const studentSignature = document.getElementById('student_preview').src;
-    const siteSignature = document.getElementById('site_preview').src;
-    const facultySignature = document.getElementById('faculty_preview').src;
+    // Generate agreement preview HTML
+    let agreementHtml = '<div class="row mt-4">';
     
-    // Generate signature preview HTML
-    let signatureHtml = '<div class="row mt-4">';
-    
-    signatureHtml += '<div class="col-md-4 text-center">';
-    signatureHtml += '<div><strong>Student-Intern Signature:</strong></div>';
-    if (studentSignature && studentSignature !== window.location.href) {
-      signatureHtml += `<img src="${studentSignature}" style="width: 150px; height: 150px; object-fit: contain; border: 1px solid #dee2e6; border-radius: 4px; margin-top: 0.5rem; background: #f8f9fa;" alt="Student signature">`;
+    agreementHtml += '<div class="col-md-4 text-center">';
+    agreementHtml += '<div><strong>Student-Intern Agreement:</strong></div>';
+    const studentAgreement = form.querySelector('input[name="student_agreement"]:checked');
+    if (studentAgreement) {
+      agreementHtml += '<div class="text-success mt-2"><i class="bi bi-check-circle me-1"></i>Agreed to terms and conditions</div>';
     } else {
-      signatureHtml += '<div style="width: 150px; height: 150px; border: 1px dashed #6c757d; border-radius: 4px; margin: 0.5rem auto; display: flex; align-items: center; justify-content: center; color: #6c757d; font-size: 0.8rem;">No signature uploaded</div>';
+      agreementHtml += '<div class="text-danger mt-2"><i class="bi bi-x-circle me-1"></i>Agreement not accepted</div>';
     }
-    signatureHtml += '</div>';
+    agreementHtml += '</div>';
     
-    signatureHtml += '<div class="col-md-4 text-center">';
-    signatureHtml += '<div><strong>Site Supervisor Signature:</strong></div>';
-    if (siteSignature && siteSignature !== window.location.href) {
-      signatureHtml += `<img src="${siteSignature}" style="width: 150px; height: 150px; object-fit: contain; border: 1px solid #dee2e6; border-radius: 4px; margin-top: 0.5rem; background: #f8f9fa;" alt="Site supervisor signature">`;
+    agreementHtml += '<div class="col-md-4 text-center">';
+    agreementHtml += '<div><strong>Site Supervisor Agreement:</strong></div>';
+    const siteAgreement = form.querySelector('input[name="site_agreement"]:checked');
+    if (siteAgreement) {
+      agreementHtml += '<div class="text-success mt-2"><i class="bi bi-check-circle me-1"></i>Agreed to terms and conditions</div>';
     } else {
-      signatureHtml += '<div style="width: 150px; height: 150px; border: 1px dashed #6c757d; border-radius: 4px; margin: 0.5rem auto; display: flex; align-items: center; justify-content: center; color: #6c757d; font-size: 0.8rem;">No signature uploaded</div>';
+      agreementHtml += '<div class="text-danger mt-2"><i class="bi bi-x-circle me-1"></i>Agreement not accepted</div>';
     }
-    signatureHtml += '</div>';
+    agreementHtml += '</div>';
     
-    signatureHtml += '<div class="col-md-4 text-center">';
-    signatureHtml += '<div><strong>Faculty Supervisor Signature:</strong></div>';
-    if (facultySignature && facultySignature !== window.location.href) {
-      signatureHtml += `<img src="${facultySignature}" style="width: 150px; height: 150px; object-fit: contain; border: 1px solid #dee2e6; border-radius: 4px; margin-top: 0.5rem; background: #f8f9fa;" alt="Faculty supervisor signature">`;
+    agreementHtml += '<div class="col-md-4 text-center">';
+    agreementHtml += '<div><strong>Faculty Supervisor Agreement:</strong></div>';
+    const facultyAgreement = form.querySelector('input[name="faculty_agreement"]:checked');
+    if (facultyAgreement) {
+      agreementHtml += '<div class="text-success mt-2"><i class="bi bi-check-circle me-1"></i>Agreed to terms and conditions</div>';
     } else {
-      signatureHtml += '<div style="width: 150px; height: 150px; border: 1px dashed #6c757d; border-radius: 4px; margin: 0.5rem auto; display: flex; align-items: center; justify-content: center; color: #6c757d; font-size: 0.8rem;">No signature uploaded</div>';
+      agreementHtml += '<div class="text-danger mt-2"><i class="bi bi-x-circle me-1"></i>Agreement not accepted</div>';
     }
-    signatureHtml += '</div>';
-    signatureHtml += '</div>';
+    agreementHtml += '</div>';
+    agreementHtml += '</div>';
     
     let html = `
       <table class="table table-bordered">

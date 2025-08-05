@@ -7,14 +7,17 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
   <style>
     body {
-      background: linear-gradient(135deg, #e0e7ff 0%, #f8fafc 100%);
+      background: #fff;
       min-height: 100vh;
+      margin: 0;
+      padding: 0;
     }
     .form-card {
-      border-radius: 18px;
-      box-shadow: 0 4px 32px rgba(0,0,0,0.08), 0 1.5px 6px rgba(0,0,0,0.04);
-      padding: 2.5rem 2rem 2rem 2rem;
-      background: #fff;
+      padding: 0;
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      border-radius: 0;
     }
     .section-title {
       font-size: 1.1rem;
@@ -132,17 +135,6 @@
         max-width: 200px;
       }
       
-      /* Signature field responsive */
-      .signature-container {
-        text-align: center;
-      }
-      
-      .signature-container input {
-        width: 100% !important;
-        max-width: 300px;
-        margin-top: 0.5rem;
-      }
-      
       /* Button adjustments */
       .btn-group-mobile {
         display: flex;
@@ -184,17 +176,7 @@
       }
     }
     
-    /* Signature Upload Styles - Minimal Custom CSS */
-    .signature-preview {
-      width: 150px;
-      height: 150px;
-      object-fit: contain;
-      display: none;
-    }
-    
-    .file-upload-btn input[type="file"] {
-      display: none;
-    }
+    /* Minimal Custom CSS - Using Bootstrap classes */
     
     @media print {
       .no-print { display: none !important; }
@@ -207,15 +189,63 @@
         pointer-events: none;
       }
     }
+    
+    /* Large screen optimizations */
+    @media (min-width: 1200px) {
+      .container-fluid {
+        padding: 2rem 4rem !important;
+      }
+      .table {
+        font-size: 1rem;
+      }
+      .form-control {
+        font-size: 1rem;
+        padding: 0.75rem 1rem;
+      }
+      h3 {
+        font-size: 2rem !important;
+        margin-bottom: 2rem !important;
+      }
+      .section-title {
+        font-size: 1.25rem;
+        margin-top: 2.5rem;
+        margin-bottom: 1rem;
+      }
+    }
+    
+    @media (min-width: 1400px) {
+      .container-fluid {
+        padding: 3rem 6rem !important;
+      }
+      .table {
+        font-size: 1.1rem;
+      }
+      .table td, .table th {
+        padding: 1rem !important;
+      }
+      .form-control {
+        font-size: 1.1rem;
+        padding: 1rem 1.25rem;
+      }
+      h3 {
+        font-size: 2.5rem !important;
+        margin-bottom: 3rem !important;
+      }
+      .section-title {
+        font-size: 1.5rem;
+        margin-top: 3rem;
+        margin-bottom: 1.5rem;
+      }
+    }
   </style>
 </head>
 <body>
 
-<div class="container my-5">
-  <div class="row justify-content-center">
-    <div class="col-md-10 col-lg-8">
+<div class="container-fluid px-0 my-0">
+  <div class="row justify-content-center g-0">
+    <div class="col-12">
       <form id="formD">
-        <div class="form-card" id="printArea">
+        <div class="form-card px-2 px-md-4 py-3" id="printArea">
 
           <h3 class="text-center text-primary mb-4 fw-bold">Form D – Student Internship – Progress Form</h3>
 
@@ -331,19 +361,12 @@
 
           <div class="mt-4 mb-2">
             <div class="bg-light rounded p-3 mb-3 border-start border-primary border-3">
-              <h6 class="mb-3 fw-bold text-primary">Student Intern Signature:</h6>
-              <div class="d-flex flex-column gap-2">
-                <div class="flex-fill">
-                  <label class="form-label small">Upload Signature:</label>
-                  <div class="bg-secondary bg-opacity-10 border border-2 border-dashed rounded p-3 text-center" 
-                       style="cursor: pointer;" onclick="document.getElementById('signature_file').click()">
-                    <input type="file" id="signature_file" accept="image/*" onchange="previewSignature(this, 'signature_preview')">
-                    <label for="signature_file" class="small text-muted mb-0" style="cursor: pointer;">
-                      <i class="bi bi-cloud-upload me-1"></i>Choose Image
-                    </label>
-                  </div>
-                  <img id="signature_preview" class="signature-preview border rounded mt-2 bg-light" alt="Student signature preview">
-                </div>
+              <h6 class="mb-3 fw-bold text-primary">Student Intern Agreement:</h6>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="student_agreement" id="studentAgreement" required>
+                <label class="form-check-label" for="studentAgreement">
+                  I acknowledge that the information provided in this final report is accurate and complete. I agree to the terms and conditions of the internship program and confirm my participation in the internship activities.
+                </label>
               </div>
             </div>
           </div>
@@ -489,40 +512,6 @@ document.addEventListener('DOMContentLoaded', function() {
   const form = document.getElementById('formD');
   const previewModal = new bootstrap.Modal(document.getElementById('previewModal'));
 
-  // Signature preview function
-  function previewSignature(input, previewId) {
-    const file = input.files[0];
-    const preview = document.getElementById(previewId);
-    
-    if (file) {
-      // Validate file type
-      if (!file.type.startsWith('image/')) {
-        alert('Please select a valid image file.');
-        input.value = '';
-        return;
-      }
-      
-      // Validate file size (max 2MB)
-      if (file.size > 2 * 1024 * 1024) {
-        alert('File size must be less than 2MB.');
-        input.value = '';
-        return;
-      }
-      
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        preview.src = e.target.result;
-        preview.style.display = 'block';
-      };
-      reader.readAsDataURL(file);
-    } else {
-      preview.style.display = 'none';
-      preview.src = '';
-    }
-  }
-
-  // Make previewSignature globally accessible
-  window.previewSignature = previewSignature;
   const requiredFields = [
     { name: 'student_name', label: 'Student Intern Name' },
     { name: 'student_id_dept', label: 'Student ID and Dept.' },
@@ -533,7 +522,8 @@ document.addEventListener('DOMContentLoaded', function() {
     { name: 'report_week', label: 'Progress Report Number' },
     { name: 'tasks_assigned', label: 'Tasks Assigned & Performed' },
     { name: 'learning_experience', label: 'Learning Experience' },
-    { name: 'limitations_challenges', label: 'Limitations & Challenges' }
+    { name: 'limitations_challenges', label: 'Limitations & Challenges' },
+    { name: 'student_agreement', label: 'Student Agreement' }
   ];
 
   function clearValidation() {
@@ -566,6 +556,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const checked = form.querySelector(`input[name="${field.name}"]:checked`);
         if (!checked) {
           showError(input, `${field.label} is required.`);
+          if (!firstInvalid) firstInvalid = input;
+          valid = false;
+        }
+      } else if (input.type === 'checkbox') {
+        if (!input.checked) {
+          showError(input, `${field.label} must be accepted.`);
           if (!firstInvalid) firstInvalid = input;
           valid = false;
         }
@@ -612,7 +608,10 @@ document.addEventListener('DOMContentLoaded', function() {
       <div>${(data.get('learning_experience') || '').replace(/\n/g, '<br>')}</div>
       <div class="section-title mt-4">c) Limitations & Challenges</div>
       <div>${(data.get('limitations_challenges') || '').replace(/\n/g, '<br>')}</div>
-      <div class="mt-4"><strong>Signature:</strong> Please see uploaded signature image above</div>
+      <div class="mt-4 text-center">
+        <div><strong>Student Agreement:</strong></div>
+        <div class="text-success mt-2"><i class="bi bi-check-circle me-1"></i>Student has agreed to the terms and conditions</div>
+      </div>
     `;
     document.getElementById('previewContent').innerHTML = html;
     previewModal.show();
