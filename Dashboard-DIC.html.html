@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DIC Dashboard - AU Internship Portal</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <!-- CKEditor for embedded Form F -->
+  <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+  <style>
+    :root {
+      --primary: #0d6efd;
+      --bg-grad-a: #e0e7ff;
+      --bg-grad-b: #f8fafc;
+      --card-bg: #ffffff;
+      --text-dark: #1f2937;
+      --muted: #6b7280;
+      /* Unified notification palette (was many different blues) */
+  --notif-accent: #0081c0;         /* main accent (updated) */
+  --notif-accent-dark: #00689a;    /* darker accent for badges */
+  --notif-accent-bg: #e0f4fc;      /* light background for unread / hover */
+  --notif-accent-bg-hover: #d1edf9;/* slightly stronger hover */
+  --notif-border-accent: #b2daeb;  /* border for unread */
+    }
+
+    body {
+      font-family: "Poppins", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: #ffffff; /* Changed from gradient to solid white */
+      color: var(--text-dark);
+      min-height: 100vh;
+      padding-top:62px; /* Offset for fixed header so notif rail is fully visible */
+    }
+
+    /* Header (match main dashboard) */
+    .app-header {
+      background: linear-gradient(135deg, #0066b2 0%, #0099cc 100%);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      padding-top:.5rem!important;
+      padding-bottom:.5rem!important;
+      border-bottom:none;
+    }
+    .app-header .btn, .app-header span, .app-header i { color:#fff !important; }
+  /* Removed circular wrapper around logo for new flat image */
+  .app-header .brand-logo{height:40px;width:auto;display:block;}
+  @media (max-width:575.98px){ .app-header .brand-logo{height:34px;} }
+    .app-header #sidebarToggle:hover { background:rgba(255,255,255,0.18); border-radius:4px; }
+
+  /* Sidebar (match main dashboard) */
+  .sidebar { background-color:#fff; border-right:1px solid #d0e5ff; box-shadow:0 0 15px rgba(0,0,0,0.05); padding-top:10px!important; width:210px!important; height:100vh!important; overflow-y:auto!important; position:fixed; top:0; left:0; transform:translateX(-100%); transition:transform .3s ease; z-index:1050; }
+  .sidebar.show { transform:translateX(0); }
+  /* Custom scrollbar */
+  .sidebar::-webkit-scrollbar { width:8px; }
+  .sidebar::-webkit-scrollbar-track { background:#f1f1f1; border-radius:4px; }
+  .sidebar::-webkit-scrollbar-thumb { background:#c1c1c1; border-radius:4px; }
+  .sidebar::-webkit-scrollbar-thumb:hover { background:#a8a8a8; }
+  @media (max-width:576px){ .sidebar { width:180px!important; padding-top:8px!important; } }
+  .sidebar .nav-link { border-radius:4px; margin-bottom:3px; font-weight:500; color:#444; transition:all .2s; font-size:.97rem; padding:.5rem .75rem!important; }
+  .sidebar .nav-link:hover { background:#f0f7ff; color:#0066b2; }
+  .sidebar .nav-link.active { background:#0066b2; color:#fff; box-shadow:0 2px 5px rgba(0,102,178,0.2); }
+  .sidebar .nav-link .bi { margin-right:8px; }
+  /* Close button */
+  #sidebarClose { border:none; background:transparent; transition:all .2s; border-radius:4px; }
+  #sidebarClose:hover { background-color:rgba(255,255,255,0.2); color:#fff!important; }
+  .sidebar-header { background:#0066b2; padding:.75rem; margin:-10px -16px 1rem -16px; display:flex; justify-content:space-between; align-items:center; }
+  .sidebar-header h6 { color:#fff!important; font-weight:600; letter-spacing:.5px; font-size:.75rem; margin:0; }
+  /* Overlay */
+  .sidebar-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.3); z-index:1040; opacity:0; visibility:hidden; transition:opacity .3s ease, visibility .3s ease; }
+  .sidebar-overlay.show { opacity:1; visibility:visible; }
+  /* Logout button */
+  .btn-logout { background:#f8f9fa; color:#dc3545; border:1px solid #dc3545; transition:all .2s; font-size:.95rem; padding:.4rem .5rem; }
+  .btn-logout:hover { background:#dc3545; color:#fff; }
+
+    /* Main container */
+    .content-wrap {
+      padding: 1rem;
+      margin-top: 0; /* header height now handled by body padding */
+    }
+    /* When viewing an embedded form, use the full viewport width/height */
+    .content-wrap.fullscreen { padding: 0 !important; }
+    #formFSection { padding: 0 !important; }
+    #formFContainer { min-height: calc(100vh - 62px); }
+    /* Make embedded form occupy all available width without page-like margins */
+    #formFContainer .container,
+    #formFContainer .container-fluid {
+      max-width: none !important;
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+    }
+    #formFContainer .form-card { margin: 0 !important; border-radius: 12px; }
+    #formFContainer .row { margin-left: 0; margin-right: 0; }
+    @media (min-width: 992px) { .content-wrap { padding: 2rem; } }
+
+    /* Cards */
+    .card-lite {
+      background: var(--card-bg);
+      border: 1px solid #eef2f7;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+    .card-lite:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(0,0,0,0.08); }
+    .card-lite .card-title { font-weight: 600; }
+  .card-lite.form-requests { position:relative; overflow:hidden; }
+  .card-lite.form-requests:before { content:""; position:absolute; inset:0; background:linear-gradient(135deg,#f5faff 0%,#ffffff 55%); opacity:.85; }
+  .card-lite.form-requests > * { position:relative; }
+  .card-lite.form-requests .card-title { font-size:.95rem; letter-spacing:.5px; text-transform:uppercase; margin-bottom:.75rem!important; padding-bottom:.5rem; border-bottom:1px solid #e4ecf4; }
+  .mini-metrics { margin-top:.25rem; }
+  .mini-metrics .col { position:relative; }
+  .mini-metrics .value { font-size:1.05rem; font-weight:700; }
+  .mini-metrics .label { font-size:.65rem; font-weight:600; text-transform:uppercase; letter-spacing:.7px; margin-top:2px; }
+  .mini-metrics .col { background:#fff; border:1px solid #deebf5; border-radius:10px; padding:.55rem .25rem; box-shadow:0 2px 4px rgba(0,0,0,0.04); }
+  .mini-metrics .col + .col { margin-left:.35rem; }
+  @media (max-width:575.98px){ .mini-metrics .col + .col { margin-left:0; } }
+  .see-requests-wrap button { font-weight:500; border:1px solid #c6ddf3; background:#f0f8ff; }
+  .see-requests-wrap button:hover { background:#e2f2ff; }
+  .form-info-strip { font-size:.7rem; letter-spacing:.5px; font-weight:600; color:#055a96; background:#e8f4ff; border:1px solid #c6e4ff; padding:.4rem .65rem; border-radius:6px; display:flex; align-items:center; gap:.4rem; margin-bottom:.65rem; }
+  .form-info-strip i { font-size:.85rem; }
+  .welcome-strip { display:flex; align-items:center; gap:.55rem; font-size:.8rem; font-weight:600; letter-spacing:.4px; color:#055a96; background:#e8f4ff; border:1px solid #c0e0fc; padding:.55rem .85rem; border-radius:8px; }
+  .welcome-strip i { font-size:1rem; }
+  .info-icon { display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:50%; background:#e8f4ff; color:#055a96; font-size:.85rem; cursor:pointer; transition:background .2s,color .2s; }
+  .info-icon:hover { background:#d4ecff; color:#004d86; }
+  .info-capsule { position:relative; display:inline-flex; align-items:center; gap:.45rem; background:#e8f4ff; color:#055a96; padding:.25rem .45rem; border-radius:20px; font-size:.65rem; font-weight:600; letter-spacing:.4px; max-width:28px; overflow:hidden; white-space:nowrap; cursor:pointer; transition:max-width .45s cubic-bezier(.25,.8,.25,1), background .3s; }
+  .info-capsule i { font-size:.85rem; flex:0 0 auto; }
+  .info-capsule .label { opacity:0; transform:translateX(4px); transition:opacity .3s ease .12s, transform .3s ease .12s; }
+  .info-capsule:hover { max-width:360px; background:#d9efff; }
+  .info-capsule:hover .label { opacity:1; transform:translateX(0); }
+  @media (prefers-reduced-motion:reduce){ .info-capsule { transition:none; } .info-capsule .label { transition:none; } }
+    .badge-soft {
+      background: #eef6ff; color: var(--primary); border: 1px solid #d6e9ff;
+    }
+
+    /* Tables */
+    .table-card {
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid #eef2f7;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.05);
+      background: #fff;
+    }
+    .table thead th { background: #f8fafc; color: #374151; font-weight: 600; }
+
+    /* Section titles */
+    .section-title {
+      font-size: 1.05rem; font-weight: 600; color: var(--primary);
+      border-left: 4px solid var(--primary); padding-left: .75rem; margin: 1rem 0 .75rem;
+    }
+
+    /* Buttons */
+    .btn-soft { background: #eef6ff; color: var(--primary); border: 1px solid #d6e9ff; }
+    .btn-soft:hover { background: #e2efff; color: #0b5ed7; }
+    .btn-logout { color: #dc3545; border: 1px solid #dc3545; }
+    .btn-logout:hover { background: #dc3545; color: #fff; }
+
+    /* Utilities */
+    .small-muted { color: var(--muted); font-size: .9rem; }
+
+  /* Simple inline metrics inside existing card-lite */
+  .mini-metrics .col { text-align:center; }
+  .mini-metrics .value { font-weight:600; }
+  .mini-metrics .value.requests { color:#000; }
+  .mini-metrics .value.pending { color:#dc3545; }
+  .mini-metrics .value.approved { color:#198754; }
+  .mini-metrics .label { font-size:.7rem; text-transform:uppercase; letter-spacing:.5px; color:var(--muted); }
+  /* Top request cards hover effect (no overlay, reveal button) */
+    .card-lite.form-requests { position:relative; transition:transform .38s cubic-bezier(.16,.8,.24,1); }
+    .card-lite.form-requests:hover { transform:scale(1.035) translateY(-2px); }
+    .card-lite.form-requests .mini-metrics { transition:opacity .3s ease; }
+    .card-lite.form-requests:hover .mini-metrics { opacity:.9; }
+    /* Animated reveal */
+    .card-lite.form-requests .see-requests-wrap { 
+      display:grid !important; grid-template-columns:1fr; 
+      opacity:0; transform:translateY(8px); pointer-events:none; 
+      transition:opacity .34s ease, transform .34s ease; 
+    }
+    .card-lite.form-requests:hover .see-requests-wrap { 
+      opacity:1; transform:translateY(0); pointer-events:auto; 
+      transition-delay:.05s; 
+    }
+  /* Faculty overview button hover */
+  /* Always show details (eye) button; rely on Bootstrap hover for color change */
+  #facultyOverviewTable tbody tr .view-details-btn { opacity:1; transform:translateY(0); transition:color .18s ease, background-color .18s ease, border-color .18s ease; }
+  /* (Previous hover reveal removed) */
+  #supervisorDetails table thead th { background:#f8fafc; }
+  /* Minimal profile dropdown */
+  .profile-min-btn{background:transparent;border:none;border-radius:0;padding:0 .25rem 0 0;font-size:.85rem;font-weight:600;display:flex;align-items:center;gap:.4rem;color:#fff;}
+  .profile-min-btn:hover{background:transparent;opacity:.9;} 
+  .profile-min-menu{position:absolute;top:100%;right:0;margin-top:.4rem;min-width:190px;background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:.6rem .75rem;box-shadow:0 6px 18px rgba(0,0,0,.08);display:none;z-index:2000;font-size:.7rem;}
+  .profile-min-menu.open{display:block;} 
+  .profile-min-menu .name{font-weight:600;font-size:.72rem;color:#1e293b;margin-bottom:2px;} 
+  .profile-min-menu .email{font-size:.62rem;color:#64748b;word-break:break-all;margin-bottom:.35rem;} 
+  /* role badge removed */
+  .profile-min-menu .logout-btn{border:1px solid #dc3545;background:#fff;color:#dc3545;font-size:.62rem;font-weight:600;padding:.3rem .55rem;border-radius:6px;width:100%;margin-top:.5rem;} 
+  .profile-min-menu .logout-btn:hover{background:#dc3545;color:#fff;} 
+  /* Removed arrow circle (icon only button) */
+  /* Enhanced dropdown panel */
+  .profile-min-menu{box-shadow:0 8px 28px -4px rgba(0,0,0,.18);animation:fadeSlide .25s ease;}
+  @keyframes fadeSlide{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+  .profile-min-menu .divider{height:1px;background:#e2e8f0;margin:.5rem 0;} 
+  .profile-min-menu .row-item{display:flex;align-items:flex-start;gap:.5rem;margin-bottom:.4rem;}
+  /* Removed avatar mini (no longer needed) */
+  .profile-min-menu .actions a{font-size:.6rem;text-decoration:none;font-weight:600;letter-spacing:.4px;color:#0d6efd;padding:.25rem .4rem;border-radius:4px;display:inline-block;}
+  .profile-min-menu .actions a:hover{background:#eff6ff;} 
+  /* DIC submissions back button hover */
+  .dic-back-btn{transition:color .25s,background-color .25s,border-color .25s;}
+  .dic-back-btn:hover{background:#0d6efd;color:#fff;border-color:#0d6efd;}
+  /* Clickable title */
+  .logo-title-btn{background:transparent;border:none;padding:0;margin:0;color:#fff;cursor:pointer;position:relative;}
+  .logo-title-btn:focus-visible{outline:2px dashed rgba(255,255,255,.7);outline-offset:3px;}
+  .logo-title-btn:hover{text-decoration:underline;text-decoration-thickness:2px;}
+  .no-select{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;}
+  /* Notifications (bell) */
+  .notif-btn{position:relative;background:transparent;border:none;color:#fff;padding:.25rem .4rem;display:inline-flex;align-items:center;justify-content:center;border-radius:6px;transition:background .25s;}
+  .notif-btn:hover{background:rgba(255,255,255,.15);} 
+  .notif-btn:focus-visible{outline:2px solid #fff;outline-offset:2px;}
+  .notif-badge{position:absolute;top:2px;right:4px;min-width:16px;height:16px;padding:0 4px;border-radius:10px;background:#dc3545;color:#fff;font-size:.55rem;font-weight:400;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 2px rgba(0,0,0,.15);} 
+  .notif-menu{position:absolute;top:100%;right:0;margin-top:.5rem;width:340px;max-width:90vw;background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:.65rem .75rem .75rem;box-shadow:0 18px 45px -8px rgba(0,0,0,.25);display:none;z-index:2100;font-size:.72rem;animation:fadeSlide .25s ease;} 
+  .notif-menu.open{display:block;} 
+  .notif-menu .nm-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.35rem;} 
+  .notif-menu .nm-head h6{font-size:.72rem;font-weight:600;letter-spacing:.5px;margin:0;color:#1f2937;} 
+  .notif-menu .nm-head button{background:transparent;border:none;font-size:.55rem;font-weight:600;color:#0d6efd;padding:.15rem .3rem;border-radius:4px;} 
+  .notif-menu .nm-head button:hover{background:#eef6ff;} 
+  .notif-list{max-height:300px;overflow-y:auto;margin:0;padding:0;list-style:none;} 
+  .notif-empty{padding:.8rem .25rem;text-align:center;color:#64748b;font-size:.65rem;} 
+  .notif-item{position:relative;display:flex;gap:.55rem;padding:.55rem .4rem .55rem .55rem;border-radius:10px;border:1px solid #edf2f7;background:#f8fbff;margin-bottom:.4rem;cursor:pointer;transition:background .25s,border-color .25s;} 
+  .notif-item:last-child{margin-bottom:0;} 
+  .notif-item:hover{background:#eef6ff;border-color:#d6e4f2;} 
+  .notif-item.read{background:#ffffff;border-color:#eceff3;opacity:.85;} 
+  .notif-item .ni-icon{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#0d6efd,#60a5fa);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0;box-shadow:0 3px 6px -2px rgba(0,0,0,.28);} 
+  .notif-item.alert .ni-icon{background:linear-gradient(135deg,#dc3545,#f87171);} 
+  .notif-item.success .ni-icon{background:linear-gradient(135deg,#198754,#34d399);} 
+  .notif-item .ni-body{flex:1;min-width:0;} 
+  .notif-item .ni-title{font-weight:600;font-size:.62rem;letter-spacing:.4px;color:#1e293b;margin:0 0 2px;} 
+  .notif-item .ni-text{font-size:.6rem;line-height:1.2;color:#475569;margin:0;} 
+  .notif-item .ni-meta{display:flex;align-items:center;gap:.4rem;margin-top:4px;} 
+  .notif-item .ni-time{font-size:.52rem;font-weight:500;color:#64748b;} 
+  .notif-item.unread-indicator:before{content:"";position:absolute;left:4px;top:8px;width:6px;height:6px;background:#0d6efd;border-radius:50%;box-shadow:0 0 0 3px rgba(13,110,253,.15);} 
+  .notif-footer{margin-top:.5rem;text-align:center;} 
+  .notif-footer button{background:#f1f5f9;border:1px solid #dbe4ee;font-size:.58rem;font-weight:600;color:#0d6efd;padding:.25rem .5rem;border-radius:6px;} 
+  .notif-footer button:hover{background:#e2efff;} 
+  @media (max-width:420px){ .notif-menu{right:-40px;} }
+  /* Expanding notification panel variant */
+  .notif-rail{background:#fff;border:1px solid #e5e7eb;border-top:none;box-shadow:0 8px 24px -6px rgba(0,0,0,.18);padding:0 .9rem;max-height:0;overflow:hidden;transition:max-height .45s cubic-bezier(.4,0,.2,1),padding .35s ease;position:fixed;top:62px;right:8px;left:auto;transform:none;width: min(560px, calc(100% - 16px));border-bottom-left-radius:14px;border-bottom-right-radius:14px;z-index:1010;}
+  .notif-rail.open{max-height:520px;padding:.85rem .9rem 1rem;}
+  .notif-rail .nr-head{display:flex;align-items:center;justify-content:space-between;padding:0 0 .35rem;margin:0 0 .4rem;border-bottom:1px solid #e5e7eb;}
+  .notif-rail .nr-panel-title{font-size:1rem;font-weight:600;margin:0;color:#111827;}
+  .notif-rail .nr-head-actions{display:flex;align-items:center;gap:.5rem;}
+  .notif-rail .nr-head-actions button{background:transparent;border:none;font-size:.7rem;font-weight:400;color:#000;display:inline-flex;align-items:center;gap:.4rem;padding:.35rem .55rem;border-radius:6px;letter-spacing:.3px;}
+  .notif-rail .nr-head-actions button i{font-size:.95rem;line-height:1;}
+  .notif-rail .nr-head-actions button:hover{background:var(--notif-accent);color:#fff;}
+  .notif-rail button.nr-close{border:1px solid #d0d7de;color:#475569;width:30px;height:30px;padding:0;border-radius:8px;font-size:.95rem;display:flex;align-items:center;justify-content:center;line-height:1;}
+  .notif-rail button.nr-close:hover{background:var(--notif-accent);color:#ffffff;}
+  .nr-tabs{display:flex;align-items:center;gap:1.75rem;padding:0;margin:0 -0.9rem .55rem;border-bottom:1px solid #e5e7eb;overflow-x:auto;}
+  .nr-tab{position:relative;list-style:none;padding:.55rem .25rem;font-size:.78rem;font-weight:500;cursor:pointer;color:#475569;flex:0 0 auto;}
+  .nr-tab .count{background:var(--notif-accent-dark);color:#fff;font-size:.55rem;font-weight:400;padding:.15rem .4rem;border-radius:8px;margin-left:.45rem;}
+  .nr-tab.active{color:#111827;font-weight:600;}
+  .nr-tab.active:after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--notif-accent);border-radius:2px;}
+  .nr-list{list-style:none;margin:0;padding:0;overflow-y:auto;max-height:380px;display:flex;flex-direction:column;gap:.6rem;}
+  .notif-rail.open .nr-list{animation:fadeSlide .25s ease;}
+  .nr-item{display:flex;align-items:flex-start;gap:.9rem;padding:.9rem .25rem .85rem;margin:0;border-radius:10px;background:transparent;box-shadow:none;transition:background .2s;} 
+  .nr-item:last-child{margin-bottom:0;}
+  .nr-item:hover{background:var(--notif-accent-bg-hover);border:0;box-shadow:none;}
+  .nr-item.unread{background:var(--notif-accent-bg);}
+  .nr-item .nr-icon{width:44px;height:44px;border-radius:50%;background:var(--notif-accent-bg);display:flex;align-items:center;justify-content:center;font-size:1.05rem;color:var(--notif-accent);flex-shrink:0;box-shadow:none;}
+  .nr-item.type-alert .nr-icon{background:#ffe9e9;color:#dc3545;}
+  .nr-item.type-success .nr-icon{background:#e5f8ef;color:#198754;}
+  .nr-body{flex:1;min-width:0;}
+  .nr-row-top{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem;font-size:.8rem;margin:0 0 .4rem;}
+  .nr-title{margin:0;font-weight:400;font-size:.85rem;color:#111827;}
+  .nr-inline-action{font-size:.78rem;color:#374151;font-weight:400;}
+  .nr-text-block{border:1px solid #dfe4ea;background:#fff;border-radius:8px;padding:.55rem .75rem;font-size:.75rem;line-height:1.35;color:#374151;margin:0 0 .55rem;}
+  .nr-meta-line{display:flex;align-items:center;justify-content:space-between;font-size:.62rem;color:#64748b;font-weight:500;}
+  .nr-date{font-size:.62rem;color:#64748b;}
+  .nr-unread-dot{width:10px;height:10px;border-radius:50%;background:var(--notif-accent);flex-shrink:0;margin-left:.25rem;margin-top:.4rem;box-shadow:0 0 0 4px rgba(0,129,192,.20);}
+  .nr-item.read .nr-unread-dot{background:#cbd5e1;box-shadow:none;}
+  .nr-time{font-size:.62rem;font-weight:500;color:#475569;margin-top:0;}
+  .nr-item.read .nr-time{color:#6b7280;}
+  /* Rail notification item */
+  .nr-item{position:relative;display:flex;gap:.75rem;padding:.8rem .9rem;border-radius:14px;border:1px solid #dbe1e8;background:#ffffff;cursor:pointer;transition:background .2s,border-color .2s,box-shadow .2s, transform .2s; box-shadow:0 1px 3px rgba(0,0,0,.05);} 
+  .nr-item:hover{border-color:var(--notif-accent);box-shadow:0 0 0 2px rgba(0,129,192,.22);background:inherit;}
+  .nr-item.unread{background:var(--notif-accent-bg);border-color:var(--notif-border-accent);}
+  .nr-item .nr-icon{width:40px;height:40px;border-radius:10px;background:var(--notif-accent-bg);display:flex;align-items:center;justify-content:center;font-size:1.05rem;color:var(--notif-accent);flex-shrink:0;}
+  .nr-item.type-alert .nr-icon{background:#ffecec;color:#dc3545;} 
+  .nr-item.type-success .nr-icon{background:#e7f9f1;color:#198754;} 
+  .nr-body{flex:1;min-width:0;} 
+  .nr-row-top{display:flex;align-items:flex-start;justify-content:space-between;gap:.75rem;margin:0 0 4px;} 
+  .nr-title{font-weight:400;font-size:.9rem;line-height:1.1;margin:0;color:#111827;} 
+  .nr-item.unread .nr-title{color:#000;font-weight:700;}
+  .nr-item.read .nr-title{font-weight:400;color:#111827;}
+  .nr-text{font-size:.8rem;line-height:1.4;color:#374151;margin:0 0 4px;} 
+  .nr-time{font-size:.72rem;font-weight:600;color:#44505a;white-space:nowrap;margin-top:2px;} 
+  .nr-item.read .nr-time{color:#6b7280;} 
+  .nr-item:focus-visible{outline:2px solid var(--notif-accent);outline-offset:2px;}
+  .nr-status-dot{width:8px;height:8px;border-radius:50%;background:var(--notif-accent);box-shadow:0 0 0 4px rgba(0,129,192,.22);}
+  .nr-item.read .nr-status-dot{background:#94a3b8;box-shadow:none;} 
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="app-header navbar text-white py-1 py-sm-2 px-2 px-sm-3 fixed-top">
+    <div class="d-flex align-items-center flex-grow-1">
+      <button id="sidebarToggle" class="btn text-white me-1 me-sm-2 p-0" aria-label="Open menu">
+        <i class="bi bi-list fs-5 fs-sm-4"></i>
+      </button>
+  <img src="images/airLogoNew.png" alt="AU Logo" class="brand-logo me-2 me-sm-3" />
+  <button id="logoTitle" class="logo-title-btn fs-6 fs-sm-5 fw-bold no-select" type="button" aria-label="Go to dashboard" title="Go to dashboard">AU Internship Portal — DIC</button>
+    </div>
+    <div class="ms-auto d-flex align-items-center gap-1 position-relative" id="topBarActions">
+      <div class="position-relative" id="notifWrapper">
+        <button id="notifBtn" class="notif-btn" type="button" aria-label="Notifications" aria-expanded="false">
+          <i class="bi bi-bell-fill fs-6"></i>
+          <span class="notif-badge d-none" id="notifBadge">0</span>
+        </button>
+      </div>
+      <div class="d-flex align-items-center position-relative" id="profileArea">
+      <button id="profileBtn" class="profile-min-btn" type="button" aria-haspopup="true" aria-expanded="false" style="box-shadow:none;">
+        <i class="bi bi-person-circle fs-5"></i>
+      </button>
+      <div id="profileMenu" class="profile-min-menu" role="menu" aria-hidden="true">
+  <div class="name" id="profileName">User Name</div>
+  <div class="email" id="profileEmail">user@email</div>
+        <button id="quickLogout" class="logout-btn" type="button"><i class="bi bi-box-arrow-right me-1"></i>Logout</button>
+      </div>
+      </div>
+    </div>
+  </header>
+  <!-- Expanding Notification Rail -->
+  <div id="notifRail" class="notif-rail" aria-hidden="true">
+    <div class="nr-head">
+      <h5 class="nr-panel-title mb-0">Notification</h5>
+      <div class="nr-head-actions">
+        <button id="nrMarkAll" type="button"><i class="bi bi-check2-circle"></i> Mark all read</button>
+        <button id="nrClearAll" type="button"><i class="bi bi-trash"></i> Clear</button>
+        <button type="button" class="nr-close" id="nrClose" aria-label="Close notifications"><i class="bi bi-x"></i></button>
+      </div>
+    </div>
+    <ul class="nr-tabs" id="nrTabs">
+      <li class="nr-tab active" data-filter="all">All <span class="count" id="nrCountAll">0</span></li>
+      <li class="nr-tab" data-filter="unread">Unread <span class="count" id="nrCountUnread">0</span></li>
+      <li class="nr-tab" data-filter="read">Read <span class="count" id="nrCountRead">0</span></li>
+    </ul>
+    <ul class="nr-list" id="nrList"></ul>
+    <div class="text-center mt-2" id="nrMoreWrap" style="display:none;">
+      <button type="button" class="btn btn-sm btn-outline-secondary" id="nrShowMore">Show more</button>
+    </div>
+  </div>
+
+  <!-- Sidebar Overlay -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- Sidebar -->
+  <nav class="sidebar h-100 d-flex flex-column py-2 px-2" id="sidebar" style="top:0;">
+    <div class="d-flex justify-content-between align-items-center mt-1 sidebar-header">
+      <h6 class="fw-semibold mb-0 small">DIC DASHBOARD</h6>
+      <button class="btn btn-sm text-white p-1" id="sidebarClose" title="Close sidebar"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <ul class="nav flex-column w-100">
+      <li class="nav-item">
+        <a href="#" class="nav-link active" data-section="home"><i class="bi bi-house"></i>Dashboard</a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link" data-section="submissions"><i class="bi bi-inboxes"></i>Student Submissions</a>
+      </li>
+    </ul>
+    <div class="mt-auto px-1 pb-2">
+      <a href="#" id="logoutBtn" class="btn btn-sm w-100 btn-logout"><i class="bi bi-box-arrow-right me-1"></i>Logout</a>
+      <div class="text-center small mt-2">© 2025 AU Internship Portal</div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="content-wrap container-fluid">
+    <!-- Default dashboard section -->
+    <section id="homeSection">
+      <!-- Top Notice -->
+      <div class="welcome-strip mb-3" role="alert">
+        <i class="bi bi-info-circle"></i>
+        <span>Welcome to the DIC Dashboard! From here, you can complete Form F and review student submissions to Approve or Reject.</span>
+      </div>
+
+      <!-- Form Requests Summary Row (enhanced design) -->
+      <div class="row g-4 mb-3" id="formRequestsRow">
+        <div class="col-12 col-lg-6">
+          <div class="card-lite form-requests p-3" data-form="Form A">
+            <h6 class="card-title d-flex align-items-center justify-content-between">Form A Requests <span class="info-capsule" data-info="Identification of industrial project intentions"><i class="bi bi-info-circle"></i><span class="label">Identification of industrial project intentions</span></span></h6>
+            <div class="row g-2 mini-metrics flex-nowrap">
+              <div class="col">
+                <div class="value requests" id="formA_requests">0</div>
+                <div class="label">Requests</div>
+              </div>
+              <div class="col">
+                <div class="value pending text-danger" id="formA_pending">0</div>
+                <div class="label">Pending</div>
+              </div>
+              <div class="col">
+                <div class="value approved text-success" id="formA_approved">0</div>
+                <div class="label">Approved</div>
+              </div>
+            </div>
+            <div class="see-requests-wrap mt-3 d-grid">
+              <button class="btn btn-soft btn-sm" data-action="see-requests" data-form="Form A"><i class="bi bi-eye me-1"></i>See Requests</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-lg-6">
+          <div class="card-lite form-requests p-3" data-form="Form B">
+            <h6 class="card-title d-flex align-items-center justify-content-between">Form B Requests <span class="info-capsule" data-info="Student submission with CV & proposal"><i class="bi bi-info-circle"></i><span class="label">Student submission with CV & proposal</span></span></h6>
+            <div class="row g-2 mini-metrics flex-nowrap">
+              <div class="col">
+                <div class="value requests" id="formB_requests">0</div>
+                <div class="label">Requests</div>
+              </div>
+              <div class="col">
+                <div class="value pending text-danger" id="formB_pending">0</div>
+                <div class="label">Pending</div>
+              </div>
+              <div class="col">
+                <div class="value approved text-success" id="formB_approved">0</div>
+                <div class="label">Approved</div>
+              </div>
+            </div>
+            <div class="see-requests-wrap mt-3 d-grid">
+              <button class="btn btn-soft btn-sm" data-action="see-requests" data-form="Form B"><i class="bi bi-eye me-1"></i>See Requests</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Faculty supervision overview table -->
+      <div class="card table-card p-3 mb-4">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2">
+          <h6 class="mb-0">Faculty Supervision Overview</h6>
+          <small class="text-muted">Snapshot of supervisors and internship progress</small>
+        </div>
+        <div class="table-responsive">
+      <table class="table align-middle mb-0" id="facultyOverviewTable">
+            <thead>
+              <tr>
+                <th>Faculty Supervisor</th>
+                <th class="text-center">Students Assigned</th>
+                <th class="text-center">Active Internships</th>
+                <th style="min-width:170px">Progress</th>
+                <th class="text-end" style="width:90px">Details</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+  <div id="supervisorDetails" class="card table-card p-3 mb-4 d-none"></div>
+
+  <!-- Removed bottom three cards (Form F / Student Submissions shortcut / At a Glance) -->
+    </section>
+
+    <!-- Form F loader section -->
+    <section id="formFSection" class="d-none">
+      <div class="section-title">Form F — Faculty Supervisor Evaluation</div>
+      <div id="formFContainer" class="mt-3"></div>
+    </section>
+
+    <!-- Student Submissions section -->
+    <section id="submissionsSection" class="d-none">
+      <div class="d-flex align-items-center mb-2 gap-2">
+        <button id="backToDashboard" class="btn btn-outline-secondary btn-sm dic-back-btn"><i class="bi bi-arrow-left"></i> Back</button>
+      </div>
+      <div class="card table-card p-3">
+        <div class="row g-2 align-items-end">
+          <div class="col-md-3">
+            <label class="form-label small">Filter by status</label>
+            <select id="filterStatus" class="form-select">
+              <option value="all">All</option>
+              <option value="Pending">Pending</option>
+              <option value="Approved">Approved</option>
+              <option value="Rejected">Rejected</option>
+            </select>
+          </div>
+          <div class="col-md-5">
+            <label class="form-label small">Search</label>
+            <input type="text" id="searchText" class="form-control" placeholder="Search by name, ID, or form type" />
+          </div>
+          <div class="col-md-4 text-md-end">
+            <button id="resetFilters" class="btn btn-outline-secondary">Reset</button>
+          </div>
+        </div>
+
+        <div class="table-responsive mt-3">
+          <table class="table align-middle mb-0">
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>ID</th>
+                <th>Form</th>
+                <th>Submitted</th>
+                <th>Status</th>
+                <th class="text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="submissionsTbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Submission Preview Modal (separate from Form C's modal) -->
+  <div class="modal fade" id="submissionPreviewModal" tabindex="-1" aria-labelledby="submissionPreviewLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="submissionPreviewLabel">Submission Preview</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="submissionPreviewBody"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Logout Modal -->
+  <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content" style="border-radius: 16px;">
+        <div class="modal-header border-0">
+          <img src="images/airLogo.png" alt="AU" width="56" class="me-2">
+          <h5 class="modal-title" id="logoutLabel">Logout Confirmation</h5>
+        </div>
+        <div class="modal-body text-center">
+          <p>Are you sure you want to logout?</p>
+          <div class="d-flex justify-content-center gap-2">
+            <button type="button" id="confirmLogout" class="btn btn-success">Yes, Logout</button>
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // State and helpers
+    const STORAGE_KEY = 'facultySubmissions';
+    const defaultSubmissions = [
+      { id: 'SB-1001', studentName: 'Ali Khan', studentId: 'FA21-BCS-001', form: 'Form B', submittedAt: '2025-08-01', status: 'Pending' },
+      { id: 'SE-1002', studentName: 'Sara Ahmed', studentId: 'FA21-BCS-015', form: 'Form E', submittedAt: '2025-08-05', status: 'Pending' },
+      { id: 'SD-1003', studentName: 'Zain Ali', studentId: 'SP22-BCS-032', form: 'Form D', submittedAt: '2025-08-06', status: 'Approved' },
+      { id: 'SE-1004', studentName: 'Maria Noor', studentId: 'SP22-BCS-047', form: 'Form E', submittedAt: '2025-08-06', status: 'Rejected' },
+    ];
+
+    function loadSubmissions() {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      try {
+        return raw ? JSON.parse(raw) : defaultSubmissions.slice();
+      } catch { return defaultSubmissions.slice(); }
+    }
+    function saveSubmissions(list) { localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); }
+
+    function setActiveSection(sectionId) {
+      // Sidebar active state
+      document.querySelectorAll('.sidebar .nav-link').forEach(a => a.classList.remove('active'));
+  const activeLink = document.querySelector(`.sidebar .nav-link[data-section="${sectionId}"]`) || document.querySelector(`.sidebar .nav-link[href="#"][data-section="${sectionId}"]`);
+      activeLink?.classList.add('active');
+
+      // Sections
+      document.getElementById('homeSection').classList.toggle('d-none', sectionId !== 'home');
+  document.getElementById('formFSection').classList.toggle('d-none', sectionId !== 'form-f');
+      document.getElementById('submissionsSection').classList.toggle('d-none', sectionId !== 'submissions');
+    }
+
+    function refreshCounters(list) {
+      const pending = list.filter(x => x.status === 'Pending').length;
+      const approved = list.filter(x => x.status === 'Approved').length;
+      const rejected = list.filter(x => x.status === 'Rejected').length;
+  // (Removed badges/counts UI)
+
+  // Form-specific request cards (Forms A, B only after removal of E & F)
+  const forms = ['A','B'];
+      const formName = f => `Form ${f}`;
+      const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+      forms.forEach(f => {
+        const name = formName(f);
+        const subset = list.filter(x => x.form === name);
+        const total = subset.length;
+        const pend = subset.filter(x => x.status === 'Pending').length;
+        const appr = subset.filter(x => x.status === 'Approved').length;
+        setVal(`form${f}_requests`, total);
+        setVal(`form${f}_pending`, pend);
+        setVal(`form${f}_approved`, appr);
+      });
+    }
+
+    function renderSubmissions(list) {
+      const tbody = document.getElementById('submissionsTbody');
+      const statusFilter = document.getElementById('filterStatus').value;
+      const search = document.getElementById('searchText').value.trim().toLowerCase();
+      const filtered = list.filter(item => {
+        const statusOk = statusFilter === 'all' || item.status === statusFilter;
+        const searchHit = !search || [item.studentName, item.studentId, item.form].some(v => v.toLowerCase().includes(search));
+        return statusOk && searchHit;
+      });
+      tbody.innerHTML = filtered.map(item => `
+        <tr>
+          <td>${item.studentName}</td>
+          <td>${item.studentId}</td>
+          <td>${item.form}</td>
+          <td>${item.submittedAt}</td>
+          <td>
+            ${item.status === 'Pending' ? '<span class="badge text-bg-warning">Pending</span>' : ''}
+            ${item.status === 'Approved' ? '<span class="badge text-bg-success">Approved</span>' : ''}
+            ${item.status === 'Rejected' ? '<span class="badge text-bg-danger">Rejected</span>' : ''}
+          </td>
+          <td class="text-end">
+            <div class="btn-group btn-group-sm" role="group">
+              <button class="btn btn-outline-primary" data-action="preview" data-id="${item.id}"><i class="bi bi-eye"></i></button>
+              <button class="btn btn-outline-success" data-action="approve" data-id="${item.id}"><i class="bi bi-check2"></i></button>
+              <button class="btn btn-outline-danger" data-action="reject" data-id="${item.id}"><i class="bi bi-x"></i></button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    async function loadFormF() {
+      const wrap = document.getElementById('formFContainer');
+      wrap.innerHTML = '<div class="text-center py-5"><div class="spinner-border text-primary" role="status"></div></div>';
+      try {
+        const res = await fetch('form-f.html');
+        const html = await res.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+
+        // Extract <body> content
+        let bodyContent = doc.querySelector('body')?.innerHTML || html;
+
+        // Remove any Bootstrap includes to avoid duplicates
+        bodyContent = bodyContent.replace(/<link[^>]bootstrap[^>]>/gi, '').replace(/<script[^>]bootstrap[^>]><\/script>/gi, '');
+
+        // Load content without scripts
+        const scripts = Array.from(doc.querySelectorAll('script'));
+        const styles = Array.from(doc.querySelectorAll('style')).map(s => s.textContent).join('\n');
+        // Remove script tags from content
+        bodyContent = bodyContent.replace(/<script[\s\S]*?<\/script>/gi, '');
+
+        // Inject styles
+        if (styles) {
+          const styleEl = document.createElement('style');
+          styleEl.textContent = styles;
+          document.head.appendChild(styleEl);
+        }
+
+        wrap.innerHTML = bodyContent;
+
+        // Remove fade on any modals to avoid backdrop conflicts within embedded area
+        wrap.querySelectorAll('.modal.fade').forEach(m => m.classList.remove('fade'));
+
+        // Remove page-level margins/paddings from embedded markup to fit full screen
+        // Common wrappers we want to flatten
+        const outerContainers = wrap.querySelectorAll('.container, .container-fluid, .form-wrapper, .page-wrapper');
+        outerContainers.forEach(el => {
+          el.style.paddingLeft = '0';
+          el.style.paddingRight = '0';
+          el.style.marginLeft = '0';
+          el.style.marginRight = '0';
+          el.style.maxWidth = 'none';
+          el.style.width = '100%';
+        });
+
+        // Ensure any top/bottom spacing is minimized
+        const topSpacers = wrap.querySelectorAll('[class*="my-"], [class*="mt-"], [class*="pt-"]');
+        topSpacers.forEach(el => {
+          // Only reduce excessive outer spacing, not internal fields
+          if (el === wrap || el.closest('#formFContainer')) {
+            // leave internal spacing mostly intact
+          }
+        });
+
+        // Execute inline scripts (no external bootstrap ones)
+        for (const s of scripts) {
+          if (s.src) continue; // ignore external in embedded context
+          if (s.textContent?.trim()) {
+            const exec = document.createElement('script');
+            exec.textContent = s.textContent;
+            document.body.appendChild(exec);
+            document.body.removeChild(exec);
+          }
+        }
+      } catch (e) {
+  wrap.innerHTML = '<div class="alert alert-danger">Failed to load Form F.</div>';
+        console.error(e);
+      }
+    }
+
+    // Sidebar controls
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+    const sidebarClose = document.getElementById('sidebarClose');
+    document.getElementById('sidebarToggle').addEventListener('click', () => {
+      sidebar.classList.add('show');
+      sidebarOverlay.classList.add('show');
+    });
+    sidebarOverlay.addEventListener('click', () => {
+      sidebar.classList.remove('show');
+      sidebarOverlay.classList.remove('show');
+    });
+    sidebarClose?.addEventListener('click', () => {
+      sidebar.classList.remove('show');
+      sidebarOverlay.classList.remove('show');
+    });
+
+    // Navigation
+  const contentWrap = document.querySelector('.content-wrap');
+  document.addEventListener('click', (e) => {
+      const link = e.target.closest('.sidebar .nav-link, a[data-section]');
+      if (!link) return;
+      const section = link.getAttribute('data-section');
+      if (!section) return;
+      e.preventDefault();
+
+      // Close sidebar on navigate
+  sidebar.classList.remove('show');
+  sidebarOverlay.classList.remove('show');
+
+      if (section === 'home') {
+        setActiveSection('home');
+        contentWrap.classList.remove('fullscreen');
+      } else if (section === 'form-f') {
+        setActiveSection('form-f');
+        loadFormF();
+        contentWrap.classList.add('fullscreen');
+      } else if (section === 'submissions') {
+        setActiveSection('submissions');
+        contentWrap.classList.remove('fullscreen');
+        // nothing else; rendering handled on filters
+      }
+    });
+
+    // Submissions: events
+    let submissions = loadSubmissions();
+    const tbody = document.getElementById('submissionsTbody');
+    tbody.addEventListener('click', (e) => {
+      const btn = e.target.closest('button[data-action]');
+      if (!btn) return;
+      const id = btn.getAttribute('data-id');
+      const action = btn.getAttribute('data-action');
+      const item = submissions.find(x => x.id === id);
+      if (!item) return;
+      if (action === 'approve') item.status = 'Approved';
+      if (action === 'reject') item.status = 'Rejected';
+      if (action === 'preview') {
+        const modal = new bootstrap.Modal(document.getElementById('submissionPreviewModal'));
+        document.getElementById('submissionPreviewBody').innerHTML = `
+          <div class="mb-3"><strong>Student:</strong> ${item.studentName} (${item.studentId})</div>
+          <div class="mb-3"><strong>Form:</strong> ${item.form}</div>
+          <div class="mb-3"><strong>Submitted:</strong> ${item.submittedAt}</div>
+          <div class="mb-3"><strong>Status:</strong> ${item.status}</div>
+          <div class="alert alert-secondary">Preview content placeholder. Integrate with actual stored form data when backend is available.</div>
+        `;
+        modal.show();
+        return;
+      }
+      saveSubmissions(submissions);
+      refreshCounters(submissions);
+      renderSubmissions(submissions);
+    });
+
+    // Top card click -> show submissions filtered by form
+    document.getElementById('formRequestsRow').addEventListener('click', (e) => {
+      const trigger = e.target.closest('[data-action="see-requests"]');
+      if (!trigger) return;
+      const form = trigger.getAttribute('data-form');
+      if (!form) return;
+      // Navigate to submissions section
+      setActiveSection('submissions');
+      contentWrap.classList.remove('fullscreen');
+      // Clear existing filters then apply search for the form name
+      document.getElementById('filterStatus').value = 'all';
+      document.getElementById('searchText').value = form;
+      renderSubmissions(submissions);
+      // Scroll into view for usability
+      document.getElementById('submissionsSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    // Filters
+    document.getElementById('filterStatus').addEventListener('change', () => renderSubmissions(submissions));
+    document.getElementById('searchText').addEventListener('input', () => renderSubmissions(submissions));
+    document.getElementById('resetFilters').addEventListener('click', () => {
+      document.getElementById('filterStatus').value = 'all';
+      document.getElementById('searchText').value = '';
+      renderSubmissions(submissions);
+    });
+
+    // Logout
+    const logoutModal = new bootstrap.Modal(document.getElementById('logoutModal'));
+    document.getElementById('logoutBtn').addEventListener('click', (e) => { e.preventDefault(); logoutModal.show(); });
+    document.getElementById('confirmLogout').addEventListener('click', () => { window.location.href = 'loginForm.html'; });
+
+    // Initial
+    document.addEventListener('DOMContentLoaded', () => {
+      refreshCounters(submissions);
+      renderSubmissions(submissions);
+      renderFacultyOverview();
+  const backBtn=document.getElementById('backToDashboard');
+  if(backBtn){ backBtn.addEventListener('click', ()=>{ setActiveSection('home'); window.scrollTo({top:0, behavior:'smooth'}); }); }
+  const logoTitle=document.getElementById('logoTitle');
+  if(logoTitle){
+    logoTitle.addEventListener('click',()=>{ 
+      setActiveSection('home'); 
+      // Close supervisor extended details table if open
+      const supDetails=document.getElementById('supervisorDetails');
+      if(supDetails && !supDetails.classList.contains('d-none')) supDetails.classList.add('d-none');
+      // Close any other future extended tables panels by a common class
+      document.querySelectorAll('.extended-table, .expanded-detail, .detail-panel').forEach(p=>p.classList.add('d-none'));
+      window.scrollTo({top:0,behavior:'smooth'}); 
+    });
+    ['copy','cut','contextmenu','dragstart','selectstart'].forEach(ev=>{
+      logoTitle.addEventListener(ev,e=>{ e.preventDefault(); });
+    });
+  }
+    });
+
+    // Faculty supervision overview - consolidated dataset with phone & email
+    const studentsData = [
+      // Class: BSCS-F-23-A-115
+      { id:'233503', name:'Muhammad Arsal Ajmal', phone:'92 307-7422768', email:'233503@students.au.edu.pk', supervisor:'Ms Atka Ali' },
+      { id:'233505', name:'Syed Muhammad Sarib', phone:'92 326-5590220', email:'233505@students.au.edu.pk', supervisor:'Ms Atka Ali' },
+      { id:'233507', name:'Abdul Moaiz', phone:'92 306-7892235', email:'233507@students.au.edu.pk', supervisor:'Ms Atka Ali' },
+      { id:'233509', name:'Talha Bin Naseer Bodla', phone:'92 300-7443311', email:'233509@students.au.edu.pk', supervisor:'Ms Atka Ali' },
+      { id:'233511', name:'Abdul Wasay Sial', phone:'92 332-7995614', email:'233511@students.au.edu.pk', supervisor:'Muhammad Rashaf Jamil' },
+      { id:'233517', name:'Zohaib Siddique', phone:'92 303-7550673', email:'233517@students.au.edu.pk', supervisor:'Ms Atka Ali' },
+      { id:'233519', name:'Fatima', phone:'92 325-2972011', email:'233519@students.au.edu.pk', supervisor:'Ms Atka Ali' },
+      { id:'233521', name:'Muhammad Hunzala Bashir', phone:'92 326-7101271', email:'233521@students.au.edu.pk', supervisor:'Ms Atka Ali' },
+      { id:'233523', name:'Muhammad Mahad Ghauri', phone:'92 310-2027781', email:'233523@students.au.edu.pk', supervisor:'Muhammad Asadullah Khalid' },
+      { id:'233525', name:'Hafiz Muhammad Hasnain Naseer', phone:'92 308-7426553', email:'233525@students.au.edu.pk', supervisor:'Muhammad Asadullah Khalid' },
+      { id:'233527', name:'Arbab Javaid', phone:'92 322-8109642', email:'233527@students.au.edu.pk', supervisor:'Muhammad Asadullah Khalid' },
+      { id:'233531', name:'Eman Qazi', phone:'92 309-7167600', email:'233531@students.au.edu.pk', supervisor:'Muhammad Asadullah Khalid' },
+      { id:'233533', name:'Aimah Bilal', phone:'92 312-7108644', email:'233533@students.au.edu.pk', supervisor:'Muhammad Asadullah Khalid' },
+      { id:'233535', name:'Muhammad Ihtisham Sajjad', phone:'92 317-7953504', email:'233535@students.au.edu.pk', supervisor:'Muhammad Rashaf Jamil' },
+      { id:'233537', name:'Muhammad Hasaan', phone:'92 312-7228352', email:'233537@students.au.edu.pk', supervisor:'Muhammad Asadullah Khalid' },
+      { id:'233539', name:'Mahateer Muhammad', phone:'92 331-2137110', email:'233539@students.au.edu.pk', supervisor:'Muhammad Asadullah Khalid' },
+      { id:'233541', name:'Hassan Raza', phone:'92 314-6138568', email:'233541@students.au.edu.pk', supervisor:'Muhammad Asadullah Khalid' },
+      { id:'233543', name:'Muhammad Bilal Talib', phone:'92 322-6538466', email:'233543@students.au.edu.pk', supervisor:'Muhammad Rashaf Jamil' },
+      { id:'233545', name:'Syeda Fatima Faisal', phone:'92 331-8639000', email:'233545@students.au.edu.pk', supervisor:'Ms Atka Ali' },
+      { id:'233547', name:'Salman Khalid', phone:'92 308-7368949', email:'233547@students.au.edu.pk', supervisor:'Muhammad Rashaf Jamil' },
+      { id:'233549', name:'Ali Raza', phone:'92 309-6894742', email:'233549@students.au.edu.pk', supervisor:'Muhammad Rashaf Jamil' },
+      { id:'233551', name:'Mariam Tanveer', phone:'92 320-5501891', email:'233551@students.au.edu.pk', supervisor:'Ms Atka Ali' },
+      { id:'233553', name:'Muhammad Maaz', phone:'92 307-1604643', email:'233553@students.au.edu.pk', supervisor:'Muhammad Rashaf Jamil' },
+      { id:'233555', name:'Mahneen Kamran Mirza', phone:'92 305-6305151', email:'233555@students.au.edu.pk', supervisor:'Muhammad Rashaf Jamil' },
+      { id:'233557', name:'Muhammad Jawad', phone:'92 345-7244148', email:'233557@students.au.edu.pk', supervisor:'Muhammad Asadullah Khalid' },
+      { id:'233559', name:'Wajahat-Ul-Hasnain', phone:'92 311-6042574', email:'233559@students.au.edu.pk', supervisor:'Engr. Fawad ul Haq' },
+      { id:'233561', name:'Kinza Javed', phone:'92 307-7363934', email:'233561@students.au.edu.pk', supervisor:'Mughees Ahmad' },
+      { id:'233567', name:'Muhammad Zaeem Tahir', phone:'92 301-7774925', email:'233567@students.au.edu.pk', supervisor:'Engr. Fawad ul Haq' },
+      { id:'233569', name:'Muhammad Ahsan Ali', phone:'92 302-8688169', email:'233569@students.au.edu.pk', supervisor:'Mughees Ahmad' },
+      { id:'233573', name:'Javeria Noor', phone:'92 333-8349996', email:'233573@students.au.edu.pk', supervisor:'Engr. Fawad ul Haq' },
+      { id:'233575', name:'Muhammad Saim Balouch', phone:'92 323-7965976', email:'233575@students.au.edu.pk', supervisor:'Mughees Ahmad' },
+      { id:'233577', name:'Abdullah Nadeem', phone:'92 319-6256100', email:'233577@students.au.edu.pk', supervisor:'Engr. Fawad ul Haq' },
+      { id:'233579', name:'Zahid Zafar', phone:'92 304-7321516', email:'233579@students.au.edu.pk', supervisor:'Mughees Ahmad' },
+      { id:'233581', name:'Amna Noor', phone:'92 308-9446090', email:'233581@students.au.edu.pk', supervisor:'Engr. Fawad ul Haq' },
+      { id:'233583', name:'Muhammad Faseeh Anjum', phone:'92 307-6036856', email:'233583@students.au.edu.pk', supervisor:'Muhammad Rashaf Jamil' },
+      { id:'233585', name:'Syed Muhammad Shah Abdullah', phone:'92 334-7292682', email:'233585@students.au.edu.pk', supervisor:'Mughees Ahmad' },
+      { id:'233587', name:'Khuzaim Adnan Qureshi', phone:'92 331-9067589', email:'233587@students.au.edu.pk', supervisor:'Engr. Fawad ul Haq' },
+      { id:'233589', name:'Abdul Rehman', phone:'92 324-1958108', email:'233589@students.au.edu.pk', supervisor:'Mughees Ahmad' },
+      { id:'233597', name:'Muhammad Zain', phone:'92 331-6845864', email:'233597@students.au.edu.pk', supervisor:'Engr. Fawad ul Haq' },
+      { id:'233599', name:'Muhammad Maauz Mansoor', phone:'92 312-6356467', email:'233599@students.au.edu.pk', supervisor:'Mughees Ahmad' },
+      { id:'233601', name:'Muhammad Shabbir', phone:'92 315-1057932', email:'233601@students.au.edu.pk', supervisor:'Engr. Fawad ul Haq' },
+      { id:'233605', name:'Ahmad Yasin', phone:'92 328-5458604', email:'233605@students.au.edu.pk', supervisor:'Mughees Ahmad' },
+      { id:'233607', name:'Muhammad Hassan Shoukat', phone:'92 317-6350352', email:'233607@students.au.edu.pk', supervisor:'Engr. Fawad ul Haq' },
+      { id:'233609', name:'Dua Nadeem', phone:'92 300-9715455', email:'233609@students.au.edu.pk', supervisor:'Mughees Ahmad' },
+      { id:'233763', name:'Shumail Majid Awan', phone:'92 315-6369688', email:'233763@students.au.edu.pk', supervisor:'Ms Mamoona Rafique' },
+      { id:'233798', name:'Maham Kamran Mirza', phone:'92 306-1555257', email:'233798@students.au.edu.pk', supervisor:'Muhammad Rashaf Jamil' },
+      { id:'233808', name:'Nosheen Asif', phone:'92 347-7009903', email:'233808@students.au.edu.pk', supervisor:'Ms Mamoona Rafique' },
+      // Class: BSCS-F-23-B-117
+      { id:'233504', name:'Muhammad Haroon', phone:'92 301-8961144', email:'233504@students.au.edu.pk', supervisor:'Ms Aleena Imran' },
+      { id:'233506', name:'Maryam Allah Ditta', phone:'92 325-7292561', email:'233506@students.au.edu.pk', supervisor:'Ms Mamoona Rafique' },
+      { id:'233508', name:'Saleh Dania Siddiquei', phone:'92 300-1567071', email:'233508@students.au.edu.pk', supervisor:'Ms Mamoona Rafique' },
+      { id:'233510', name:'Muhammad Ali', phone:'92 303-4966677', email:'233510@students.au.edu.pk', supervisor:'Muhammad Kashif' },
+      { id:'233514', name:'Muhammad Muzamil', phone:'92 328-7362120', email:'233514@students.au.edu.pk', supervisor:'Muhammad Kashif' },
+      { id:'233516', name:'Muhammad Hassan', phone:'92 305-6622236', email:'233516@students.au.edu.pk', supervisor:'Anum Aftab' },
+      { id:'233518', name:'Tooba Ghaffar', phone:'92 308-4756752', email:'233518@students.au.edu.pk', supervisor:'Ms Mamoona Rafique' },
+      { id:'233520', name:'Komal Naz', phone:'92 332-2836060', email:'233520@students.au.edu.pk', supervisor:'Ms Mamoona Rafique' },
+      { id:'233522', name:'Fatima Rani', phone:'92 349-6522587', email:'233522@students.au.edu.pk', supervisor:'Ms Mamoona Rafique' },
+      { id:'233526', name:'Fatima Khalid', phone:'92 309-9787670', email:'233526@students.au.edu.pk', supervisor:'Muhammad Kashif' },
+      { id:'233530', name:'Somal Atta Baloch', phone:'92 333-8583938', email:'233530@students.au.edu.pk', supervisor:'Ms Mamoona Rafique' },
+      { id:'233532', name:'Muhammad Rayyan Javed', phone:'92 307-6965231', email:'233532@students.au.edu.pk', supervisor:'Muhammad Faisal Idrees' },
+      { id:'233534', name:'Abu Bakar', phone:'92 334-7067577', email:'233534@students.au.edu.pk', supervisor:'Muhammad Kashif' },
+      { id:'233536', name:'Abdul Moueed Alvi', phone:'92 327-6969033', email:'233536@students.au.edu.pk', supervisor:'Muhammad Faisal Idrees' },
+      { id:'233538', name:'Muhammad Umer', phone:'92 301-0611212', email:'233538@students.au.edu.pk', supervisor:'Muhammad Faisal Idrees' },
+      { id:'233544', name:'Sadia Khan', phone:'92 311-9997719', email:'233544@students.au.edu.pk', supervisor:'Muhammad Faisal Idrees' },
+      { id:'233546', name:'Muhammad Javed', phone:'92 332-6368906', email:'233546@students.au.edu.pk', supervisor:'Ms Mamoona Rafique' },
+      { id:'233548', name:'Areej Shehzad', phone:'92 312-6537530', email:'233548@students.au.edu.pk', supervisor:'Ms Aleena Imran' },
+      { id:'233550', name:'Ammar Yaqub', phone:'92 333-6017580', email:'233550@students.au.edu.pk', supervisor:'Ms Aleena Imran' },
+      { id:'233552', name:'Malaika Batool', phone:'92 332-1711070', email:'233552@students.au.edu.pk', supervisor:'Ms Aleena Imran' },
+      { id:'233556', name:'Zunaira Iqbal', phone:'92 317-5667844', email:'233556@students.au.edu.pk', supervisor:'Ms Aleena Imran' },
+      { id:'233558', name:'Abdullah Altaf', phone:'92 312-9636765', email:'233558@students.au.edu.pk', supervisor:'Muhammad Kashif' },
+      { id:'233560', name:'Muhammad Muneeb Ahmad', phone:'92 335-9220505', email:'233560@students.au.edu.pk', supervisor:'Muhammad Kashif' },
+      { id:'233566', name:'Muhammad Ahmad Ijaz', phone:'92 303-7602577', email:'233566@students.au.edu.pk', supervisor:'Muhammad Faisal Idrees' },
+      { id:'233574', name:'Muhammad Faizan Ali', phone:'92 308-8598971', email:'233574@students.au.edu.pk', supervisor:'Muhammad Kashif' },
+      { id:'233576', name:'Musa Bin Abdullah', phone:'92 314-4154633', email:'233576@students.au.edu.pk', supervisor:'Ms Aleena Imran' },
+      { id:'233578', name:'Muhammad Arbab', phone:'92 318-9006754', email:'233578@students.au.edu.pk', supervisor:'Ms Aleena Imran' },
+      { id:'233580', name:'Ayesha Saeed Alvi', phone:'92 300-6221502', email:'233580@students.au.edu.pk', supervisor:'Muhammad Kashif' },
+      { id:'233582', name:'Amna Sajjad', phone:'92 340-1710049', email:'233582@students.au.edu.pk', supervisor:'Ms Aleena Imran' },
+      { id:'233584', name:'Muhammad Fahad Ashraf', phone:'92 317-6869143', email:'233584@students.au.edu.pk', supervisor:'Muhammad Faisal Idrees' },
+      { id:'233586', name:'Muhammad Owaif Aamir', phone:'92 300-7802212', email:'233586@students.au.edu.pk', supervisor:'Anum Aftab' },
+      { id:'233588', name:'Muhammad Danial', phone:'92 330-6746910', email:'233588@students.au.edu.pk', supervisor:'Anum Aftab' },
+      { id:'233590', name:'Muhammad Alwaz Siddique', phone:'92 313-6700789', email:'233590@students.au.edu.pk', supervisor:'Ms Aleena Imran' },
+      { id:'233596', name:'Arfa Imran', phone:'92 317-6759695', email:'233596@students.au.edu.pk', supervisor:'Muhammad Faisal Idrees' },
+      { id:'233598', name:'Muhammad Musa', phone:'92 321-6315922', email:'233598@students.au.edu.pk', supervisor:'Anum Aftab' },
+      { id:'233600', name:'Abdul Rehman', phone:'92 315-3211100', email:'233600@students.au.edu.pk', supervisor:'Anum Aftab' },
+      { id:'233604', name:'Zain Ul Abideen Ali', phone:'92 316-4647771', email:'233604@students.au.edu.pk', supervisor:'Muhammad Faisal Idrees' },
+      { id:'233606', name:'Danish Naveed Butt', phone:'92 345-4333293', email:'233606@students.au.edu.pk', supervisor:'Muhammad Faisal Idrees' },
+      { id:'233608', name:'Muzzammil Imtiaz', phone:'92 307-6388621', email:'233608@students.au.edu.pk', supervisor:'Anum Aftab' },
+      { id:'233757', name:'Aaira Wajahat Rao', phone:'92 334-7475355', email:'233757@students.au.edu.pk', supervisor:'Anum Aftab' },
+      { id:'233769', name:'Asia Sajid', phone:'92 321-8681896', email:'233769@students.au.edu.pk', supervisor:'Anum Aftab' },
+      { id:'233787', name:'Unaiza Faheem', phone:'92 307-7799509', email:'233787@students.au.edu.pk', supervisor:'Anum Aftab' },
+      { id:'233807', name:'Mashhood Farqaleet', phone:'92 332-0790500', email:'233807@students.au.edu.pk', supervisor:'Muhammad Kashif' },
+      // Class: BSCYS-F-23-A-119
+      { id:'233610', name:'Mudassir Hussain', phone:'92 305-4683127', email:'233610@students.au.edu.pk', supervisor:'Naveed Abbas' },
+      { id:'233612', name:'Malaika Noor', phone:'92 331-5764025', email:'233612@students.au.edu.pk', supervisor:'Ms Ramsha Qureshi' },
+      { id:'233613', name:'Umme Ruman', phone:'92 307-1906191', email:'233613@students.au.edu.pk', supervisor:'Ms Ramsha Qureshi' },
+      { id:'233614', name:'Abdul Qadeer', phone:'92 344-4941078', email:'233614@students.au.edu.pk', supervisor:'Naveed Abbas' },
+      { id:'233615', name:'Tayyab Shahzad Akram', phone:'92 339-3931313', email:'233615@students.au.edu.pk', supervisor:'Naveed Abbas' },
+      { id:'233616', name:'Hafiz Usman Ghani', phone:'92 306-8686006', email:'233616@students.au.edu.pk', supervisor:'Babar Ahmad' },
+      { id:'233617', name:'Sheraz Hussain', phone:'92 316-7012917', email:'233617@students.au.edu.pk', supervisor:'Naveed Abbas' },
+      { id:'233618', name:'Muhammad Faheem Shahid', phone:'92 320-9676535', email:'233618@students.au.edu.pk', supervisor:'Naveed Abbas' },
+      { id:'233619', name:'Aatika Asif', phone:'92 307-4250088', email:'233619@students.au.edu.pk', supervisor:'Ms Ramsha Qureshi' },
+      { id:'233620', name:'Asjad Abbas', phone:'92 300-9636508', email:'233620@students.au.edu.pk', supervisor:'Ms Ramsha Qureshi' },
+      { id:'233621', name:'Muhammad Jameel', phone:'92 318-0669441', email:'233621@students.au.edu.pk', supervisor:'Muhammad Azam' },
+      { id:'233623', name:'Laiba Sattar', phone:'92 304-0406974', email:'233623@students.au.edu.pk', supervisor:'Ms Ramsha Qureshi' },
+      { id:'233624', name:'Mahmood Ul Hasson', phone:'92 334-5240917', email:'233624@students.au.edu.pk', supervisor:'Muhammad Azam' },
+      { id:'233625', name:'Syed Gohar Iqbal', phone:'92 311-6438892', email:'233625@students.au.edu.pk', supervisor:'Muhammad Azam' },
+      { id:'233626', name:'Muhammad Imran', phone:'92 301-0051720', email:'233626@students.au.edu.pk', supervisor:'Muhammad Azam' },
+      { id:'233627', name:'Ameer Hamza', phone:'92 317-5667844', email:'233627@students.au.edu.pk', supervisor:'Muhammad Azam' },
+      { id:'233628', name:'Muhammad Faseeh Ansari', phone:'92 304-7814625', email:'233628@students.au.edu.pk', supervisor:'Muhammad Azam' },
+      { id:'233629', name:'Saif Ur Rehman Alvi', phone:'92 300-1602391', email:'233629@students.au.edu.pk', supervisor:'Muhammad Azam' },
+      { id:'233631', name:'Laiqa Rafay', phone:'92 311-6001350', email:'233631@students.au.edu.pk', supervisor:'Ms Ramsha Qureshi' },
+      { id:'233632', name:'Syeda Maryam Haider Gardezi', phone:'92 300-6227212', email:'233632@students.au.edu.pk', supervisor:'Naveed Abbas' },
+      { id:'233633', name:'Muhammad Arhum Luqman', phone:'92 303-0423335', email:'233633@students.au.edu.pk', supervisor:'Naveed Abbas' },
+      { id:'233634', name:'Hamza Ali', phone:'92 304-2966911', email:'233634@students.au.edu.pk', supervisor:'Muhammad Azam' },
+      { id:'233635', name:'Zahid Ali', phone:'92 305-2842676', email:'233635@students.au.edu.pk', supervisor:'Muhammad Azam' },
+      { id:'233637', name:'Muhammad Hassan', phone:'92 310-2157156', email:'233637@students.au.edu.pk', supervisor:'Naveed Abbas' },
+      { id:'233638', name:'Bakhtawar Saeed', phone:'92 340-4963682', email:'233638@students.au.edu.pk', supervisor:'Ms Ramsha Qureshi' },
+      { id:'233639', name:'Zaid Bin Saeed', phone:'92 306-3944499', email:'233639@students.au.edu.pk', supervisor:'Babar Ahmad' },
+      { id:'233640', name:'Fahad Hussain', phone:'92 335-4167209', email:'233640@students.au.edu.pk', supervisor:'Babar Ahmad' },
+      { id:'233641', name:'Tahir Ismail', phone:'92 307-2954743', email:'233641@students.au.edu.pk', supervisor:'Ms Ramsha Qureshi' },
+      { id:'233643', name:'Muzammil Hussain', phone:'92 302-6407224', email:'233643@students.au.edu.pk', supervisor:'Babar Ahmad' },
+      { id:'233644', name:'Shehroz Ahmed Khan', phone:'92 316-8551626', email:'233644@students.au.edu.pk', supervisor:'Ms Ramsha Qureshi' },
+      { id:'233645', name:'Muhammad Ali Hassan', phone:'92 333-3491616', email:'233645@students.au.edu.pk', supervisor:'Babar Ahmad' },
+      { id:'233647', name:'Zohaib Altaf', phone:'92 328-7337763', email:'233647@students.au.edu.pk', supervisor:'Babar Ahmad' },
+      { id:'233648', name:'Maheen Asghar Khan', phone:'92 324-1846243', email:'233648@students.au.edu.pk', supervisor:'Babar Ahmad' },
+      { id:'233649', name:'Mohsin Nasir', phone:'92 313-6102379', email:'233649@students.au.edu.pk', supervisor:'Babar Ahmad' },
+      { id:'233650', name:'Muhammad Hashaam Talib', phone:'92 305-1039948', email:'233650@students.au.edu.pk', supervisor:'Babar Ahmad' },
+      { id:'233651', name:'M Talha', phone:'92 309-5855216', email:'233651@students.au.edu.pk', supervisor:'Babar Ahmad' },
+      { id:'233652', name:'Muhammad Saad Hassan', phone:'92 304-7752743', email:'233652@students.au.edu.pk', supervisor:'Ms Maryam' },
+      { id:'233653', name:'Bukhari', phone:'92 300-1123468', email:'233653@students.au.edu.pk', supervisor:'Ms Maryam' },
+      { id:'233654', name:'Unaiza Fatima', phone:'92 302-6968607', email:'233654@students.au.edu.pk', supervisor:'Ms Maryam' },
+      { id:'233655', name:'Sara Saleem', phone:'92 312-0367600', email:'233655@students.au.edu.pk', supervisor:'Ms Maryam' },
+      { id:'233656', name:'Ahmad Talha', phone:'0334-6443513', email:'233656@students.au.edu.pk', supervisor:'Naveed Abbas' },
+      { id:'233658', name:'Shameer Iftikhar', phone:'92 300-7851259', email:'233658@students.au.edu.pk', supervisor:'Ms Maryam' },
+      { id:'233661', name:'Muhammad Bilal', phone:'92 348-0164828', email:'233661@students.au.edu.pk', supervisor:'Ms Maryam' },
+      { id:'233662', name:'Muhammad Usaid Riaz', phone:'92 300-1337004', email:'233662@students.au.edu.pk', supervisor:'Ms Maryam' },
+      { id:'233663', name:'Muhammad Talha', phone:'92 321-1956056', email:'233663@students.au.edu.pk', supervisor:'Engr. Syed Umair' },
+      { id:'233785', name:'Maheen Suhail', phone:'92 326-6443531', email:'233785@students.au.edu.pk', supervisor:'Ms Maryam' },
+      // Class: BSSE-F-23-A-118 (previously added)
+      { id:'233515', name:'Arslan Dilawar', phone:'92 320-7672182', email:'233515@students.au.edu.pk', supervisor:'Saad ur Rahman' },
+      { id:'233664', name:'Nasir Ali', phone:'92 322-2934139', email:'233664@students.au.edu.pk', supervisor:'Ubaid Bin Zaffar' },
+      { id:'233665', name:'Muhammad Attaullah', phone:'92 306-1877442', email:'233665@students.au.edu.pk', supervisor:'Saad ur Rahman' },
+      { id:'233666', name:'Abeer Fatima', phone:'92 308-6739000', email:'233666@students.au.edu.pk', supervisor:'Ubaid Bin Zaffar' },
+      { id:'233667', name:'Mereen Mazhar', phone:'92 323-6006731', email:'233667@students.au.edu.pk', supervisor:'Saad ur Rahman' },
+      { id:'233668', name:'Abdullah Adan', phone:'92 311-7267539', email:'233668@students.au.edu.pk', supervisor:'Ubaid Bin Zaffar' },
+      { id:'233669', name:'Muhammad Hasnain', phone:'92 302-2677474', email:'233669@students.au.edu.pk', supervisor:'Saad ur Rahman' },
+      { id:'233670', name:'Sidra Ghulam Hussain', phone:'92 323-5998675', email:'233670@students.au.edu.pk', supervisor:'Ubaid Bin Zaffar' },
+      { id:'233671', name:'Muhammad Muqaddas Ali', phone:'92 326-1430766', email:'233671@students.au.edu.pk', supervisor:'Saad ur Rahman' },
+      { id:'233672', name:'Iman Ali', phone:'92 300-6324550', email:'233672@students.au.edu.pk', supervisor:'Ubaid Bin Zaffar' },
+      { id:'233674', name:'Muhammad Umar', phone:'92 307-1449857', email:'233674@students.au.edu.pk', supervisor:'Saad ur Rahman' },
+      { id:'233675', name:'Anzila Malik', phone:'92 336-6158777', email:'233675@students.au.edu.pk', supervisor:'Ubaid Bin Zaffar' },
+      { id:'233676', name:'Eman Muzaffar', phone:'92 316-6505766', email:'233676@students.au.edu.pk', supervisor:'Saad ur Rahman' },
+      { id:'233677', name:'Noor Fatima', phone:'92 313-7866955', email:'233677@students.au.edu.pk', supervisor:'Ubaid Bin Zaffar' },
+      { id:'233678', name:'Kashmala Tariq', phone:'92 303-9934620', email:'233678@students.au.edu.pk', supervisor:'Saad ur Rahman' },
+      { id:'233679', name:'Abdul Rafay', phone:'92 332-6044586', email:'233679@students.au.edu.pk', supervisor:'Ubaid Bin Zaffar' },
+      { id:'233680', name:'Muhammad Awais', phone:'92 324-6378077', email:'233680@students.au.edu.pk', supervisor:'Saad ur Rahman' },
+      { id:'233681', name:'Tayyab Abbas', phone:'92 300-1567730', email:'233681@students.au.edu.pk', supervisor:'Ubaid Bin Zaffar' },
+      { id:'233682', name:'Amina Hussain', phone:'92 300-0400389', email:'233682@students.au.edu.pk', supervisor:'Abdul Ghani' },
+      { id:'233683', name:'Muhammad Shahzaib', phone:'92 311-7642300', email:'233683@students.au.edu.pk', supervisor:'Hafiz Muhammad Anas Ali' },
+      { id:'233684', name:'Tabraiz Ali Khan', phone:'92 320-7892659', email:'233684@students.au.edu.pk', supervisor:'Abdul Ghani' },
+      { id:'233685', name:'Abdul Wahab Haider', phone:'92 314-6674485', email:'233685@students.au.edu.pk', supervisor:'Hafiz Muhammad Anas Ali' },
+      { id:'233686', name:'Muneeb Ur Rehman', phone:'92 320-6728840', email:'233686@students.au.edu.pk', supervisor:'Abdul Ghani' },
+      { id:'233688', name:'Mehreen Shahid', phone:'92 320-9676535', email:'233688@students.au.edu.pk', supervisor:'Hafiz Muhammad Anas Ali' },
+      { id:'233689', name:'Muhammad Haris Nisar', phone:'92 315-4630125', email:'233689@students.au.edu.pk', supervisor:'Abdul Ghani' },
+      { id:'233690', name:'Rao Salaar Yusuf', phone:'92 309-2541616', email:'233690@students.au.edu.pk', supervisor:'Hafiz Muhammad Anas Ali' },
+      { id:'233691', name:'Sami Ullah', phone:'92 317-6759248', email:'233691@students.au.edu.pk', supervisor:'Abdul Ghani' },
+      { id:'233692', name:'Kashif Akram', phone:'92 324-6676291', email:'233692@students.au.edu.pk', supervisor:'Hafiz Muhammad Anas Ali' },
+      { id:'233693', name:'Abdullah', phone:'92 304-7319493', email:'233693@students.au.edu.pk', supervisor:'Abdul Ghani' },
+      { id:'233694', name:'Muhammad Waleed Qasim', phone:'92 334-6599500', email:'233694@students.au.edu.pk', supervisor:'Hafiz Muhammad Anas Ali' },
+      { id:'233695', name:'Muhammad Zain Ul Abideen', phone:'92 304-8043041', email:'233695@students.au.edu.pk', supervisor:'Abdul Ghani' },
+      { id:'233696', name:'Awais Ali', phone:'92 342-2459976', email:'233696@students.au.edu.pk', supervisor:'Hafiz Muhammad Anas Ali' },
+      { id:'233697', name:'Naveena Rashid', phone:'92 325-7435827', email:'233697@students.au.edu.pk', supervisor:'Abdul Ghani' },
+      { id:'233698', name:'Muhammad Ahsan', phone:'92 312-7987628', email:'233698@students.au.edu.pk', supervisor:'Hafiz Muhammad Anas Ali' },
+      { id:'233699', name:'Muhammad Aqeel Hassan', phone:'92 312-4418190', email:'233699@students.au.edu.pk', supervisor:'Abdul Ghani' },
+      { id:'233700', name:'Tayyaba Khalid', phone:'92 313-6251174', email:'233700@students.au.edu.pk', supervisor:'Hafiz Muhammad Anas Ali' },
+      { id:'233701', name:'Muhammad Awais Khan', phone:'92 330-7177987', email:'233701@students.au.edu.pk', supervisor:'Muhammad Burhan' },
+      { id:'233702', name:'Muhammad Zain Tariq', phone:'92 340-4858807', email:'233702@students.au.edu.pk', supervisor:'Muhammad Burhan' },
+      { id:'233703', name:'Meesam Raza', phone:'92 334-9072002', email:'233703@students.au.edu.pk', supervisor:'Engr. Syed Umair' },
+      { id:'233704', name:'Uzair Ahmed', phone:'92 326-5998367', email:'233704@students.au.edu.pk', supervisor:'Muhammad Burhan' },
+      { id:'233705', name:'Eman Asim', phone:'92 302-8658266', email:'233705@students.au.edu.pk', supervisor:'Engr. Syed Umair' },
+      { id:'233706', name:'Irza Sohail', phone:'92 309-6337768', email:'233706@students.au.edu.pk', supervisor:'Muhammad Burhan' },
+      { id:'233707', name:'Muhammad Zain Zafar', phone:'92 303-6540931', email:'233707@students.au.edu.pk', supervisor:'Engr. Syed Umair' },
+      { id:'233710', name:'Muhammad Hasnain Haider', phone:'92 346-6775000', email:'233710@students.au.edu.pk', supervisor:'Muhammad Burhan' },
+      { id:'233711', name:'Abdul Rehman', phone:'92 308-7719875', email:'233711@students.au.edu.pk', supervisor:'Engr. Syed Umair' },
+      { id:'233712', name:'Mansoor Ul Haq', phone:'92 340-1642350', email:'233712@students.au.edu.pk', supervisor:'Muhammad Burhan' },
+      { id:'233713', name:'Ahmad Ali Nasir', phone:'92 304-7039589', email:'233713@students.au.edu.pk', supervisor:'Engr. Syed Umair' },
+      { id:'233714', name:'Abdullah Saleem', phone:'92 314-6691096', email:'233714@students.au.edu.pk', supervisor:'Muhammad Burhan' },
+      { id:'233759', name:'Waseem Rasheed', phone:'92 304-7334693', email:'233759@students.au.edu.pk', supervisor:'Engr. Syed Umair' },
+      { id:'233762', name:'Abeeha Fatima', phone:'92 303-9800490', email:'233762@students.au.edu.pk', supervisor:'Muhammad Burhan' },
+      { id:'233764', name:'Muhammad Ahsan', phone:'92 315-0608712', email:'233764@students.au.edu.pk', supervisor:'Engr. Syed Umair' },
+      { id:'233784', name:'Muhammad Hassan Khan', phone:'92 304-6723444', email:'233784@students.au.edu.pk', supervisor:'Muhammad Burhan' }
+    ];
+    const supervisorStudents = studentsData.reduce((m,s)=>{(m[s.supervisor]=m[s.supervisor]||[]).push(s);return m;},{});
+    const facultyMembers = Object.keys(supervisorStudents);
+    // Evaluation placeholders (all blank initially). Later you can fill real numbers (0-100) per form.
+    const evaluationWeights = { C:40, E:25, F:5, REPORT:30 };
+    function computeFinal(st){
+      const C = st.C ?? 0, E = st.E ?? 0, F = st.F ?? 0, R = st.REPORT ?? 0;
+      const total = (C*evaluationWeights.C + E*evaluationWeights.E + F*evaluationWeights.F + R*evaluationWeights.REPORT)/100;
+      return Math.round(total*10)/10;
+    }
+    function getFacultyOverview(){
+      return facultyMembers.map(name=>{
+        const list = supervisorStudents[name]||[];
+        const assigned = list.length;
+        const active = assigned; // until a status field is added
+        const avg = assigned ? Math.round(list.reduce((a,s)=> a + computeFinal(s),0)/assigned) : 0;
+        return { supervisor:name, assigned, active, progress:avg };
+      });
+    }
+    function renderFacultyOverview(){
+      const tbody=document.querySelector('#facultyOverviewTable tbody'); if(!tbody) return;
+      tbody.innerHTML=getFacultyOverview().map(r=>{
+        const pct=Math.max(0,Math.min(100,r.progress));
+        const barClass = pct>=80?'bg-success':pct>=50?'bg-primary':'bg-warning';
+        return `<tr data-supervisor="${r.supervisor}">
+          <td>${r.supervisor}</td>
+          <td class="text-center">${r.assigned}</td>
+          <td class="text-center">${r.active}</td>
+          <td>
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:8px;border-radius:4px;">
+                <div class="progress-bar ${barClass}" style="width:${pct}%"></div>
+              </div>
+              <span class="small text-muted" style="width:40px;">${pct}%</span>
+            </div>
+          </td>
+          <td class="text-end"><button class="btn btn-outline-primary btn-sm view-details-btn" data-action="view-supervisor" data-supervisor="${r.supervisor}"><i class="bi bi-eye"></i></button></td>
+        </tr>`;
+      }).join('');
+    }
+    function expectedGrade(p){
+      if(p>=80) return 'A';
+      if(p>=75) return 'A-';
+      if(p>=70) return 'B+';
+      if(p>=65) return 'B';
+      if(p>=60) return 'B-';
+      if(p>=55) return 'C+';
+      if(p>=50) return 'C';
+      if(p>=45) return 'D';
+      return 'F';
+    }
+    function showSupervisorDetails(name){
+      const wrap=document.getElementById('supervisorDetails'); const list=supervisorStudents[name]||[];
+    const rows=list.map(s=>{
+        const finalPct=computeFinal(s);
+        const grade=expectedGrade(finalPct);
+    return `<tr>
+          <td>${s.id}</td>
+          <td>${s.name}</td>
+      <td>${s.phone||'-'}</td>
+      <td>${s.email||'-'}</td>
+          <td class="text-center">${s.C??'-'}</td>
+          <td class="text-center">${s.E??'-'}</td>
+          <td class="text-center">${s.F??'-'}</td>
+          <td class="text-center">${s.REPORT??'-'}</td>
+          <td>
+            <div class="d-flex align-items-center gap-2">
+              <div class="progress flex-grow-1" style="height:8px;border-radius:4px;">
+                <div class="progress-bar ${finalPct>=80?'bg-success':finalPct>=50?'bg-primary':'bg-warning'}" style="width:${finalPct}%"></div>
+              </div>
+      <span class="small text-muted" style="width:46px;">${finalPct}%</span>
+      <button class="btn btn-outline-primary btn-sm view-form-btn" data-student="${s.id}" title="View evaluated forms"><i class="bi bi-eye"></i></button>
+            </div>
+          </td>
+          <td class="text-center fw-semibold">${grade}</td>
+        </tr>`;
+      }).join('');
+      wrap.classList.remove('d-none');
+  wrap.innerHTML=`<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2"><h6 class="mb-0">${name} — Student Evaluation Details</h6><button class="btn btn-outline-secondary btn-sm" id="closeDetails"><i class="bi bi-x"></i></button></div><div class="table-responsive"><table class="table align-middle mb-0"><thead><tr><th style=\"min-width:90px;width:90px;\">Reg No</th><th style=\"min-width:200px;\">Student Name</th><th style=\"min-width:110px;\">Phone</th><th style=\"min-width:180px;\">Email</th><th class=\"text-center\">Form C<br><small class=\"text-muted\">40%</small></th><th class=\"text-center\">Form E<br><small class=\"text-muted\">25%</small></th><th class=\"text-center\">Form F<br><small class=\"text-muted\">5%</small></th><th class=\"text-center\">Final Report<br><small class=\"text-muted\">30%</small></th><th style=\"min-width:220px\">Final % & Forms</th><th>Expected Grade</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+      document.getElementById('closeDetails').addEventListener('click',()=>wrap.classList.add('d-none'));
+      wrap.scrollIntoView({behavior:'smooth', block:'start'});
+      // Attach listener for view forms buttons
+      wrap.querySelectorAll('.view-form-btn').forEach(btn=>{
+        btn.addEventListener('click',()=>{
+          const sid=btn.getAttribute('data-student');
+          alert('Placeholder: open evaluated forms for student '+sid); // placeholder action
+        });
+      });
+    }
+    document.getElementById('facultyOverviewTable').addEventListener('click',e=>{const b=e.target.closest('button[data-action="view-supervisor"]'); if(!b) return; showSupervisorDetails(b.getAttribute('data-supervisor'));});
+  // (Removed obsolete evaluation/progress logic)
+  </script>
+    <script>
+    // Notification rail (expanding panel) logic
+    (function(){
+      const STORE='dicNotifications';
+      const rail=document.getElementById('notifRail');
+      const btn=document.getElementById('notifBtn');
+      const list=document.getElementById('nrList');
+      const badge=document.getElementById('notifBadge');
+  const count=document.getElementById('nrCount');
+  const tabs=document.getElementById('nrTabs');
+      const markAll=document.getElementById('nrMarkAll');
+      const clearAll=document.getElementById('nrClearAll');
+      const closeBtn=document.getElementById('nrClose');
+      const seeds=[
+        {id:'n1', type:'alert',  category:'team',    title:'Pending Approvals',        text:'You have 3 Form B requests awaiting review.',             time:Date.now()-1000*60*12,      read:false},
+        {id:'n2', type:'success',category:'mention', title:'Submission Approved',      text:'Form A for student 233505 approved.',                     time:Date.now()-1000*60*47,      read:false},
+        {id:'n3', type:'info',   category:'team',    title:'System Notice',           text:'Evaluation period closes in 5 days.',                    time:Date.now()-1000*60*60*7,    read:true},
+        {id:'n4', type:'info',   category:'team',    title:'New Form B Submission',   text:'Student 231245 submitted Form B for review.',            time:Date.now()-1000*60*60*9,    read:false},
+        {id:'n5', type:'alert',  category:'team',    title:'Evaluation Reminder',     text:'Faculty evaluations are due tomorrow.',                 time:Date.now()-1000*60*60*15,   read:false},
+        {id:'n6', type:'success',category:'mention', title:'Final Report Uploaded',   text:'Student 233100 uploaded the final report.',             time:Date.now()-1000*60*60*20,   read:true},
+        {id:'n7', type:'info',   category:'team',    title:'Site Feedback Received',  text:'New feedback submitted by internship site.',            time:Date.now()-1000*60*60*28,   read:false},
+        {id:'n8', type:'info',   category:'team',    title:'Policy Update',           text:'Updated guidelines for Form C evaluation posted.',      time:Date.now()-1000*60*60*33,   read:true},
+        {id:'n9', type:'alert',  category:'mention', title:'Meeting Scheduled',       text:'Industry partner meeting set for next Monday 10AM.',    time:Date.now()-1000*60*60*40,   read:false},
+        {id:'n10',type:'success',category:'team',    title:'Maintenance Complete',    text:'Database maintenance completed successfully.',          time:Date.now()-1000*60*60*48,   read:true}
+      ];
+  // TEST MODE: always repopulate defaults on page load so they come back after clearing
+  const ALWAYS_RESET=true; // set to false later in production
+      function load(){ try{const raw=localStorage.getItem(STORE); return raw?JSON.parse(raw):seeds;}catch{return seeds;} }
+      function save(arr){ localStorage.setItem(STORE,JSON.stringify(arr)); }
+      function ago(ts){ const d=Date.now()-ts; const m=Math.floor(d/60000); if(m<1) return 'just now'; if(m<60) return m+'m ago'; const h=Math.floor(m/60); if(h<24) return h+'h ago'; const day=Math.floor(h/24); if(day<7) return day+'d ago'; return new Date(ts).toLocaleDateString(); }
+      function iconFor(type){ if(type==='alert') return '<i class="bi bi-exclamation-triangle-fill"></i>'; if(type==='success') return '<i class="bi bi-check2"></i>'; return '<i class="bi bi-info-circle"></i>'; }
+      let activeFilter='all'; // all | unread | read
+      function applyFilter(listData){
+        if(activeFilter==='all') return listData;
+        if(activeFilter==='unread') return listData.filter(n=>!n.read);
+        if(activeFilter==='read') return listData.filter(n=>n.read);
+        return listData;
+      }
+      let showAll=false;
+      function render(){
+        const data=load().sort((a,b)=>b.time-a.time);
+        const filtered=applyFilter(data);
+        const limit=10;
+        const visible = showAll?filtered:filtered.slice(0,limit);
+        list.innerHTML = visible.length ? visible.map(n=>{
+          const typeClass = n.type?`type-${n.type}`:'';
+          const title = n.title || 'Notification';
+          const dateStr = new Date(n.time).toLocaleDateString(undefined,{month:'short', day:'numeric', year:'numeric'});
+          return `<li class="nr-item ${typeClass} ${n.read?'read':'unread'}" data-id="${n.id}">
+            <div class="nr-icon">${iconFor(n.type)}</div>
+            <div class="nr-body">
+              <div class="nr-row-top"><span class="nr-title">${title}</span></div>
+              <div class="nr-text-block">${n.text}</div>
+              <div class="nr-meta-line"><span class="nr-time">${ago(n.time)}</span><span class="nr-date">${dateStr}</span></div>
+            </div>
+            <div class="nr-unread-dot" aria-hidden="true"></div>
+          </li>`;
+        }).join('') : '<li class="nr-item"><div class="nr-body"><h6 class="nr-title">No Notifications</h6><p class="nr-text">You are all caught up.</p></div></li>';
+        // show more / less button logic
+        const moreWrap=document.getElementById('nrMoreWrap');
+        const moreBtn=document.getElementById('nrShowMore');
+        if(filtered.length>limit){
+          moreWrap.style.display='block';
+          moreBtn.textContent = showAll? 'Show less' : `Show more (${filtered.length - visible.length})`;
+        } else {
+          moreWrap.style.display='none';
+        }
+        const total=data.length;
+        const unreadCount=data.filter(n=>!n.read).length;
+        const readCount=total-unreadCount;
+        if(unreadCount){ badge.textContent=unreadCount>99?'99+':unreadCount; badge.classList.remove('d-none'); } else badge.classList.add('d-none');
+        // update tab counts
+        tabs.querySelectorAll('.nr-tab').forEach(tab=>{
+          const f=tab.getAttribute('data-filter');
+          const span=tab.querySelector('.count');
+            if(f==='all' && span) span.textContent=total;
+            if(f==='unread' && span) span.textContent=unreadCount;
+            if(f==='read' && span) span.textContent=readCount;
+          tab.classList.toggle('active', f===activeFilter);
+        });
+      }
+      function open(){ rail.classList.add('open'); rail.setAttribute('aria-hidden','false'); render(); btn.setAttribute('aria-expanded','true'); }
+      function close(){ rail.classList.remove('open'); rail.setAttribute('aria-hidden','true'); btn.setAttribute('aria-expanded','false'); }
+      function toggle(){ rail.classList.contains('open')?close():open(); }
+      btn?.addEventListener('click',e=>{ e.stopPropagation(); toggle(); });
+      closeBtn?.addEventListener('click',close);
+      document.addEventListener('click',e=>{ if(rail.classList.contains('open')){ if(!rail.contains(e.target) && !btn.contains(e.target)) close(); }});
+      window.addEventListener('keydown',e=>{ if(e.key==='Escape') close(); });
+  list.addEventListener('click',e=>{ const li=e.target.closest('.nr-item'); if(!li) return; const id=li.getAttribute('data-id'); const data=load(); const n=data.find(x=>x.id===id); if(n && !n.read){ n.read=true; save(data); render(); }});
+  tabs.addEventListener('click',e=>{ const t=e.target.closest('.nr-tab'); if(!t) return; activeFilter=t.getAttribute('data-filter'); showAll=false; render(); });
+  document.getElementById('nrShowMore')?.addEventListener('click',()=>{ showAll=!showAll; render(); });
+      markAll?.addEventListener('click',()=>{ save(load().map(n=>({...n,read:true}))); render(); });
+      clearAll?.addEventListener('click',()=>{ save([]); render(); });
+  window.pushDICNotification=function(partial){ const data=load(); data.push({id:'n'+Date.now()+Math.random().toString(36).slice(2), type:partial.type||'info', category:partial.category||'team', title:partial.title||'Notice', text:partial.text||'', time:Date.now(), read:false}); save(data); render(); if(!rail.classList.contains('open')) open(); };
+  if(ALWAYS_RESET){ save(seeds); }
+  render(); // (Auto-open removed per request; click bell to expand)
+    })();
+    </script>
+  <script>
+  // Minimal profile dropdown logic
+  (function(){
+    const fallback={name:'DIC Coordinator',email:'dic@au.edu.pk',role:'DIC'};
+    let uRaw=localStorage.getItem('currentUser');
+    let u; try{u=uRaw?JSON.parse(uRaw):fallback;}catch{u=fallback;}
+    if(!u.role) u.role='DIC';
+    const first=u.name.split(/\s+/)[0];
+    const set=(id,val)=>{const el=document.getElementById(id); if(el) el.textContent=val;};
+  set('profileName',u.name); set('profileEmail',u.email);
+  const btn=document.getElementById('profileBtn'); const menu=document.getElementById('profileMenu');
+    function closeMenu(){ menu.classList.remove('open'); btn.classList.remove('open'); }
+    if(btn&&menu){
+      btn.addEventListener('click',e=>{e.stopPropagation(); const willOpen=!menu.classList.contains('open'); document.querySelectorAll('.profile-min-menu.open').forEach(m=>m.classList.remove('open')); if(willOpen){ menu.classList.add('open'); btn.classList.add('open'); } else { closeMenu(); }});
+      document.addEventListener('click',e=>{ if(!menu.contains(e.target) && !btn.contains(e.target)) closeMenu();});
+      window.addEventListener('keydown',e=>{ if(e.key==='Escape') closeMenu();});
+    }
+    const logout=document.getElementById('quickLogout');
+    if(logout){ logout.addEventListener('click',()=>{ localStorage.removeItem('currentUser'); window.location.href='loginForm.html'; }); }
+  })();
+  </script>
+</body>
+</html>

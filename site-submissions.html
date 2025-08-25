@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Form C Submissions - Site Supervisor</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+<style>
+body{font-family:"Poppins",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#f5f8fb;color:#1f2937;}
+.header-bar{background:linear-gradient(135deg,#0066b2,#0099cc);padding:.65rem .9rem;display:flex;align-items:center;gap:.75rem;box-shadow:0 2px 8px rgba(0,0,0,.08);} 
+.header-bar .logo-circle{background:#fff;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;padding:4px;} 
+.header-bar img{height:32px;width:auto;} 
+.header-bar h1{font-size:1rem;color:#fff;margin:0;font-weight:600;letter-spacing:.4px;cursor:pointer;user-select:none;} 
+.header-bar h1:hover{text-decoration:underline;text-decoration-thickness:2px;} 
+.main-wrap{padding:1.25rem 1.25rem 2.5rem;max-width:1180px;margin:0 auto;} 
+.card-lite{background:#fff;border:1px solid #e4edf5;border-radius:18px;box-shadow:0 6px 26px -4px rgba(0,0,0,.08);padding:1.05rem 1.1rem;} 
+.table-card{overflow:hidden;} 
+.section-title{font-size:.95rem;font-weight:600;letter-spacing:.5px;text-transform:uppercase;margin-bottom:1rem;display:flex;align-items:center;gap:.55rem;} 
+.filters-row label{font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:#64748b;} 
+.badge{font-weight:500;} 
+.btn-outline-secondary.btn-sm{--bs-btn-padding-y:.25rem;--bs-btn-padding-x:.55rem;} 
+/* Unified back button */
+.dash-back-btn{background:#0d6efd;border:1px solid #0b5ed7;color:#fff;font-weight:500;display:inline-flex;align-items:center;gap:.45rem;padding:.45rem .95rem .45rem .85rem;cursor:pointer;font-size:.8rem;border-radius:8px;line-height:1;box-shadow:0 2px 4px rgba(0,0,0,.08);transition:background .25s,box-shadow .25s,transform .25s;} 
+.dash-back-btn i{font-size:.95rem;line-height:1;} 
+.dash-back-btn:hover{background:#0b5ed7;box-shadow:0 4px 10px -2px rgba(0,0,0,.2);} 
+.dash-back-btn:active{transform:translateY(1px);box-shadow:0 2px 5px -2px rgba(0,0,0,.25);} 
+.dash-back-btn:focus-visible{outline:2px solid #fff;outline-offset:2px;}
+.search-input{background:#f1f6fa;border:1px solid #d4e3f2;} 
+.search-input:focus{background:#fff;border-color:#0d6efd;box-shadow:0 0 0 .15rem rgba(13,110,253,.15);} 
+.reset-btn{font-size:.7rem;font-weight:600;letter-spacing:.5px;} 
+.empty-hint{font-size:.75rem;color:#6b7280;padding:1.5rem 0;} 
+.table thead th{font-size:.65rem;letter-spacing:.5px;text-transform:uppercase;background:#f8fafc;} 
+.table td{font-size:.72rem;} 
+@media (max-width:575.98px){.filters-row .col-md-3.text-md-end{text-align:left!important;margin-top:.35rem;} }
+</style>
+</head>
+<body>
+<header class="header-bar">
+  <div class="logo-circle"><img src="images/airLogo.png" alt="AU Logo"></div>
+  <h1 id="homeLink">Site Supervisor – Form C Submissions</h1>
+</header>
+<main class="main-wrap">
+  <div class="mb-3">
+  <button type="button" class="dash-back-btn" id="backBtn"><i class="bi bi-arrow-left"></i><span>Back</span></button>
+  </div>
+  <div class="card-lite table-card">
+    <div class="section-title mb-2"><i class="bi bi-inboxes"></i> Form C Submissions</div>
+    <div class="row g-2 align-items-end filters-row">
+      <div class="col-md-3 col-sm-6">
+        <label class="form-label mb-1">Student</label>
+        <select id="filterStudentC" class="form-select form-select-sm">
+          <option value="all">All Students</option>
+        </select>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <label class="form-label mb-1">Status</label>
+        <select id="filterStatusC" class="form-select form-select-sm">
+          <option value="all">All</option>
+          <option value="Pending">Pending</option>
+          <option value="Approved">Approved</option>
+          <option value="Rejected">Rejected</option>
+        </select>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <label class="form-label mb-1">Search (timestamp)</label>
+        <input id="searchTextC" type="text" class="form-control form-control-sm search-input" placeholder="e.g. 2025-08-21" />
+      </div>
+      <div class="col-md-3 col-sm-6 d-flex gap-2">
+        <button id="openFormCBtn" class="btn btn-primary btn-sm flex-grow-1" type="button"><i class="bi bi-journal-text me-1"></i>Open Form</button>
+        <button id="resetFiltersC" class="btn btn-outline-secondary btn-sm reset-btn" type="button"><i class="bi bi-arrow-counterclockwise"></i></button>
+      </div>
+    </div>
+    <div class="table-responsive mt-3">
+      <table class="table align-middle mb-0">
+        <thead>
+          <tr>
+            <th style="min-width:120px;">Student</th>
+            <th style="min-width:140px;">Submitted</th>
+            <th style="min-width:90px;">Status</th>
+            <th class="text-end" style="min-width:130px;">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="formCSubsTbody"><tr><td colspan="3" class="text-center empty-hint">No submissions yet.</td></tr></tbody>
+      </table>
+    </div>
+    <div id="formCWrapper" class="mt-4" style="display:none;">
+      <div class="card-lite p-3">
+        <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
+          <h6 class="mb-0">Form C – Fill for Student <span id="activeStudentLabel" class="text-primary"></span></h6>
+          <div class="d-flex gap-2">
+            <button id="closeFormC" class="btn btn-outline-secondary btn-sm" type="button" title="Close"><i class="bi bi-x"></i></button>
+          </div>
+        </div>
+        <div id="formCContainer" class="position-relative"></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Preview Modal -->
+<div class="modal fade" id="submissionPreviewModalC" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Submission Preview</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="submissionPreviewBodyC"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const STORAGE_KEY='siteFormCSubmissions';
+// Assigned students for this Site Supervisor (Reg No acts as studentId)
+const ASSIGNED_STUDENTS=[
+  { studentId:'233505', name:'Syed Muhammad Sarib', phone:'92 326-5590220', email:'233505@students.au.edu.pk', facultySupervisor:'Ms Atka Ali' },
+  { studentId:'233606', name:'Danish Naveed Butt', phone:'92 345-4333293', email:'233606@students.au.edu.pk', facultySupervisor:'Muhammad Faisal Idrees' },
+  { studentId:'233579', name:'Zahid Zafar', phone:'92 304-7321516', email:'233579@students.au.edu.pk', facultySupervisor:'Mughees Ahmad' },
+  { studentId:'233538', name:'Muhammad Umer', phone:'92 301-0611212', email:'233538@students.au.edu.pk', facultySupervisor:'Muhammad Faisal Idrees' },
+  { studentId:'233566', name:'Muhammad Ahmad Ijaz', phone:'92 303-7602577', email:'233566@students.au.edu.pk', facultySupervisor:'Muhammad Faisal Idrees' },
+  { studentId:'233532', name:'Muhammad Rayyan Javed', phone:'92 307-6965231', email:'233532@students.au.edu.pk', facultySupervisor:'Muhammad Faisal Idrees' }
+];
+function loadFormCSubmissions(){ const raw=localStorage.getItem(STORAGE_KEY); try{return raw?JSON.parse(raw):[];}catch{return [];} }
+function saveFormCSubmissions(list){ localStorage.setItem(STORAGE_KEY,JSON.stringify(list)); }
+function getStudentMeta(id){ return ASSIGNED_STUDENTS.find(s=>s.studentId===id); }
+function uniqueStudents(list){ const fromSubs=list.map(x=>x.studentId).filter(Boolean); const base=ASSIGNED_STUDENTS.map(s=>s.studentId); return Array.from(new Set([...base,...fromSubs])).sort(); }
+function studentLabel(id){ const meta=getStudentMeta(id); return meta?`${id} - ${meta.name}`:id||'-'; }
+function populateStudentFilter(){ const sel=document.getElementById('filterStudentC'); if(!sel) return; const list=loadFormCSubmissions(); const current=sel.value; const students=uniqueStudents(list); sel.innerHTML='<option value="all">All Students</option>'+students.map(s=>`<option value="${s}">${studentLabel(s)}</option>`).join(''); if(Array.from(sel.options).some(o=>o.value===current)) sel.value=current; }
+function renderSubsTable(){ const tbody=document.getElementById('formCSubsTbody'); const statusFilter=document.getElementById('filterStatusC').value; const search=document.getElementById('searchTextC').value.trim().toLowerCase(); const studentFilter=document.getElementById('filterStudentC').value; const raw=loadFormCSubmissions(); const filtered=raw.filter(it=> (statusFilter==='all'||it.status===statusFilter) && (studentFilter==='all'||it.studentId===studentFilter) && (!search||it.submittedAt.toLowerCase().includes(search)) ); if(!filtered.length){ tbody.innerHTML='<tr><td colspan="4" class="text-center empty-hint">No submissions match.</td></tr>'; return;} tbody.innerHTML=filtered.slice().reverse().map(it=>{ const stu=studentLabel(it.studentId); return `<tr><td>${stu}</td><td>${it.submittedAt}</td><td>${badge(it.status)}</td><td class='text-end'><div class="btn-group btn-group-sm" role="group"><button class='btn btn-outline-primary' data-action='view' data-id='${it.id}' title='Preview'><i class='bi bi-eye'></i></button><button class='btn btn-outline-success' data-action='approve' data-id='${it.id}' title='Approve'><i class='bi bi-check2'></i></button><button class='btn btn-outline-danger' data-action='reject' data-id='${it.id}' title='Reject'><i class='bi bi-x'></i></button></div></td></tr>`; }).join(''); }
+function badge(s){ if(s==='Pending') return '<span class="badge text-bg-warning">Pending</span>'; if(s==='Approved') return '<span class="badge text-bg-success">Approved</span>'; return '<span class="badge text-bg-danger">Rejected</span>'; }
+function refreshAndRender(){ renderSubsTable(); }
+
+document.getElementById('filterStatusC').addEventListener('change',()=>{renderSubsTable();});
+document.getElementById('filterStudentC').addEventListener('change',()=>{renderSubsTable();});
+document.getElementById('searchTextC').addEventListener('input',()=>{renderSubsTable();});
+document.getElementById('resetFiltersC').addEventListener('click',()=>{document.getElementById('filterStatusC').value='all';document.getElementById('filterStudentC').value='all';document.getElementById('searchTextC').value='';renderSubsTable();});
+
+// Open embedded form logic
+const formWrapper=document.getElementById('formCWrapper');
+const formContainer=document.getElementById('formCContainer');
+const activeStudentLabel=document.getElementById('activeStudentLabel');
+document.getElementById('openFormCBtn').addEventListener('click',()=>{ const sel=document.getElementById('filterStudentC'); const studentId=sel.value; if(studentId==='all'){ alert('Select a specific student first.'); return;} activeStudentLabel.textContent=studentId; formWrapper.style.display='block'; if(!formContainer.dataset.loaded){ loadEmbeddedFormC(); } else { attachFormCSubmit(studentId); } });
+document.getElementById('closeFormC').addEventListener('click',()=>{ formWrapper.style.display='none'; });
+
+async function loadEmbeddedFormC(){ formContainer.dataset.loaded='1'; formContainer.innerHTML='<div class="loader-wrap py-5"><div class="spinner-border text-primary" role="status"></div><div class="small text-secondary mt-2">Loading Form C...</div></div>'; try{ const res=await fetch('form-c.html'); const html=await res.text(); const parser=new DOMParser(); const doc=parser.parseFromString(html,'text/html'); let body=doc.querySelector('body')?.innerHTML||html; body=body.replace(/<link[^>]*bootstrap[^>]*>/gi,'').replace(/<script[^>]*bootstrap[^>]*><\/script>/gi,''); const temp=parser.parseFromString(body,'text/html'); const scripts=[...temp.querySelectorAll('script')]; scripts.forEach(s=>s.remove()); formContainer.innerHTML=temp.body.innerHTML; scripts.forEach(s=>{ if(s.textContent.trim()){ const sc=document.createElement('script'); sc.textContent=s.textContent; document.body.appendChild(sc); sc.remove(); }}); const sel=document.getElementById('filterStudentC'); attachFormCSubmit(sel.value); }catch(e){ console.error(e); formContainer.innerHTML='<div class="alert alert-danger">Failed to load form.</div>'; }}
+
+function attachFormCSubmit(studentId){ const form=formContainer.querySelector('form#formC, #formC'); if(!form||form.dataset.bound==='1') return; form.dataset.bound='1'; // ensure hidden student input
+ let hidden=form.querySelector('input[name="studentId"]'); if(!hidden){ hidden=document.createElement('input'); hidden.type='hidden'; hidden.name='studentId'; form.appendChild(hidden);} hidden.value=studentId; form.addEventListener('submit',e=>{ try{ const list=loadFormCSubmissions(); const now=new Date(); const stamp= now.toISOString().split('T')[0]+' '+now.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}); const meta=getStudentMeta(hidden.value)||{}; list.push({id:'FC-'+Date.now(), submittedAt:stamp, status:'Pending', studentId:hidden.value, studentName:meta.name||''}); saveFormCSubmissions(list); populateStudentFilter(); renderSubsTable(); formWrapper.style.display='none'; alert('Form C submitted for student '+studentLabel(hidden.value)+' (Pending).'); }catch(err){ console.error(err); } }, {capture:true}); }
+
+function init(){ populateStudentFilter(); renderSubsTable(); }
+
+document.getElementById('formCSubsTbody').addEventListener('click',e=>{ const btn=e.target.closest('button[data-action]'); if(!btn) return; const id=btn.getAttribute('data-id'); const action=btn.getAttribute('data-action'); const raw=loadFormCSubmissions(); const item=raw.find(x=>x.id===id); if(!item) return; if(action==='approve'){ item.status='Approved'; saveFormCSubmissions(raw); renderSubsTable(); return;} if(action==='reject'){ item.status='Rejected'; saveFormCSubmissions(raw); renderSubsTable(); return;} if(action==='view'){ const body=document.getElementById('submissionPreviewBodyC'); const stuLabel=studentLabel(item.studentId); body.innerHTML=`<p class='mb-2'><strong>ID:</strong> ${item.id}</p><p class='mb-2'><strong>Student:</strong> ${stuLabel}</p><p class='mb-2'><strong>Submitted:</strong> ${item.submittedAt}</p><p class='mb-2'><strong>Status:</strong> ${item.status}</p><div class='alert alert-secondary small mb-0'>Preview placeholder. Integrate actual form fields when stored.</div>`; new bootstrap.Modal(document.getElementById('submissionPreviewModalC')).show(); }});
+
+document.getElementById('backBtn').addEventListener('click',()=>{ window.location.href='dashboard-site.html'; });
+document.getElementById('homeLink').addEventListener('click',()=>{ window.location.href='dashboard-site.html'; });
+
+init();
+</script>
+</body>
+</html>

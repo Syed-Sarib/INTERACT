@@ -8,17 +8,36 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
         :root {
-            --primary-color: #0066b2;
-            --secondary-color: #f0f7ff;
-            --border-color: #d0e5ff;
-            --hover-color: #004d86;
+            --primary-color: #0081c0; /* Updated project blue */
+            --secondary-color: #f0f9ff;
+            --border-color: #cfe7f5;
+            --hover-color: #00689a;
         }
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f8f9fa;
             font-size: 0.95rem;
+            min-height:100vh;
+            display:flex;
+            flex-direction:column;
         }
+    .dash-back-btn{background:#0d6efd;border:1px solid #0b5ed7;color:#fff;font-weight:500;display:inline-flex;align-items:center;gap:.45rem;padding:.45rem .95rem .45rem .85rem;cursor:pointer;font-size:.8rem;border-radius:8px;line-height:1;box-shadow:0 2px 4px rgba(0,0,0,.08);transition:background .25s,box-shadow .25s,transform .25s;}        
+    .dash-back-btn i{font-size:.95rem;line-height:1;}
+    .dash-back-btn:hover{background:#0b5ed7;box-shadow:0 4px 10px -2px rgba(0,0,0,.2);}        
+    .dash-back-btn:active{transform:translateY(1px);box-shadow:0 2px 5px -2px rgba(0,0,0,.25);}        
+    .dash-back-btn:focus-visible{outline:2px solid #fff;outline-offset:2px;}
+    /* Minimal profile dropdown */
+    .profile-min-btn{background:transparent;border:none;border-radius:0;padding:0 .25rem 0 0;font-size:.85rem;font-weight:600;display:flex;align-items:center;gap:.4rem;color:#fff;}
+    .profile-min-btn:hover{background:transparent;opacity:.9;} 
+    .profile-min-menu{position:absolute;top:100%;right:0;margin-top:.4rem;min-width:190px;background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:.6rem .75rem;box-shadow:0 8px 28px -4px rgba(0,0,0,.18);display:none;z-index:2000;font-size:.7rem;animation:fadeSlide .25s ease;}
+    .profile-min-menu.open{display:block;} 
+    .profile-min-menu .name{font-weight:600;font-size:.72rem;color:#1e293b;margin-bottom:2px;} 
+    .profile-min-menu .email{font-size:.62rem;color:#64748b;word-break:break-all;margin-bottom:.35rem;} 
+    .profile-min-menu .logout-btn{border:1px solid #dc3545;background:#fff;color:#dc3545;font-size:.62rem;font-weight:600;padding:.3rem .55rem;border-radius:6px;width:100%;margin-top:.5rem;} 
+    .profile-min-menu .logout-btn:hover{background:#dc3545;color:#fff;} 
+    .logo-title-btn:focus-visible{outline:2px dashed rgba(255,255,255,.7);outline-offset:3px;}
+    .logo-title-btn:hover{text-decoration:underline;text-decoration-thickness:2px;}
         
         .header {
             background: linear-gradient(135deg, var(--primary-color) 0%, #0099cc 100%);
@@ -26,6 +45,98 @@
             padding-top: 0.5rem !important;
             padding-bottom: 0.5rem !important;
         }
+
+    /* DIC-style info strip */
+    .welcome-strip { display:flex; align-items:center; gap:.55rem; font-size:.8rem; font-weight:600; letter-spacing:.4px; color:#055a96; background:#e8f4ff; border:1px solid #c0e0fc; padding:.55rem .85rem; border-radius:8px; }
+    .welcome-strip i { font-size:1rem; }
+    /* --- Simplified Footer (static, no hover effects) --- */
+    .site-footer{margin-top:3rem;background:linear-gradient(135deg,var(--primary-color) 0%, #0099cc 100%);color:#f4fbfe;font-size:.8rem;letter-spacing:.25px;line-height:1.55;box-shadow:0 -4px 18px -8px rgba(0,0,0,.35);} 
+    .site-footer .footer-main{max-width:1400px;margin:0 auto;padding:2.6rem 3rem 2.2rem;display:flex;flex-wrap:wrap;gap:2.2rem;position:relative;} 
+    .site-footer .footer-main:before{content:"";position:absolute;top:0;left:0;width:100%;height:3px;background:linear-gradient(90deg,#ffffff,rgba(255,255,255,0));opacity:.35;} 
+    .site-footer .footer-col{flex:1 1 300px;min-width:260px;position:relative;padding-right:2rem;display:flex;flex-direction:column;} 
+    .site-footer .footer-col:not(:last-child):after{content:"";position:absolute;top:.35rem;right:0;width:1px;height:85%;background:rgba(255,255,255,.35);} 
+    .site-footer h5{font-size:1.02rem;margin:0 0 .95rem;font-weight:700;letter-spacing:.55px;color:#fff;text-transform:uppercase;display:flex;align-items:center;gap:.6rem;} 
+    .site-footer h5:after{content:"";flex:1;height:2px;background:#ffffff;border-radius:4px;opacity:1;} 
+    /* Animated underline for first column (independent of flex snap) */
+    .site-footer .footer-main .footer-col:first-child h5{display:flex;align-items:center;gap:.6rem;}
+    .site-footer .footer-main .footer-col:first-child h5:after{transform:scaleX(.68);transform-origin:left center;transition:transform .4s ease;} 
+    .site-footer .footer-main.hover-col-0 .footer-col:first-child h5:after{transform:scaleX(1);} 
+    .site-footer p{margin:0 0 .9rem;font-size:.78rem;} 
+    .site-footer address{font-style:normal;margin:0 0 .7rem;} 
+    .site-footer .contact-item{display:flex;align-items:flex-start;gap:.55rem;margin-bottom:.7rem;font-size:.78rem;} 
+    .site-footer .contact-item i{color:#fff;font-size:.95rem;line-height:1.1;opacity:.9;} 
+    .site-footer a{color:#fff;text-decoration:none;font-weight:600;opacity:.92;} 
+    /* Remove hover change – keep static */
+    .site-footer a:hover{opacity:.92;text-decoration:none;} 
+    .site-footer .bottom-bar{background:#00689a;margin-top:1rem;padding:.9rem 1rem;display:flex;justify-content:center;align-items:center;font-size:.7rem;letter-spacing:.4px;color:#e8f6fb;position:relative;border-top:1px solid rgba(255,255,255,.25);} 
+    .site-footer .bottom-bar:before{content:"";position:absolute;top:0;left:0;width:100%;height:1px;background:linear-gradient(90deg,rgba(255,255,255,.45),rgba(255,255,255,0));} 
+    /* Stabilize text width to reduce reflow jitter on column expansion */
+    .site-footer .footer-col p,
+    .site-footer .footer-col address,
+    .site-footer .footer-col .contact-item span,
+    .site-footer .footer-col .contact-item a{max-width:48ch;display:block;} 
+    /* Optional subtle fade for smoother perceived change */
+    .site-footer .footer-col *{transition:color .25s ease, opacity .25s ease;} 
+    /* Text fade & scale on expansion (shrink -> full) */
+    .site-footer .footer-col p,
+    .site-footer .footer-col address,
+    .site-footer .footer-col .contact-item,
+    .site-footer .footer-col .contact-item span,
+    .site-footer .footer-col .contact-item a,
+    .site-footer .footer-col > .fw-semibold{opacity:.85;transform:scale(.94);transform-origin:left top;transition:opacity .4s ease, transform .4s ease;} 
+    .site-footer .footer-main.hover-col-0 .footer-col:nth-child(1) p,
+    .site-footer .footer-main.hover-col-0 .footer-col:nth-child(1) address,
+    .site-footer .footer-main.hover-col-0 .footer-col:nth-child(1) .contact-item,
+    .site-footer .footer-main.hover-col-0 .footer-col:nth-child(1) .contact-item span,
+    .site-footer .footer-main.hover-col-0 .footer-col:nth-child(1) .contact-item a,
+    .site-footer .footer-main.hover-col-0 .footer-col:nth-child(1) > .fw-semibold,
+    .site-footer .footer-main.hover-col-1 .footer-col:nth-child(2) p,
+    .site-footer .footer-main.hover-col-1 .footer-col:nth-child(2) address,
+    .site-footer .footer-main.hover-col-1 .footer-col:nth-child(2) .contact-item,
+    .site-footer .footer-main.hover-col-1 .footer-col:nth-child(2) .contact-item span,
+    .site-footer .footer-main.hover-col-1 .footer-col:nth-child(2) .contact-item a,
+    .site-footer .footer-main.hover-col-1 .footer-col:nth-child(2) > .fw-semibold,
+    .site-footer .footer-main.hover-col-2 .footer-col:nth-child(3) p,
+    .site-footer .footer-main.hover-col-2 .footer-col:nth-child(3) address,
+    .site-footer .footer-main.hover-col-2 .footer-col:nth-child(3) .contact-item,
+    .site-footer .footer-main.hover-col-2 .footer-col:nth-child(3) .contact-item span,
+    .site-footer .footer-main.hover-col-2 .footer-col:nth-child(3) .contact-item a,
+    .site-footer .footer-main.hover-col-2 .footer-col:nth-child(3) > .fw-semibold{opacity:1;transform:scale(1);} 
+    @media (max-width:900px){
+        .site-footer .footer-col p,
+        .site-footer .footer-col address,
+        .site-footer .footer-col .contact-item,
+        .site-footer .footer-col .contact-item span,
+        .site-footer .footer-col .contact-item a,
+        .site-footer .footer-col > .fw-semibold{opacity:1;transform:none;}
+    }
+    /* Responsive: stack columns on narrow screens */
+    @media (max-width:900px){ .site-footer .footer-col:not(:last-child):after{display:none;} } 
+    @media (max-width:600px){ .site-footer .footer-main{padding:2.1rem 1.4rem 1.5rem;} .site-footer h5{font-size:.94rem;} }
+    /* Hover grow effect: hovered column grows to 1.5 ratio compared to others */
+    /* Base flex columns */
+    .site-footer .footer-main .footer-col{flex:1;transition:flex .45s ease;will-change:flex;} 
+    .site-footer .footer-main .footer-col:first-child{transition:none;} 
+    /* Expanded column driven by class on parent (prevents flicker) */
+    .site-footer .footer-main.hover-col-0 .footer-col:nth-child(1){flex:1.5;}
+    .site-footer .footer-main.hover-col-1 .footer-col:nth-child(2){flex:1.5;}
+    .site-footer .footer-main.hover-col-2 .footer-col:nth-child(3){flex:1.5;}
+    /* Non‑expanded siblings stay at flex:1 (implicit) */
+    /* Developer list reveal */
+    .site-footer .footer-col.dev .dev-lists{margin-top:.6rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem 1.4rem;opacity:0;transform:translateY(6px);max-height:0;overflow:hidden;transition:opacity .45s ease, transform .45s ease, max-height .5s ease;}
+    /* Developer group panels for clearer separation */
+    .site-footer .footer-col.dev .dev-group{background:rgba(255,255,255,.07);padding:.75rem .9rem .85rem;border:1px solid rgba(255,255,255,.18);border-radius:10px;position:relative;} /* hover highlight removed */
+    .site-footer .footer-col.dev .dev-group h6{font-size:.68rem;letter-spacing:.8px;font-weight:700;margin:0 0 .55rem;text-transform:uppercase;display:block;padding:0;position:relative;}
+    .site-footer .footer-col.dev .dev-group h6:after{content:"";display:block;margin-top:4px;width:54px;height:2px;background:#ffffff;border-radius:2px;}
+    .site-footer .footer-col.dev ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.28rem;font-size:.7rem;}
+    .site-footer .footer-col.dev ul li{position:relative;padding-left:14px;font-weight:600;}
+    .site-footer .footer-col.dev ul li:before{content:"\25B8"; /* small right-pointing triangle */ position:absolute;left:0;top:0;color:#fff;font-size:.75rem;line-height:1;}
+    .site-footer .footer-main.hover-col-1 .footer-col.dev .dev-lists{opacity:1;transform:translateY(0);max-height:400px;}
+    @media (max-width:900px){
+        /* Disable hover grow on stacked/narrow layouts */
+    .site-footer .footer-main .footer-col{flex:1 !important;} /* Disable expansion on narrow */
+    }
+    .main-shell{flex:1 0 auto;} 
         
 
         .sidebar {
@@ -34,12 +145,35 @@
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
             padding-top: 10px !important;
             width: 210px !important;
+            height: 100vh !important;
+            overflow-y: auto !important;
+        }
+        
+        /* Custom scrollbar for sidebar */
+        .sidebar::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .sidebar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        
+        .sidebar::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+        
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
         }
         
         @media (max-width: 576px) {
             .sidebar {
                 width: 180px !important;
                 padding-top: 8px !important;
+                height: 100vh !important;
+                overflow-y: auto !important;
             }
         }
         
@@ -161,6 +295,8 @@
             .sidebar {
                 width: 180px !important;
                 padding-top: 50px !important;
+                height: 100vh !important;
+                overflow-y: auto !important;
             }
         }
         .card {
@@ -209,7 +345,7 @@
                 padding: 2rem 3rem !important;
             }
             
-            #dashboard-content .row.g-2.g-sm-3 {
+            #dashboard-content .row.g-2.g-sm-3.g-lg-4 {
                 gap: 1.5rem !important;
             }
             
@@ -227,8 +363,27 @@
                 padding: 2.5rem 4rem !important;
             }
             
-            #dashboard-content .row.g-2.g-sm-3 {
+            #dashboard-content .row.g-2.g-sm-3.g-lg-4 {
                 gap: 2rem !important;
+            }
+        }
+        
+        /* Extra large screens - maximize card utilization */
+        @media (min-width: 1600px) {
+            .container-fluid {
+                padding: 3rem 5rem !important;
+            }
+            
+            #dashboard-content .row.g-2.g-sm-3.g-lg-4 {
+                gap: 2.5rem !important;
+            }
+            
+            /* Custom class for 7 cards per row on ultrawide screens */
+            .col-xxl-custom {
+                flex: 0 0 auto;
+                width: calc(100% / 7 - 1rem);
+                margin-right: 0.5rem;
+                margin-left: 0.5rem;
             }
         }
         h3.fw-bold {
@@ -406,7 +561,7 @@
 <body>
     <!-- AU Header -->
     <header class="navbar header text-white py-1 py-sm-2 px-2 px-sm-3 fixed-top">
-        <div class="d-flex align-items-center">
+        <div class="d-flex align-items-center flex-grow-1">
             <button class="btn text-white me-1 me-sm-2 p-0" id="sidebarToggle">
                 <i class="bi bi-list fs-5 fs-sm-4"></i>
             </button>
@@ -414,7 +569,20 @@
                 <img src="images/airLogo.png" alt="AU Logo" height="26" class="img-fluid d-sm-none">
                 <img src="images/airLogo.png" alt="AU Logo" height="32" class="img-fluid d-none d-sm-block">
             </div>
-            <span class="fs-6 fs-sm-5 fw-bold">AU Internship Portal</span>
+            <button id="logoTitle" class="logo-title-btn fs-6 fs-sm-5 fw-bold" type="button" aria-label="Go to dashboard" title="Go to dashboard" style="background:transparent;border:none;color:#fff;padding:0;">AU Internship Portal</button>
+        </div>
+        <div class="ms-auto d-flex align-items-center position-relative" id="profileArea">
+            <button id="profileBtn" class="profile-min-btn" type="button" aria-haspopup="true" aria-expanded="false" title="Profile">
+                <i class="bi bi-person-circle fs-5"></i>
+            </button>
+            <div id="profileMenu" class="profile-min-menu" role="menu" aria-hidden="true">
+                <div class="name" id="profileName">User Name</div>
+                <div class="email" id="profileEmail">user@email</div>
+                <div style="display:flex;gap:.5rem;">
+                    <button id="viewProfile" class="logout-btn" type="button" style="border-color:#0d6efd;color:#0d6efd;"><i class="bi bi-person-lines-fill me-1"></i>View Profile</button>
+                    <button id="quickLogout" class="logout-btn" type="button"><i class="bi bi-box-arrow-right me-1"></i>Logout</button>
+                </div>
+            </div>
         </div>
 
     </header>
@@ -436,6 +604,13 @@
                     <i class="bi bi-house me-1 me-sm-2"></i>
                     <span class="d-none d-sm-inline">Dashboard</span>
                     <span class="d-sm-none">Home</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link py-1 py-sm-2 px-1 px-sm-2 small" data-form="form-a">
+                    <i class="bi bi-file-earmark-plus me-1 me-sm-2"></i>
+                    <span class="d-none d-sm-inline">Internship Intention Form (Form A)</span>
+                    <span class="d-sm-none">Form A</span>
                 </a>
             </li>
             <li class="nav-item">
@@ -466,6 +641,13 @@
                     <span class="d-sm-none">Form E</span>
                 </a>
             </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link py-1 py-sm-2 px-1 px-sm-2 small" data-form="form-f">
+                    <i class="bi bi-clipboard2-check me-1 me-sm-2"></i>
+                    <span class="d-none d-sm-inline">Faculty Supervisor Evaluation (Form F)</span>
+                    <span class="d-sm-none">Form F</span>
+                </a>
+            </li>
         </ul>
         <div class="mt-auto">
             <hr class="my-1 my-sm-2">
@@ -477,7 +659,7 @@
     </nav>
 
     <!-- Main Content -->
-    <div class="container-fluid py-1 py-sm-2 px-1 px-sm-2">
+    <div class="container-fluid py-1 py-sm-2 px-1 px-sm-2 main-shell">
         <!-- Dynamic Content Area -->
         <div id="main-content">
             <!-- Dashboard Content (Default) -->
@@ -485,17 +667,32 @@
                 <div class="row mb-2 mb-sm-3">
                     <div class="col-12">
                         <h3 class="fw-bold mb-2 mb-sm-3 fs-5 fs-sm-4">Dashboard</h3>
-                        <div class="alert alert-info d-flex align-items-center py-2 px-2 px-sm-3" role="alert">
-                            <i class="bi bi-info-circle-fill me-2 fs-6 fs-sm-5"></i>
-                            <div class="small">
-                                Welcome to the AU Internship Portal. Complete all required forms: Form B (Approval), Form C (Site Supervisor Evaluation), Form D (Weekly Progress), and Form E (Activity Log).
-                            </div>
+                        <div class="welcome-strip mb-2 mb-sm-3" role="alert">
+                            <i class="bi bi-info-circle"></i>
+                            <span class="small">Welcome to the AU Internship Portal. Complete all required forms: <strong>Form B</strong> (Approval), <strong>Form C</strong> (Site Supervisor Evaluation), <strong>Form D</strong> (Weekly Progress), and <strong>Form E</strong> (Activity Log).</span>
                         </div>
                     </div>
                 </div>
                 
-                <div class="row g-2 g-sm-3">
-                    <div class="col-lg-3 col-md-6">
+                <div class="row g-2 g-sm-3 g-lg-4">
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 col-xxl-custom">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body p-2">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="flex-grow-1 me-2">
+                                        <h6 class="card-title mb-1 small fw-semibold">Internship Intention Form (Form A)</h6>
+                                        <p class="text-muted mb-1" style="font-size: 0.75rem;">Faculty Project Proposal</p>
+                                    </div>
+                                    <span class="badge bg-primary rounded-pill" style="font-size: 0.65rem;">Available</span>
+                                </div>
+                                <div class="d-grid gap-1 mt-2">
+                                    <a href="#" class="btn btn-outline-primary btn-sm py-1" style="font-size: 0.75rem;" data-form="form-a">Complete Form</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 col-xxl-custom">
                         <div class="card h-100 border-0 shadow-sm">
                             <div class="card-body p-2">
                                 <div class="d-flex justify-content-between align-items-start">
@@ -512,7 +709,7 @@
                         </div>
                     </div>
                     
-                    <div class="col-lg-3 col-md-6">
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 col-xxl-custom">
                         <div class="card h-100 border-0 shadow-sm opacity-75">
                             <div class="card-body p-2">
                                 <div class="d-flex justify-content-between align-items-start">
@@ -531,7 +728,7 @@
                         </div>
                     </div>
                     
-                    <div class="col-lg-3 col-md-6">
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 col-xxl-custom">
                         <div class="card h-100 border-0 shadow-sm opacity-75">
                             <div class="card-body p-2">
                                 <div class="d-flex justify-content-between align-items-start">
@@ -550,7 +747,7 @@
                         </div>
                     </div>
                     
-                    <div class="col-lg-3 col-md-6">
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 col-xxl-custom">
                         <div class="card h-100 border-0 shadow-sm opacity-75">
                             <div class="card-body p-2">
                                 <div class="d-flex justify-content-between align-items-start">
@@ -568,11 +765,29 @@
                             </div>
                         </div>
                     </div>
+                    
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 col-xxl-custom">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body p-2">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="flex-grow-1 me-2">
+                                        <h6 class="card-title mb-1 small fw-semibold">Faculty Supervisor Evaluation (Form F)</h6>
+                                        <p class="text-muted mb-1" style="font-size: 0.75rem;">Complete Internship Evaluation</p>
+                                    </div>
+                                    <span class="badge bg-primary rounded-pill" style="font-size: 0.65rem;">Available</span>
+                                </div>
+                                <div class="d-grid gap-1 mt-2">
+                                    <a href="#" class="btn btn-outline-primary btn-sm py-1" style="font-size: 0.75rem;" data-form="form-f">Complete Form</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             
             <!-- Form Content Area (Hidden by default) -->
             <div id="form-content" style="display: none;">
+                <div class="mb-2 mb-sm-3"><button type="button" id="backToDashboard" class="dash-back-btn"><i class="bi bi-arrow-left"></i><span>Back</span></button></div>
                 <div id="form-container">
                     <!-- Form content will be loaded here -->
                 </div>
@@ -580,8 +795,63 @@
         </div>
     </div>
 
+    <footer class="site-footer" aria-label="Site footer">
+        <div class="footer-main">
+            <div class="footer-col">
+                <h5>AU INTERNSHIP PORTAL</h5>
+                <p>This portal streamlines the entire internship workflow for students, faculty and site supervisors. Submit and track required forms (A–F), monitor progress, manage evaluations, and ensure timely completion of all internship milestones in one unified space.</p>
+            </div>
+            <div class="footer-col dev">
+                <h5>DEVELOPERS</h5>
+                <p class="mb-0 fw-semibold" style="letter-spacing:.4px;">BS CS Fall 23 Students</p>
+                <div class="dev-lists" aria-hidden="true">
+                    <div class="dev-group">
+                        <h6>Frontend</h6>
+                        <ul>
+                            <li>Syed M. Sarib</li>
+                            <li>Muhammad Umer</li>
+                            <li>Zahid Zafar</li>
+                        </ul>
+                    </div>
+                    <div class="dev-group">
+                        <h6>Backend</h6>
+                        <ul>
+                            <li>Danish Butt</li>
+                            <li>Ahmad Ijaz</li>
+                            <li>Rayyan Javed</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h5>CONTACT</h5>
+                <div class="contact-item"><i class="bi bi-house-door"></i><address class="mb-0">5 Faiz Bahawalpur Road Multan, Punjab</address></div>
+                <div class="contact-item"><i class="bi bi-envelope"></i><a href="mailto:faisal.idrees@aumc.edu.pk">faisal.idrees@aumc.edu.pk</a></div>
+                <div class="contact-item"><i class="bi bi-telephone"></i><span>(061) 4508500 ext 510</span></div>
+            </div>
+        </div>
+        <div class="bottom-bar">&copy; 2025 AUMC. All Rights Reserved</div>
+    </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Minimal profile dropdown logic (shared)
+        (function(){
+            const fallback={name:'Student User',email:'student@example.com'};
+            let uRaw=localStorage.getItem('currentUser');
+            let u; try{u=uRaw?JSON.parse(uRaw):fallback;}catch{u=fallback;}
+            const set=(id,val)=>{const el=document.getElementById(id); if(el) el.textContent=val;};
+            set('profileName',u.name||fallback.name); set('profileEmail',u.email||fallback.email);
+            const btn=document.getElementById('profileBtn'); const menu=document.getElementById('profileMenu');
+            function closeMenu(){ menu.classList.remove('open'); btn?.classList.remove('open'); }
+            if(btn&&menu){
+                btn.addEventListener('click',e=>{e.stopPropagation(); const willOpen=!menu.classList.contains('open'); document.querySelectorAll('.profile-min-menu.open').forEach(m=>m.classList.remove('open')); if(willOpen){ menu.classList.add('open'); btn.classList.add('open'); } else { closeMenu(); }});
+                document.addEventListener('click',e=>{ if(!menu.contains(e.target) && !btn.contains(e.target)) closeMenu();});
+                window.addEventListener('keydown',e=>{ if(e.key==='Escape') closeMenu();});
+            }
+            const logout=document.getElementById('quickLogout');
+            if(logout){ logout.addEventListener('click',()=>{ localStorage.removeItem('currentUser'); window.location.href='loginForm.html'; }); }
+        })();
         // Sidebar toggle for all screen sizes
         const sidebar = document.getElementById('sidebar');
         const sidebarOverlay = document.getElementById('sidebarOverlay');
@@ -801,6 +1071,9 @@
             
             // Initialize any specific form functionality
             switch(formId) {
+                case 'form-a':
+                    initializeFormA();
+                    break;
                 case 'form-b':
                     initializeFormB();
                     break;
@@ -817,9 +1090,175 @@
         }
         
         // Form-specific initialization functions (to be expanded as needed)
+        function initializeFormA() {
+            console.log("Initializing Form A in dashboard");
+            
+            // Wait a bit for the content to be fully loaded
+            setTimeout(() => {
+                // Re-initialize Form A functionality
+                const formA = document.getElementById('formA');
+                const previewBtnA = document.getElementById('previewBtnA');
+                const previewModalElementA = document.getElementById('previewModalA');
+                const printBtnA = document.getElementById('printBtnModalA');
+                
+                console.log("Form A found:", !!formA);
+                console.log("Preview button A found:", !!previewBtnA);
+                console.log("Modal element A found:", !!previewModalElementA);
+                
+                // Initialize Bootstrap modal
+                let previewModalA;
+                if (previewModalElementA) {
+                    // Remove fade class if it exists
+                    previewModalElementA.classList.remove('fade');
+                    
+                    previewModalA = new bootstrap.Modal(previewModalElementA, {
+                        backdrop: false,
+                        keyboard: true,
+                        focus: true
+                    });
+                    console.log("Bootstrap modal A initialized in dashboard without backdrop");
+                }
+
+                // Set current date
+                const today = new Date();
+                const displayDate = today.toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                });
+                
+                const currentDateElementA = document.getElementById('currentDateA');
+                const dateFieldElementA = document.getElementById('dateFieldA');
+                
+                if (currentDateElementA) currentDateElementA.textContent = displayDate;
+                if (dateFieldElementA) dateFieldElementA.value = today.toISOString().split('T')[0];
+
+                // Preview function
+                function showPreview() {
+                    console.log("Generating Form A preview...");
+                    
+                    if (!previewModalA) {
+                        alert("Modal not initialized. Please refresh the page.");
+                        return;
+                    }
+                    
+                    const data = new FormData(formA);
+                    
+                    // Generate agreement preview HTML
+                    const agreementChecked = formA.querySelector('input[name="agreementA"]:checked');
+                    const agreementHtml = `
+                      <div class="mt-4 text-center">
+                        <div><strong>Faculty Supervisor Agreement:</strong></div>
+                        ${agreementChecked ? 
+                          '<div class="text-success mt-2"><i class="bi bi-check-circle me-1"></i>Faculty has agreed to the terms and conditions</div>' :
+                          '<div class="text-muted mt-2"><i class="bi bi-dash-circle me-1"></i>Agreement pending</div>'
+                        }
+                      </div>
+                    `;
+                    
+                    const html = `
+                      <div class="text-center mb-4">
+                        <h3 class="text-primary fw-bold mb-3">Form A – Internship/Project Intention Form</h3>
+                        <p class="small text-secondary mb-0">
+                          Faculty Member to fill the form and return the signed copy to the Departmental Internship Coordinator (DIC) by the first week of April.
+                        </p>
+                      </div>
+                      <div class="section-title-preview">Faculty Details</div>
+                      <table class="table table-bordered mb-4">
+                        <tbody>
+                          <tr><th>Date</th><td colspan="3">${displayDate}</td></tr>
+                          <tr><th>Project ID</th><td colspan="3">${data.get('project_id') || 'Not filled'}</td></tr>
+                          <tr><th>Faculty Member</th><td>${data.get('faculty_name') || 'Not filled'}</td>
+                              <th>Department</th><td>${data.get('department') || 'Not filled'}</td></tr>
+                          <tr><th>Targeted Degree Program</th><td colspan="3">${data.get('degree_program') || 'Not filled'}</td></tr>
+                        </tbody>
+                      </table>
+                      <div class="section-title-preview">Project Details</div>
+                      <table class="table table-bordered mb-4">
+                        <tbody>
+                          <tr><th>Project Title</th><td colspan="3">${data.get('project_title') || 'Not filled'}</td></tr>
+                          <tr><th>Short Description</th><td colspan="3">${data.get('short_description') || 'Not filled'}</td></tr>
+                        </tbody>
+                      </table>
+                      ${agreementHtml}
+                    `;
+                    
+                    const previewContentA = document.getElementById('previewContentA');
+                    if (previewContentA) {
+                        previewContentA.innerHTML = html;
+                        
+                        // Show modal with same logic as Form B
+                        try {
+                            const existingBackdrops = document.querySelectorAll('.modal-backdrop');
+                            existingBackdrops.forEach(backdrop => backdrop.remove());
+                            
+                            document.body.classList.remove('modal-open');
+                            document.body.style.overflow = 'auto';
+                            document.body.style.paddingRight = '0';
+                            
+                            previewModalA.show();
+                            console.log("Preview modal A shown in dashboard!");
+                            
+                            setTimeout(() => {
+                                const backdrops = document.querySelectorAll('.modal-backdrop');
+                                backdrops.forEach(backdrop => backdrop.remove());
+                                document.body.classList.remove('modal-open');
+                                document.body.style.overflow = 'auto';
+                            }, 50);
+                            
+                        } catch (error) {
+                            console.error("Error showing modal A:", error);
+                            alert("Error displaying preview. Please try again.");
+                        }
+                    }
+                }
+
+                // Event listeners
+                if (previewBtnA) {
+                    previewBtnA.replaceWith(previewBtnA.cloneNode(true));
+                    const newPreviewBtnA = document.getElementById('previewBtnA');
+                    
+                    newPreviewBtnA.addEventListener('click', function(e) {
+                        console.log("Preview button A clicked in dashboard!");
+                        e.preventDefault();
+                        e.stopPropagation();
+                        showPreview();
+                    });
+                    console.log("Preview button A event listener added in dashboard");
+                }
+                
+                if (printBtnA) {
+                    printBtnA.replaceWith(printBtnA.cloneNode(true));
+                    const newPrintBtnA = document.getElementById('printBtnModalA');
+                    
+                    newPrintBtnA.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        
+                        setTimeout(() => {
+                            if (previewModalElementA && previewModalElementA.classList.contains('show')) {
+                                console.log("Printing modal A content...");
+                                window.print();
+                            } else {
+                                console.error("Modal A not visible for printing");
+                                alert("Please ensure the preview is open before printing.");
+                            }
+                        }, 100);
+                    });
+                    console.log("Print button A event listener added in dashboard");
+                }
+                
+                if (formA) {
+                    formA.addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        alert('Form A submitted successfully!');
+                    });
+                    console.log("Form A submit event listener added in dashboard");
+                }
+            }, 300);
+        }
+        
         function initializeFormB() {
             console.log("Initializing Form B in dashboard");
-            
             // Wait a bit for the content to be fully loaded
             setTimeout(() => {
                 // Re-initialize Form B functionality
@@ -1010,15 +1449,1006 @@
         }
         
         function initializeFormC() {
-            // Form C specific initialization
+            console.log("Initializing Form C in dashboard");
+            
+            // Wait a bit for the content to be fully loaded
+            setTimeout(() => {
+                // Re-initialize Form C functionality
+                const form = document.getElementById('formC');
+                const previewBtn = document.getElementById('previewBtn');
+                const previewModalElement = document.getElementById('previewModal');
+                const printBtn = document.getElementById('printBtnModal');
+                
+                console.log("Form C found:", !!form);
+                console.log("Preview button found:", !!previewBtn);
+                console.log("Modal element found:", !!previewModalElement);
+                
+                // Initialize Bootstrap modal with proper configuration
+                let previewModal;
+                if (previewModalElement) {
+                    // Remove fade class if it exists
+                    previewModalElement.classList.remove('fade');
+                    
+                    previewModal = new bootstrap.Modal(previewModalElement, {
+                        backdrop: false,  // Completely disable backdrop
+                        keyboard: true,
+                        focus: true
+                    });
+                    console.log("Bootstrap modal initialized in dashboard without backdrop");
+                }
+
+                // Set current date
+                const today = new Date();
+                const displayDate = today.toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                });
+                
+                const formattedDate = today.toISOString().split('T')[0]; // YYYY-MM-DD format
+                const currentDateElement = document.getElementById('currentDate');
+                const dateFieldElement = document.getElementById('dateField');
+                const supervisorCurrentDateElement = document.getElementById('supervisorCurrentDate');
+                const supervisorDateFieldElement = document.getElementById('supervisorDateField');
+                
+                if (currentDateElement) currentDateElement.textContent = formattedDate;
+                if (dateFieldElement) dateFieldElement.value = formattedDate;
+                if (supervisorCurrentDateElement) supervisorCurrentDateElement.textContent = formattedDate;
+                if (supervisorDateFieldElement) supervisorDateFieldElement.value = formattedDate;
+
+                // Validation functions
+                function clearValidation() {
+                    if (form) {
+                        form.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+                        form.querySelectorAll('.error-message').forEach(el => el.remove());
+                    }
+                }
+
+                function showError(input, message) {
+                    if (!input) return;
+                    input.classList.add('input-error');
+                    let error = document.createElement('div');
+                    error.className = 'error-message';
+                    error.innerText = message;
+                    if (input.type === 'radio') {
+                        // For radio, show error after the last radio in the group
+                        const radios = form.querySelectorAll(`input[name="${input.name}"]`);
+                        if (radios.length > 0) {
+                            radios[radios.length-1].parentElement.appendChild(error);
+                        }
+                    } else if (input.parentElement) {
+                        input.parentElement.appendChild(error);
+                    }
+                }
+
+                function validateForm() {
+                    clearValidation();
+                    let valid = true;
+                    let firstInvalid = null;
+                    
+                    const requiredFields = [
+                        { name: 'site_supervisor', label: 'Site Supervisor' },
+                        { name: 'designation', label: 'Designation' },
+                        { name: 'host_institution', label: 'Host Institution' },
+                        { name: 'student_name', label: 'Student Intern Name' },
+                        { name: 'student_program', label: 'Student Program' },
+                        { name: 'semester', label: 'Semester' },
+                        { name: 'start_date', label: 'Starting Date of Internship' },
+                        { name: 'end_date', label: 'Ending Date of Internship' },
+                        { name: 'duration', label: 'Internship Duration' },
+                        { name: 'rating_1', label: 'Rating 1' },
+                        { name: 'rating_2', label: 'Rating 2' },
+                        { name: 'rating_3', label: 'Rating 3' },
+                        { name: 'rating_4', label: 'Rating 4' },
+                        { name: 'rating_5', label: 'Rating 5' },
+                        { name: 'rating_6', label: 'Rating 6' },
+                        { name: 'rating_7', label: 'Rating 7' },
+                        { name: 'rating_8', label: 'Rating 8' },
+                        { name: 'rating_9', label: 'Rating 9' },
+                        { name: 'contact_number', label: 'Contact Number' },
+                        { name: 'official_email', label: 'Official Email' },
+                        { name: 'supervisor_agreement', label: 'Supervisor Agreement' }
+                    ];
+
+                    for (const field of requiredFields) {
+                        let input = form.querySelector(`[name="${field.name}"]`);
+                        if (!input) continue;
+                        if (input.type === 'radio') {
+                            // Check if any radio in the group is selected
+                            const checked = form.querySelector(`input[name="${field.name}"]:checked`);
+                            if (!checked) {
+                                showError(input, `${field.label} is required.`);
+                                if (!firstInvalid) firstInvalid = input;
+                                valid = false;
+                            }
+                        } else if (input.type === 'checkbox') {
+                            if (!input.checked) {
+                                showError(input, `${field.label} must be accepted.`);
+                                if (!firstInvalid) firstInvalid = input;
+                                valid = false;
+                            }
+                        } else if (!input.value.trim()) {
+                            showError(input, `${field.label} is required.`);
+                            if (!firstInvalid) firstInvalid = input;
+                            valid = false;
+                        }
+                    }
+                    if (firstInvalid) {
+                        firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        firstInvalid.focus();
+                    }
+                    return valid;
+                }
+
+                // Preview function
+                function showPreview() {
+                    console.log("Generating Form C preview...");
+                    
+                    if (!previewModal) {
+                        alert("Modal not initialized. Please refresh the page.");
+                        return;
+                    }
+                    
+                    // Comment out validation to allow preview without form completion
+                    // if (!validateForm()) {
+                    //     return false;
+                    // }
+                    
+                    const data = new FormData(form);
+                    
+                    // Get duration value
+                    let duration = data.get('duration');
+                    
+                    // Generate evaluation ratings preview
+                    let ratingsHtml = '';
+                    for (let i = 1; i <= 9; i++) {
+                        const rating = data.get(`rating_${i}`);
+                        const ratingDisplay = rating ? `${rating} out of 5` : 'Not rated';
+                        const criteria = [
+                            'Arrives to work on time / Available online as per schedule',
+                            'Demonstrates respect for organizational staff, policies, and norms',
+                            'Shows requisite understanding and ability to learn about organizational work',
+                            'Exhibits necessary skills required at the workplace',
+                            'Conducts self professionally in all work-related scenarios',
+                            'Takes initiative and seeks opportunities to make contributions',
+                            'Completes tasks and reports to supervisor on time',
+                            'Demonstrates the ability to work with others in a team',
+                            'Proves to be Reliable and Dependable'
+                        ];
+                        ratingsHtml += `<tr>
+                          <td style="padding: 12px; font-weight: 500;">${i}. ${criteria[i-1]}</td>
+                          <td style="text-align: center; padding: 12px; font-weight: 600; color: #0d6efd;">${ratingDisplay}</td>
+                        </tr>`;
+                    }
+                    
+                    const html = `
+                      <div class="text-center mb-4">
+                        <h3 class="text-primary fw-bold mb-3">Form C – Site Supervisor Evaluation Form</h3>
+                        <p class="small text-secondary mb-0">
+                          Site Supervisor to fill the form and return the signed copy to the Faculty Supervisor.
+                        </p>
+                      </div>
+                      <div class="section-title-preview">Supervisor and Internship Details</div>
+                      <table class="table table-bordered mb-4">
+                        <tbody>
+                          <tr><th>Date</th><td colspan="3">${data.get('date') || ''}</td></tr>
+                          <tr><th>Site Supervisor</th><td>${data.get('site_supervisor') || ''}</td>
+                              <th>Designation</th><td>${data.get('designation') || ''}</td></tr>
+                          <tr><th>Host Institution</th><td colspan="3">${data.get('host_institution') || ''}</td></tr>
+                          <tr><th>Student Intern Name</th><td colspan="3">${data.get('student_name') || ''}</td></tr>
+                          <tr><th>Student Program</th><td>${data.get('student_program') || ''}</td>
+                              <th>Semester</th><td>${data.get('semester') || ''}</td></tr>
+                          <tr><th>Starting Date</th><td>${data.get('start_date') || ''}</td>
+                              <th>Ending Date</th><td>${data.get('end_date') || ''}</td></tr>
+                          <tr><th>Internship Duration</th><td colspan="3">${duration ? duration + ' Weeks' : ''}</td></tr>
+                        </tbody>
+                      </table>
+                      <div class="section-title-preview">Evaluation Ratings</div>
+                      <table class="table table-bordered mb-4">
+                        <thead>
+                          <tr>
+                            <th style="width: 75%;">Evaluation Criteria</th>
+                            <th style="width: 25%; text-align: center;">Rating</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          ${ratingsHtml}
+                        </tbody>
+                      </table>
+                      <div class="mt-4 text-center">
+                        <div><strong>Supervisor Agreement:</strong></div>
+                        <div class="text-success mt-2"><i class="bi bi-check-circle me-1"></i>Supervisor has agreed to the terms and conditions</div>
+                        <div class="mt-2"><strong>Contact Number:</strong> ${data.get('contact_number') || ''}</div>
+                        <div><strong>Official Email:</strong> ${data.get('official_email') || ''}</div>
+                      </div>
+                    `;
+                    
+                    const previewContent = document.getElementById('previewContent');
+                    if (previewContent) {
+                        previewContent.innerHTML = html;
+                        
+                        // Ensure the modal is properly shown
+                        try {
+                            // Completely remove any backdrop elements
+                            const existingBackdrops = document.querySelectorAll('.modal-backdrop');
+                            existingBackdrops.forEach(backdrop => backdrop.remove());
+                            
+                            // Reset body to prevent scroll lock
+                            document.body.classList.remove('modal-open');
+                            document.body.style.overflow = 'auto';
+                            document.body.style.paddingRight = '0';
+                            
+                            previewModal.show();
+                            console.log("Form C preview modal shown in dashboard!");
+                            
+                            // Immediately remove any backdrop that Bootstrap might create
+                            setTimeout(() => {
+                                const backdrops = document.querySelectorAll('.modal-backdrop');
+                                backdrops.forEach(backdrop => backdrop.remove());
+                                document.body.classList.remove('modal-open');
+                                document.body.style.overflow = 'auto';
+                            }, 50);
+                            
+                        } catch (error) {
+                            console.error("Error showing modal:", error);
+                            alert("Error displaying preview. Please try again.");
+                        }
+                    } else {
+                        console.error("Preview content element not found");
+                    }
+                }
+
+                // Event listeners
+                if (previewBtn) {
+                    // Remove any existing event listeners
+                    previewBtn.replaceWith(previewBtn.cloneNode(true));
+                    const newPreviewBtn = document.getElementById('previewBtn');
+                    
+                    newPreviewBtn.addEventListener('click', function(e) {
+                        console.log("Form C Preview button clicked in dashboard!");
+                        e.preventDefault();
+                        e.stopPropagation();
+                        showPreview();
+                    });
+                    console.log("Form C Preview button event listener added in dashboard");
+                }
+                
+                if (printBtn) {
+                    printBtn.replaceWith(printBtn.cloneNode(true));
+                    const newPrintBtn = document.getElementById('printBtnModal');
+                    
+                    newPrintBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        
+                        // Give a small delay to ensure modal content is fully rendered
+                        setTimeout(() => {
+                            // Ensure the modal is visible and content is loaded
+                            if (previewModalElement && previewModalElement.classList.contains('show')) {
+                                console.log("Printing Form C modal content...");
+                                window.print();
+                            } else {
+                                console.error("Modal not visible for printing");
+                                alert("Please ensure the preview is open before printing.");
+                            }
+                        }, 100);
+                    });
+                    console.log("Form C Print button event listener added in dashboard");
+                }
+                
+                if (form) {
+                    form.addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        if (!validateForm()) return false;
+                        alert('Form C submitted successfully!');
+                    });
+                    console.log("Form C submit event listener added in dashboard");
+                }
+            }, 300);
         }
         
         function initializeFormD() {
-            // Form D specific initialization
+            console.log("Initializing Form D in dashboard");
+            
+            // Wait a bit for the content to be fully loaded
+            setTimeout(() => {
+                // Re-initialize Form D functionality
+                const form = document.getElementById('formD');
+                const previewBtn = document.getElementById('previewBtn');
+                const previewBtnMobile = document.getElementById('previewBtnMobile');
+                const previewModalElement = document.getElementById('previewModal');
+                const printBtnModal = document.getElementById('printBtnModal');
+                
+                console.log("Form D found:", !!form);
+                console.log("Preview button found:", !!previewBtn);
+                console.log("Modal element found:", !!previewModalElement);
+                console.log("Modal print button found:", !!printBtnModal);
+                
+                // CKEditor instances
+                let tasksEditor, learningEditor, limitationsEditor;
+
+                // Initialize Bootstrap modal with proper configuration
+                let previewModal;
+                if (previewModalElement) {
+                    // Remove fade class if it exists
+                    previewModalElement.classList.remove('fade');
+                    
+                    previewModal = new bootstrap.Modal(previewModalElement, {
+                        backdrop: false,  // Completely disable backdrop
+                        keyboard: true,
+                        focus: true
+                    });
+                    console.log("Bootstrap modal initialized in dashboard without backdrop");
+                }
+
+                // Initialize CKEditor instances for Form D
+                if (typeof ClassicEditor !== 'undefined') {
+                    const tasksEditorEl = document.querySelector('#tasks_assigned_editor');
+                    const learningEditorEl = document.querySelector('#learning_experience_editor');
+                    const limitationsEditorEl = document.querySelector('#limitations_challenges_editor');
+                    
+                    if (tasksEditorEl) {
+                        ClassicEditor
+                            .create(tasksEditorEl, {
+                                placeholder: 'Describe tasks assigned and performed...',
+                                toolbar: ['heading', '|', 'bold', 'italic', 'underline', '|', 'bulletedList', 'numberedList', '|', 'outdent', 'indent', '|', 'undo', 'redo']
+                            })
+                            .then(editor => {
+                                tasksEditor = editor;
+                            })
+                            .catch(error => {
+                                console.error('Error initializing tasks editor in dashboard:', error);
+                            });
+                    }
+                    
+                    if (learningEditorEl) {
+                        ClassicEditor
+                            .create(learningEditorEl, {
+                                placeholder: 'Describe your learning experience...',
+                                toolbar: ['heading', '|', 'bold', 'italic', 'underline', '|', 'bulletedList', 'numberedList', '|', 'outdent', 'indent', '|', 'undo', 'redo']
+                            })
+                            .then(editor => {
+                                learningEditor = editor;
+                            })
+                            .catch(error => {
+                                console.error('Error initializing learning editor in dashboard:', error);
+                            });
+                    }
+                    
+                    if (limitationsEditorEl) {
+                        ClassicEditor
+                            .create(limitationsEditorEl, {
+                                placeholder: 'Describe any limitations or challenges...',
+                                toolbar: ['heading', '|', 'bold', 'italic', 'underline', '|', 'bulletedList', 'numberedList', '|', 'outdent', 'indent', '|', 'undo', 'redo']
+                            })
+                            .then(editor => {
+                                limitationsEditor = editor;
+                            })
+                            .catch(error => {
+                                console.error('Error initializing limitations editor in dashboard:', error);
+                            });
+                    }
+                }
+
+                const requiredFields = [
+                    { name: 'student_name', label: 'Student Intern Name' },
+                    { name: 'student_id', label: 'Student ID' },
+                    { name: 'student_dept', label: 'Department' },
+                    { name: 'host_institution', label: 'Host Institution' },
+                    { name: 'site_supervisor', label: 'Site Supervisor' },
+                    { name: 'faculty_supervisor', label: 'Faculty Supervisor' },
+                    { name: 'reporting_period', label: 'Reporting Period' },
+                    { name: 'report_week', label: 'Progress Report Number' },
+                    { name: 'tasks_assigned', label: 'Tasks Assigned & Performed', editor: true },
+                    { name: 'learning_experience', label: 'Learning Experience', editor: true },
+                    { name: 'limitations_challenges', label: 'Limitations & Challenges', editor: true },
+                    { name: 'student_agreement', label: 'Student Agreement' }
+                ];
+
+                function clearValidation() {
+                    if (form) {
+                        form.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+                        form.querySelectorAll('.error-message').forEach(el => el.remove());
+                        // Clear editor errors
+                        document.querySelectorAll('.ck-editor').forEach(el => el.classList.remove('editor-error'));
+                    }
+                }
+
+                function showError(input, message) {
+                    if (input) {
+                        input.classList.add('input-error');
+                        let error = document.createElement('div');
+                        error.className = 'error-message';
+                        error.innerText = message;
+                        if (input.type === 'radio') {
+                            const radios = form.querySelectorAll(`input[name="${input.name}"]`);
+                            if (radios.length > 0) {
+                                radios[radios.length-1].parentElement.appendChild(error);
+                            }
+                        } else if (input.parentElement) {
+                            input.parentElement.appendChild(error);
+                        }
+                    }
+                }
+
+                function showEditorError(editorContainer, message) {
+                    editorContainer.classList.add('editor-error');
+                    let error = document.createElement('div');
+                    error.className = 'error-message';
+                    error.innerText = message;
+                    editorContainer.parentElement.appendChild(error);
+                }
+
+                function getEditorContent(editorName) {
+                    switch(editorName) {
+                        case 'tasks_assigned':
+                            return tasksEditor ? tasksEditor.getData() : '';
+                        case 'learning_experience':
+                            return learningEditor ? learningEditor.getData() : '';
+                        case 'limitations_challenges':
+                            return limitationsEditor ? limitationsEditor.getData() : '';
+                        default:
+                            return '';
+                    }
+                }
+
+                function validateForm() {
+                    clearValidation();
+                    let valid = true;
+                    let firstInvalid = null;
+                    
+                    for (const field of requiredFields) {
+                        if (field.editor) {
+                            // Handle CKEditor fields
+                            const content = getEditorContent(field.name);
+                            const plainText = content.replace(/<[^>]*>/g, '').trim(); // Strip HTML tags
+                            if (!plainText) {
+                                const editorContainer = document.querySelector(`#${field.name}_editor`)?.parentElement?.querySelector('.ck-editor');
+                                if (editorContainer) {
+                                    showEditorError(editorContainer, `${field.label} is required.`);
+                                    if (!firstInvalid) firstInvalid = editorContainer;
+                                    valid = false;
+                                }
+                            }
+                        } else {
+                            // Handle regular form fields
+                            let input = form?.querySelector(`[name="${field.name}"]`);
+                            if (!input) continue;
+                            if (input.type === 'radio') {
+                                const checked = form.querySelector(`input[name="${field.name}"]:checked`);
+                                if (!checked) {
+                                    showError(input, `${field.label} is required.`);
+                                    if (!firstInvalid) firstInvalid = input;
+                                    valid = false;
+                                }
+                            } else if (input.type === 'checkbox') {
+                                if (!input.checked) {
+                                    showError(input, `${field.label} must be accepted.`);
+                                    if (!firstInvalid) firstInvalid = input;
+                                    valid = false;
+                                }
+                            } else if (!input.value.trim()) {
+                                showError(input, `${field.label} is required.`);
+                                if (!firstInvalid) firstInvalid = input;
+                                valid = false;
+                            }
+                        }
+                    }
+                    
+                    if (firstInvalid) {
+                        firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        if (firstInvalid.focus) firstInvalid.focus();
+                    }
+                    return valid;
+                }
+
+                // Preview function
+                function showPreview() {
+                    console.log("Generating Form D preview...");
+                    
+                    if (!previewModal) {
+                        alert("Modal not initialized. Please refresh the page.");
+                        return false;
+                    }
+                    
+                    // Comment out validation to allow preview without form completion
+                    // if (!validateForm()) {
+                    //     return false;
+                    // }
+                    
+                    const data = new FormData(form);
+                    
+                    // Get CKEditor content
+                    const tasksContent = getEditorContent('tasks_assigned');
+                    const learningContent = getEditorContent('learning_experience');
+                    const limitationsContent = getEditorContent('limitations_challenges');
+                    
+                    const html = `
+                      <div class="text-center mb-4">
+                        <h3 class="text-primary fw-bold mb-3">Form D – Student Internship – Progress Form</h3>
+                        <p class="small text-secondary mb-0">
+                          Student Intern to fill the form and return the signed copy to the Faculty Supervisor during the 2nd, 4th, and 6th/8th weeks of the internship period.
+                        </p>
+                      </div>
+                      <div class="section-title-preview">Student and Internship Details</div>
+                      <table class="table table-bordered mb-4">
+                        <tbody>
+                          <tr><th>Date</th><td colspan="3">${data.get('date') || ''}</td></tr>
+                          <tr><th>Student Intern Name</th><td>${data.get('student_name') || ''}</td>
+                              <th>Host Institution</th><td>${data.get('host_institution') || ''}</td></tr>
+                          <tr><th>Student ID</th><td>${data.get('student_id') || ''}</td>
+                              <th>Department</th><td>${data.get('student_dept') || ''}</td></tr>
+                              <th>Site Supervisor</th><td>${data.get('site_supervisor') || ''}</td></tr>
+                          <tr><th>Faculty Supervisor</th><td>${data.get('faculty_supervisor') || ''}</td>
+                              <th>Reporting Period</th><td>${data.get('reporting_period') || ''}</td></tr>
+                          <tr>
+                            <th>Progress Report Number</th>
+                            <td colspan="3">${data.get('report_week') || ''}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <div class="section-title-preview">a) Tasks Assigned & Performed</div>
+                      <div class="content-box">${tasksContent || 'No content provided'}</div>
+                      <div class="section-title-preview">b) Learning Experience</div>
+                      <div class="content-box">${learningContent || 'No content provided'}</div>
+                      <div class="section-title-preview">c) Limitations & Challenges</div>
+                      <div class="content-box">${limitationsContent || 'No content provided'}</div>
+                      <div class="mt-4 text-center">
+                        <div><strong>Student Agreement:</strong></div>
+                        <div class="text-success mt-2"><i class="bi bi-check-circle me-1"></i>Student has agreed to the terms and conditions</div>
+                      </div>
+                    `;
+                    
+                    const previewContent = document.getElementById('previewContent');
+                    if (previewContent) {
+                        previewContent.innerHTML = html;
+                        
+                        // Ensure the modal is properly shown
+                        try {
+                            // Completely remove any backdrop elements
+                            const existingBackdrops = document.querySelectorAll('.modal-backdrop');
+                            existingBackdrops.forEach(backdrop => backdrop.remove());
+                            
+                            // Reset body to prevent scroll lock
+                            document.body.classList.remove('modal-open');
+                            document.body.style.overflow = 'auto';
+                            document.body.style.paddingRight = '0';
+                            
+                            previewModal.show();
+                            console.log("Form D preview modal shown in dashboard!");
+                            
+                            // Immediately remove any backdrop that Bootstrap might create
+                            setTimeout(() => {
+                                const backdrops = document.querySelectorAll('.modal-backdrop');
+                                backdrops.forEach(backdrop => backdrop.remove());
+                                document.body.classList.remove('modal-open');
+                                document.body.style.overflow = 'auto';
+                            }, 50);
+                            
+                        } catch (error) {
+                            console.error("Error showing modal:", error);
+                            alert("Error displaying preview. Please try again.");
+                        }
+                    } else {
+                        console.error("Preview content element not found");
+                    }
+                    return true;
+                }
+
+                // Event listeners
+                if (previewBtn) {
+                    // Remove any existing event listeners
+                    previewBtn.replaceWith(previewBtn.cloneNode(true));
+                    const newPreviewBtn = document.getElementById('previewBtn');
+                    
+                    newPreviewBtn.addEventListener('click', function(e) {
+                        console.log("Form D Preview button clicked in dashboard!");
+                        e.preventDefault();
+                        e.stopPropagation();
+                        showPreview();
+                    });
+                    console.log("Form D Preview button event listener added in dashboard");
+                }
+
+                if (previewBtnMobile) {
+                    previewBtnMobile.replaceWith(previewBtnMobile.cloneNode(true));
+                    const newPreviewBtnMobile = document.getElementById('previewBtnMobile');
+                    
+                    newPreviewBtnMobile.addEventListener('click', function(e) {
+                        console.log("Form D Mobile Preview button clicked in dashboard!");
+                        e.preventDefault();
+                        e.stopPropagation();
+                        showPreview();
+                    });
+                    console.log("Form D Mobile Preview button event listener added in dashboard");
+                }
+                
+                if (printBtnModal) {
+                    printBtnModal.replaceWith(printBtnModal.cloneNode(true));
+                    const newPrintBtnModal = document.getElementById('printBtnModal');
+                    
+                    newPrintBtnModal.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        
+                        var previewContent = document.getElementById('previewContent');
+                        if (!previewContent || !previewContent.innerHTML.trim()) {
+                            alert('Preview content is empty! Please click the Preview button first.');
+                            return;
+                        }
+                        
+                        // Use the working print logic from Form A
+                        const modalBackdrop = document.querySelector('.modal-backdrop');
+                        const modal = document.getElementById('previewModal');
+                        const body = document.body;
+                        
+                        // Store original styles
+                        const originalBodyClass = body.className;
+                        const originalBackdropDisplay = modalBackdrop ? modalBackdrop.style.display : '';
+                        const originalModalDisplay = modal.style.display;
+                        
+                        // Hide backdrop and adjust modal for printing
+                        if (modalBackdrop) modalBackdrop.style.display = 'none';
+                        modal.style.display = 'block';
+                        modal.style.position = 'static';
+                        modal.style.transform = 'none';
+                        body.className = originalBodyClass.replace('modal-open', '');
+                        
+                        // Print the page
+                        window.print();
+                        
+                        // Restore original styles after printing
+                        setTimeout(() => {
+                            if (modalBackdrop) modalBackdrop.style.display = originalBackdropDisplay;
+                            modal.style.display = originalModalDisplay;
+                            modal.style.position = '';
+                            modal.style.transform = '';
+                            body.className = originalBodyClass;
+                        }, 100);
+                    });
+                    console.log("Form D Print button event listener added in dashboard");
+                }
+                
+                if (form) {
+                    form.addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        if (!validateForm()) return false;
+                        alert('Form D submitted successfully!');
+                    });
+                    console.log("Form D submit event listener added in dashboard");
+                }
+            }, 300);
         }
         
         function initializeFormE() {
-            // Form E specific initialization
+            console.log("Initializing Form E in dashboard");
+            
+            // Wait for the content to be fully loaded and visible
+            setTimeout(() => {
+                // Re-initialize Form E functionality
+                const form = document.getElementById('formE');
+                const previewBtn = document.getElementById('previewBtn');
+                const previewBtnMobile = document.getElementById('previewBtnMobile');
+                const previewModalElement = document.getElementById('previewModal');
+                
+                console.log("Form E found:", !!form);
+                console.log("Preview button found:", !!previewBtn);
+                console.log("Preview button mobile found:", !!previewBtnMobile);
+                console.log("Modal element found:", !!previewModalElement);
+                
+                // Initialize Bootstrap modal with proper configuration
+                let previewModal;
+                if (previewModalElement) {
+                    // Remove fade class to prevent backdrop issues
+                    previewModalElement.classList.remove('fade');
+                    previewModal = new bootstrap.Modal(previewModalElement, {
+                        backdrop: false,  // Disable backdrop
+                        keyboard: true,
+                        focus: true
+                    });
+                    console.log("Form E Preview modal initialized");
+                }
+
+                // Set current date
+                const today = new Date();
+                const year = today.getFullYear();
+                const month = String(today.getMonth() + 1).padStart(2, '0');
+                const day = String(today.getDate()).padStart(2, '0');
+                const currentDate = `${year}-${month}-${day}`;
+                
+                const dateField = document.getElementById('dateField');
+                if (dateField) {
+                    dateField.value = currentDate;
+                    console.log("Date field set:", currentDate);
+                }
+
+                // Preview function for Form E
+                function showPreview() {
+                    console.log("Showing Form E preview...");
+                    
+                    if (!previewModal) {
+                        alert("Modal not initialized. Please refresh the page.");
+                        return;
+                    }
+                    
+                    const data = new FormData(form);
+                    
+                    // Generate weekly activities preview
+                    let weeklyHtml = '';
+                    for (let i = 1; i <= 8; i++) {
+                        // Try to get editors from global instances
+                        const desktopEditor = window.formEEditorInstances && window.formEEditorInstances[`week_${i}`];
+                        const mobileEditor = window.formEMobileEditorInstances && window.formEMobileEditorInstances[`week_${i}_mobile`];
+                        const editor = desktopEditor || mobileEditor;
+                        
+                        let weekData = '';
+                        if (editor) {
+                            weekData = editor.getData();
+                        } else {
+                            weekData = data.get(`week_${i}`) || '';
+                        }
+                        
+                        // Show all weeks, even if empty (with "Not filled" for empty ones)
+                        const displayContent = weekData.trim() ? weekData : 'Not filled';
+                        weeklyHtml += `<tr><td class="fw-bold">Week # ${i}</td><td>${displayContent}</td></tr>`;
+                    }
+                    
+                    // Generate agreement preview HTML
+                    let agreementHtml = '<div class="row mt-4">';
+                    
+                    agreementHtml += '<div class="col-md-4 text-center">';
+                    agreementHtml += '<div><strong>Student-Intern Agreement:</strong></div>';
+                    const studentAgreement = form.querySelector('input[name="student_agreement"]:checked');
+                    agreementHtml += studentAgreement
+                        ? '<div class="text-success mt-2"><i class="bi bi-check-circle me-1"></i>Student has agreed to the terms and conditions</div>'
+                        : '<div class="text-muted mt-2"><i class="bi bi-dash-circle me-1"></i>Agreement pending</div>';
+                    agreementHtml += '</div>';
+                    
+                    agreementHtml += '<div class="col-md-4 text-center">';
+                    agreementHtml += '<div><strong>Site Supervisor Agreement:</strong></div>';
+                    const siteAgreement = form.querySelector('input[name="site_agreement"]:checked');
+                    agreementHtml += siteAgreement
+                        ? '<div class="text-success mt-2"><i class="bi bi-check-circle me-1"></i>Site Supervisor has agreed to the terms and conditions</div>'
+                        : '<div class="text-muted mt-2"><i class="bi bi-dash-circle me-1"></i>Agreement pending</div>';
+                    agreementHtml += '</div>';
+                    
+                    agreementHtml += '<div class="col-md-4 text-center">';
+                    agreementHtml += '<div><strong>Faculty Supervisor Agreement:</strong></div>';
+                    const facultyAgreement = form.querySelector('input[name="faculty_agreement"]:checked');
+                    agreementHtml += facultyAgreement
+                        ? '<div class="text-success mt-2"><i class="bi bi-check-circle me-1"></i>Faculty Supervisor has agreed to the terms and conditions</div>'
+                        : '<div class="text-muted mt-2"><i class="bi bi-dash-circle me-1"></i>Agreement pending</div>';
+                    agreementHtml += '</div>';
+                    agreementHtml += '</div>';
+                    
+                    const html = `
+                        <div class="text-center mb-4">
+                            <h3 class="text-primary fw-bold mb-3">Form E – Student Internship – Activity Log</h3>
+                            <p class="small text-secondary mb-0">
+                                The Student Intern to fill the form and submit it to the Faculty Supervisor. The Faculty Supervisors are required to carefully review and evaluate the Student Intern's activity log. Please return the form by the end of internship before 10<sup>th</sup> of September every Year.
+                            </p>
+                        </div>
+                        <div class="section-title-preview">Student & Internship Details</div>
+                        <table class="table table-bordered mb-4">
+                            <tbody>
+                                <tr><th>Date</th><td colspan="3">${data.get('date') || 'Not filled'}</td></tr>
+                                <tr><th>Student Intern Name</th><td colspan="3">${data.get('student_name') || 'Not filled'}</td></tr>
+                                <tr><th>Student ID</th><td>${data.get('student_id') || 'Not filled'}</td>
+                                    <th>Department</th><td>${data.get('student_dept') || 'Not filled'}</td></tr>
+                                <tr><th>Host Institution</th><td colspan="3">${data.get('host_institution') || 'Not filled'}</td></tr>
+                                <tr><th>Site Supervisor</th><td colspan="3">${data.get('site_supervisor') || 'Not filled'}</td></tr>
+                                <tr><th>Faculty Supervisor</th><td colspan="3">${data.get('faculty_supervisor') || 'Not filled'}</td></tr>
+                                <tr><th>Internship Completion Date</th><td colspan="3">${data.get('completion_date') || 'Not filled'}</td></tr>
+                            </tbody>
+                        </table>
+                        <div class="section-title-preview">Weekly Activities</div>
+                        <table class="table table-bordered mb-4">
+                            <thead>
+                                <tr><th style="width: 20%;">Week</th><th>Tasks Performed</th></tr>
+                            </thead>
+                            <tbody>
+                                ${weeklyHtml}
+                            </tbody>
+                        </table>
+                        <div class="section-title-preview">Agreements</div>
+                        ${agreementHtml}
+                    `;
+                    
+                    const previewContent = document.getElementById('previewContent');
+                    if (previewContent) {
+                        previewContent.innerHTML = html;
+                        
+                        // Show modal with same logic as Form A
+                        try {
+                            const existingBackdrops = document.querySelectorAll('.modal-backdrop');
+                            existingBackdrops.forEach(backdrop => backdrop.remove());
+                            
+                            document.body.classList.remove('modal-open');
+                            document.body.style.overflow = 'auto';
+                            document.body.style.paddingRight = '0';
+                            
+                            previewModal.show();
+                            console.log("Form E Preview modal shown in dashboard!");
+                            
+                            setTimeout(() => {
+                                const backdrops = document.querySelectorAll('.modal-backdrop');
+                                backdrops.forEach(backdrop => backdrop.remove());
+                                document.body.classList.remove('modal-open');
+                                document.body.style.overflow = 'auto';
+                            }, 50);
+                            
+                        } catch (error) {
+                            console.error("Error showing Form E modal:", error);
+                            alert("Error displaying preview. Please try again.");
+                        }
+                    }
+                    return true;
+                }
+
+                // Event listeners for preview buttons
+                if (previewBtn) {
+                    previewBtn.replaceWith(previewBtn.cloneNode(true));
+                    const newPreviewBtn = document.getElementById('previewBtn');
+                    
+                    newPreviewBtn.addEventListener('click', function(e) {
+                        console.log("Form E Preview button clicked in dashboard!");
+                        e.preventDefault();
+                        e.stopPropagation();
+                        showPreview();
+                    });
+                    console.log("Form E Preview button event listener added in dashboard");
+                }
+                
+                if (previewBtnMobile) {
+                    previewBtnMobile.replaceWith(previewBtnMobile.cloneNode(true));
+                    const newPreviewBtnMobile = document.getElementById('previewBtnMobile');
+                    
+                    newPreviewBtnMobile.addEventListener('click', function(e) {
+                        console.log("Form E Mobile Preview button clicked in dashboard!");
+                        e.preventDefault();
+                        e.stopPropagation();
+                        showPreview();
+                    });
+                    console.log("Form E Mobile Preview button event listener added in dashboard");
+                }
+
+                // Force initialize CKEditor instances when in dashboard
+                if (window.ClassicEditor) {
+                    initializeFormEEditors();
+                } else {
+                    // If CKEditor not loaded yet, wait for it
+                    const checkCKEditor = setInterval(() => {
+                        if (window.ClassicEditor) {
+                            clearInterval(checkCKEditor);
+                            initializeFormEEditors();
+                        }
+                    }, 100);
+                    
+                    // Timeout after 5 seconds
+                    setTimeout(() => clearInterval(checkCKEditor), 5000);
+                }
+
+                // Initialize print button functionality for Form E
+                const printBtnModalE = document.getElementById('printBtnModal');
+                if (printBtnModalE) {
+                    printBtnModalE.replaceWith(printBtnModalE.cloneNode(true));
+                    const newPrintBtnE = document.getElementById('printBtnModal');
+                    
+                    newPrintBtnE.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        
+                        setTimeout(() => {
+                            if (previewModalElement && previewModalElement.classList.contains('show')) {
+                                console.log("Printing Form E modal content...");
+                                window.print();
+                            } else {
+                                console.error("Form E modal not visible for printing");
+                                alert("Please ensure the preview is open before printing.");
+                            }
+                        }, 100);
+                    });
+                    console.log("Form E print button event listener added in dashboard");
+                }
+                
+                console.log("Form E initialization completed in dashboard");
+            }, 500); // Increased delay to ensure visibility
+        }
+        
+        function initializeFormEEditors() {
+            console.log("Initializing Form E CKEditors in dashboard");
+            
+            const editorInstances = {};
+            const mobileEditorInstances = {};
+            
+            const desktopEditorConfig = {
+                toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', '|', 'outdent', 'indent', '|', 'undo', 'redo'],
+                placeholder: 'Describe tasks performed this week...',
+                initialData: '',
+            };
+
+            const mobileEditorConfig = {
+                toolbar: ['bold', 'italic', 'link', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
+                placeholder: 'Describe tasks performed this week...',
+                initialData: '',
+            };
+
+            // Force create editors without visibility check since we're in dashboard context
+            function forceCreateEditor(selector, key, config, store, onReady) {
+                const el = document.querySelector(selector);
+                if (!el) {
+                    console.log("Element not found:", selector);
+                    return;
+                }
+                
+                // Skip if already initialized
+                if (el.dataset.editorInitialized === 'true') {
+                    console.log("Editor already initialized for:", selector);
+                    return;
+                }
+
+                console.log("Creating editor for:", selector);
+                
+                ClassicEditor
+                    .create(el, config)
+                    .then(editor => {
+                        store[key] = editor;
+                        el.dataset.editorInitialized = 'true';
+                        console.log("Editor created successfully for:", selector);
+                        if (typeof onReady === 'function') onReady(editor, el);
+                    })
+                    .catch(error => {
+                        console.error('CKEditor init error for', selector, error);
+                    });
+            }
+
+            // Initialize all editors (both desktop and mobile)
+            for (let i = 1; i <= 8; i++) {
+                // Desktop editors
+                forceCreateEditor(
+                    `#week${i}Editor`,
+                    `week_${i}`,
+                    desktopEditorConfig,
+                    editorInstances,
+                    (editor) => {
+                        // Sync with hidden textarea
+                        const textarea = document.getElementById(`week_${i}_textarea`);
+                        if (textarea) {
+                            editor.model.document.on('change:data', () => {
+                                textarea.value = editor.getData();
+                            });
+                        }
+                    }
+                );
+
+                // Mobile editors
+                forceCreateEditor(
+                    `#mobileWeek${i}Editor`,
+                    `week_${i}_mobile`,
+                    mobileEditorConfig,
+                    mobileEditorInstances,
+                    (mobileEditor) => {
+                        // Keep desktop and mobile editors in sync if both exist
+                        const desktopKey = `week_${i}`;
+                        setTimeout(() => {
+                            const maybeDesktop = editorInstances[desktopKey];
+                            if (maybeDesktop) {
+                                mobileEditor.model.document.on('change:data', () => {
+                                    if (mobileEditor.getData() !== maybeDesktop.getData()) {
+                                        maybeDesktop.setData(mobileEditor.getData());
+                                    }
+                                });
+                                maybeDesktop.model.document.on('change:data', () => {
+                                    if (maybeDesktop.getData() !== mobileEditor.getData()) {
+                                        mobileEditor.setData(maybeDesktop.getData());
+                                    }
+                                });
+                            }
+                        }, 100);
+                    }
+                );
+            }
+            
+            // Store references globally for form functionality
+            window.formEEditorInstances = editorInstances;
+            window.formEMobileEditorInstances = mobileEditorInstances;
         }
         
         // Event listeners
@@ -1046,6 +2476,49 @@
                 return new bootstrap.Tooltip(tooltipTriggerEl);
             });
         });
+    // Back & title actions
+    document.getElementById('backToDashboard')?.addEventListener('click',()=>{ showDashboard(); window.scrollTo({top:0,behavior:'smooth'}); });
+    document.getElementById('logoTitle')?.addEventListener('click',()=>{ showDashboard(); });
+    // Footer simplified: interactive hover logic removed
+    // Footer anti-flicker hover expansion (parent handles state)
+    (function(){
+        const fm=document.querySelector('.site-footer .footer-main');
+        if(!fm) return; const cols=[...fm.querySelectorAll('.footer-col')];
+        let leaveTimer=null; let clearPending=()=>{ if(leaveTimer){ clearTimeout(leaveTimer); leaveTimer=null; } };
+        // Lock to max expanded height so bottom bar stays fixed
+        function setFixedHeight(){
+            // measure collapsed height
+            fm.classList.remove('hover-col-0','hover-col-1','hover-col-2');
+            const baseH=fm.scrollHeight;
+            // measure developers expanded height
+            fm.classList.add('hover-col-1');
+            const devH=fm.scrollHeight;
+            fm.classList.remove('hover-col-1');
+            const maxH=Math.max(baseH,devH);
+            fm.style.height=maxH+'px';
+        }
+        setFixedHeight();
+        let resizeTO; window.addEventListener('resize',()=>{ clearTimeout(resizeTO); resizeTO=setTimeout(()=> setFixedHeight(),180); });
+    const devList=fm.querySelector('.footer-col.dev .dev-lists');
+    cols.forEach((col,idx)=>{
+            col.addEventListener('mouseenter',()=>{
+                if(window.matchMedia('(max-width: 900px)').matches) return; // disabled on small
+        clearPending();
+                fm.classList.remove('hover-col-0','hover-col-1','hover-col-2');
+                fm.classList.add('hover-col-'+idx);
+        if(devList) devList.setAttribute('aria-hidden', idx===1? 'false':'true');
+            });
+            col.addEventListener('mouseleave',()=>{
+        // start delayed collapse to allow fade/scale reverse animation
+        clearPending();
+        leaveTimer=setTimeout(()=>{ if(!fm.matches(':hover')) { fm.classList.remove('hover-col-0','hover-col-1','hover-col-2'); if(devList) devList.setAttribute('aria-hidden','true'); } },140);
+            });
+        });
+    fm.addEventListener('mouseleave',()=>{ clearPending(); leaveTimer=setTimeout(()=>{ fm.classList.remove('hover-col-0','hover-col-1','hover-col-2'); if(devList) devList.setAttribute('aria-hidden','true'); },140); });
+    fm.addEventListener('mouseenter',()=> clearPending());
+    // Re-lock height if fonts load later causing shift
+    window.addEventListener('load',()=> setTimeout(setFixedHeight,120));
+    })();
     </script>
 </body>
 </html>

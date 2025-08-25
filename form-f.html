@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form F – Faculty Supervisor Evaluation Form</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+    <style>
+        body {
+            background: #fff;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+        .form-card {
+            padding: 0;
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            border-radius: 0;
+        }
+        .section-title {
+            font-size: 1.1rem;
+            color: #0d6efd;
+            border-left: 4px solid #0d6efd;
+            padding-left: 0.75rem;
+            margin-bottom: 0.5rem;
+            margin-top: 2rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .form-control:focus {
+            box-shadow: 0 0 0 0.2rem rgba(13,110,253,.15);
+            border-color: #0d6efd;
+        }
+        .btn-custom {
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 8px rgba(13,110,253,0.08);
+        }
+        .btn-custom:hover, .btn-custom:focus {
+            background: #0b5ed7 !important;
+            color: #fff !important;
+            box-shadow: 0 4px 16px rgba(13,110,253,0.15);
+        }
+        
+        /* Ensure buttons are clickable */
+        #previewBtn, #submitBtn {
+            position: relative !important;
+            z-index: 1000 !important;
+            pointer-events: auto !important;
+        }
+        .scoring-table th, .scoring-table td {
+            text-align: center;
+            vertical-align: middle;
+        }
+        .scoring-table th {
+            background: #e3f0fa;
+        }
+        .evaluation-item {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 3px solid #0d6efd;
+        }
+        .evaluation-question {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 0.75rem;
+        }
+        
+        /* CKEditor styling */
+        .ck-editor__editable {
+            min-height: 150px;
+        }
+        
+        .ck-editor {
+            margin-bottom: 1rem;
+        }
+        
+        .ck-editor__editable {
+            border-radius: 0.375rem;
+        }
+        
+        .ck-editor__editable_inline {
+            border: 1px solid #ced4da;
+            padding: 0.5rem 0.75rem;
+        }
+        
+        .ck-editor__editable:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+        }
+        
+        /* Mobile responsive */
+        @media (max-width: 576px) {
+            .form-card {
+                padding: 0;
+            }
+            .section-title {
+                font-size: 1rem;
+                margin-top: 1.5rem;
+                margin-bottom: 0.5rem;
+            }
+            h3 {
+                font-size: 1.1rem !important;
+                margin-bottom: 1rem !important;
+            }
+            .table {
+                font-size: 0.85rem;
+            }
+            .table td, .table th {
+                padding: 0.4rem !important;
+                vertical-align: top;
+            }
+            .form-control {
+                font-size: 0.85rem;
+                padding: 0.4rem 0.6rem;
+            }
+            .btn {
+                font-size: 0.8rem;
+                padding: 0.4rem 0.8rem;
+                margin: 0.2rem;
+            }
+            .small {
+                font-size: 0.75rem !important;
+            }
+            .evaluation-item {
+                padding: 0.75rem;
+                margin-bottom: 0.75rem;
+            }
+            .evaluation-question {
+                font-size: 0.9rem;
+                margin-bottom: 0.5rem;
+                line-height: 1.3;
+            }
+            .form-check-label {
+                font-size: 0.9rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .form-card {
+                padding: 0;
+            }
+            .table {
+                font-size: 0.9rem;
+            }
+            .container-fluid {
+                padding: 1rem;
+                max-width: 100%;
+                margin: 0;
+            }
+        }
+        
+        /* Large screen optimizations */
+        @media (min-width: 1200px) {
+            .container-fluid {
+                padding: 2rem 4rem !important;
+            }
+        }
+        
+        @media (min-width: 1400px) {
+            .container-fluid {
+                padding: 3rem 6rem !important;
+            }
+            .table {
+                font-size: 1.1rem;
+            }
+            .table td, .table th {
+                padding: 1rem !important;
+            }
+            .form-control {
+                font-size: 1.1rem;
+                padding: 1rem 1.25rem;
+            }
+            h3 {
+                font-size: 2.5rem !important;
+                margin-bottom: 3rem !important;
+            }
+            .section-title {
+                font-size: 1.5rem;
+                margin-top: 3rem;
+                margin-bottom: 1.5rem;
+            }
+        }
+        
+        /* Clean modal backdrop */
+        .modal-backdrop {
+            background-color: rgba(0, 0, 0, 0.5) !important;
+        }
+        
+        /* Ensure form fields remain visible during modal */
+        body.modal-open .evaluation-item {
+            opacity: 1 !important;
+        }
+        
+        body.modal-open .form-check {
+            opacity: 1 !important;
+        }
+        
+        /* Modal animation */
+        .modal.fade .modal-dialog {
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+            transform: translate(0, -50px);
+            opacity: 0;
+        }
+        
+        .modal.show .modal-dialog {
+            transform: translate(0, 0);
+            opacity: 1;
+        }
+        
+        /* Enhanced modal styling */
+        .modal-content {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+        }
+        
+        @media print {
+            /* Hide everything initially */
+            body * {
+                visibility: hidden;
+            }
+            
+            /* Set up the page */
+            @page {
+                margin: 0.5cm;
+                size: auto;
+            }
+            
+            /* Reset body styles */
+            body {
+                margin: 0;
+                padding: 0;
+                min-height: 0 !important;
+                height: auto !important;
+                background: none !important;
+            }
+            
+            /* Show only modal content */
+            #previewModal,
+            #previewBody,
+            #previewBody * {
+                visibility: visible;
+            }
+            
+            #previewModal {
+                position: absolute !important;
+                left: 0 !important;
+                top: 0 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                overflow: visible !important;
+                height: auto !important;
+                page-break-after: avoid !important;
+            }
+            
+            /* Hide unnecessary elements */
+            .modal-header,
+            .modal-footer,
+            .no-print {
+                display: none !important;
+            }
+            
+            /* Clean modal formatting */
+            .modal-dialog {
+                transform: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+                max-width: none !important;
+                height: auto !important;
+            }
+            
+            .modal-content {
+                border: none !important;
+                box-shadow: none !important;
+                height: auto !important;
+            }
+            
+            .modal-body {
+                padding: 1cm !important;
+                height: auto !important;
+                overflow: visible !important;
+            }
+            
+            #previewBody {
+                overflow: visible !important;
+                height: auto !important;
+                page-break-after: avoid !important;
+            }
+            
+            /* Table styles */
+            table {
+                width: 100% !important;
+                margin-bottom: 1cm !important;
+                page-break-inside: avoid !important;
+                border-collapse: collapse !important;
+            }
+            
+            th, td {
+                border: 1px solid #000 !important;
+                padding: 8px !important;
+                text-align: left !important;
+                background: none !important;
+            }
+            
+            /* Clean text styles */
+            * {
+                color: black !important;
+                background: transparent !important;
+                box-shadow: none !important;
+                float: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+<body>
+
+<div class="container-fluid my-0 px-0">
+    <div class="row justify-content-center g-0">
+        <div class="col-12">
+            <form id="formF">
+                <div class="form-card px-2 px-md-4 py-3" id="printAreaF">
+
+                    <h3 class="text-center text-primary mb-3 mb-md-4 fw-bold">Form F – Faculty Supervisor – Evaluation Form</h3>
+                    
+                    <p class="small mb-3 text-center text-secondary">
+                        Faculty Supervisor to fill the form and return the signed copy to the Departmental Internship Coordinator (DIC) at the completion of the internship period.
+                    </p>
+
+                    <div class="text-end small mb-3">
+                        <label class="me-2 fw-bold">Date:</label>
+                        <span class="form-control d-inline-block" style="width: 180px; background-color: #f8f9fa;" id="currentDateF"></span>
+                        <input type="hidden" name="date" id="dateFieldF">
+                    </div>
+
+                    <div class="section-title">Evaluation Key</div>
+                    <div class="row small mb-4">
+                        <div class="col-6 col-md-3">1 = Does not meet expectations</div>
+                        <div class="col-6 col-md-3">2 = Inconsistently meets expectations</div>
+                        <div class="col-6 col-md-3">3 = Consistently meets expectations</div>
+                        <div class="col-6 col-md-3">4 = Above Expectations</div>
+                        <div class="col-12 col-md-12 mt-1">5 = Far above expectations</div>
+                    </div>
+
+                    <div class="section-title">Performance Evaluation</div>
+                    <div class="text-center mb-3 small">Circle the number that best describes the Student Intern's Performance</div>
+                    
+                    <div class="row g-3 mb-4">
+                        <div class="col-12">
+                            <div class="evaluation-item">
+                                <div class="evaluation-question">1. Tasks Performed</div>
+                                <div class="d-flex gap-4 flex-wrap justify-content-center">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="tasks" value="1" id="tasks_1" required>
+                                        <label class="form-check-label" for="tasks_1">1</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="tasks" value="2" id="tasks_2">
+                                        <label class="form-check-label" for="tasks_2">2</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="tasks" value="3" id="tasks_3">
+                                        <label class="form-check-label" for="tasks_3">3</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="tasks" value="4" id="tasks_4">
+                                        <label class="form-check-label" for="tasks_4">4</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="tasks" value="5" id="tasks_5">
+                                        <label class="form-check-label" for="tasks_5">5</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="evaluation-item">
+                                <div class="evaluation-question">2. Learning Experience</div>
+                                <div class="d-flex gap-4 flex-wrap justify-content-center">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="learning" value="1" id="learning_1" required>
+                                        <label class="form-check-label" for="learning_1">1</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="learning" value="2" id="learning_2">
+                                        <label class="form-check-label" for="learning_2">2</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="learning" value="3" id="learning_3">
+                                        <label class="form-check-label" for="learning_3">3</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="learning" value="4" id="learning_4">
+                                        <label class="form-check-label" for="learning_4">4</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="learning" value="5" id="learning_5">
+                                        <label class="form-check-label" for="learning_5">5</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="evaluation-item">
+                                <div class="evaluation-question">3. Overcoming challenges</div>
+                                <div class="d-flex gap-4 flex-wrap justify-content-center">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="challenges" value="1" id="challenges_1" required>
+                                        <label class="form-check-label" for="challenges_1">1</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="challenges" value="2" id="challenges_2">
+                                        <label class="form-check-label" for="challenges_2">2</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="challenges" value="3" id="challenges_3">
+                                        <label class="form-check-label" for="challenges_3">3</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="challenges" value="4" id="challenges_4">
+                                        <label class="form-check-label" for="challenges_4">4</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="challenges" value="5" id="challenges_5">
+                                        <label class="form-check-label" for="challenges_5">5</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section-title">Additional Comments</div>
+                    <div class="mb-4">
+                        <textarea class="form-control" id="comments" name="comments" rows="4" placeholder="Enter additional comments if any..."></textarea>
+                    </div>
+
+                    <div class="mt-3 mt-md-4 mb-2">
+                        <div class="bg-light rounded p-3 mb-3 border-start border-primary border-3">
+                            <h6 class="mb-3 fw-bold text-primary">Faculty Supervisor Agreement:</h6>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="faculty_agreement" id="facultyAgreement" required>
+                                <label class="form-check-label" for="facultyAgreement">
+                                    <p class="fst-italic">I hereby confirm that the information provided above is accurate and I agree to the terms and conditions as the Faculty Supervisor for this internship evaluation.</p>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4 no-print">
+                        <div class="d-flex flex-wrap gap-2 justify-content-center">
+                            <button type="button" class="btn btn-primary btn-custom" id="previewBtn">
+                                <i class="bi bi-eye me-1"></i> Preview
+                            </button>
+                            <button type="submit" class="btn btn-outline-primary btn-custom" id="submitBtn">
+                                <i class="bi bi-check-circle me-1"></i> Submit
+                            </button>
+                            <button type="reset" class="btn btn-outline-secondary btn-custom">
+                                <i class="bi bi-arrow-clockwise me-1"></i> Reset
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+    <!-- Preview Modal -->
+    <div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="previewModalLabel">Faculty Supervisor Evaluation Preview</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" id="previewBody" style="background: #f8fafc;">
+            <!-- Preview content will be injected here -->
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-success" id="printBtnModal">
+              <i class="bi bi-printer me-1"></i> Print
+            </button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<style>
+#previewBody {
+  padding: 2rem 1.5rem;
+  background: #f8fafc;
+  border-radius: 16px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+  font-size: 1.05rem;
+  word-break: break-word;
+}
+#previewBody table {
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+  margin-bottom: 0.7rem;
+  table-layout: fixed;
+  width: 100%;
+  border-left: 5px solid #0d6efd !important;
+}
+#previewBody th, #previewBody td {
+  word-break: break-word;
+  white-space: pre-line;
+  vertical-align: top;
+  padding: 10px 8px;
+}
+#previewBody .section-title-preview {
+  font-weight: 600;
+  color: #0d6efd;
+  font-size: 1.1rem;
+  border-left: 4px solid #0d6efd;
+  padding-left: 0.75rem;
+  margin-bottom: 0.75rem;
+  margin-top: 1.5rem;
+  letter-spacing: 0.5px;
+}
+</style>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    // Get form and modal references
+    const formF = document.getElementById('formF');
+    const previewModalF = document.getElementById('previewModal');
+    const previewBtnF = document.getElementById('previewBtn');
+    const printBtnF = document.getElementById('printBtnModal');
+
+    // Check if we're in dashboard context
+    const isDashboard = !!document.getElementById('sidebar');
+
+    // Set current date - copied from form-a
+    const today = new Date();
+    const displayDate = today.toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+    });
+    
+    const currentDateElementF = document.getElementById('currentDateF');
+    const dateFieldElementF = document.getElementById('dateFieldF');
+    
+    if (currentDateElementF) currentDateElementF.textContent = displayDate;
+    if (dateFieldElementF) dateFieldElementF.value = today.toISOString().split('T')[0];
+
+    // Initialize CKEditor - copied from form-e pattern with dashboard handling
+    let commentsEditor;
+    
+    function initCKEditor(selector, config, onReady) {
+        const el = document.querySelector(selector);
+        if (!el || el.dataset.editorInitialized === 'true') {
+            console.log('Editor already initialized for', selector);
+            return;
+        }
+        
+        ClassicEditor
+            .create(el, config)
+            .then(editor => {
+                commentsEditor = editor;
+                el.dataset.editorInitialized = 'true';
+                if (typeof onReady === 'function') onReady(editor, el);
+                console.log('CKEditor initialized for comments');
+            })
+            .catch(error => {
+                console.error('CKEditor init error for', selector, error);
+            });
+    }
+
+    const editorConfig = {
+        toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', '|', 'outdent', 'indent', '|', 'undo', 'redo'],
+        placeholder: 'Enter additional comments if any...',
+        initialData: '',
+    };
+
+    // Initialize CKEditor when DOM is ready - only once
+    function initializeEditor() {
+        if (document.querySelector('#comments').dataset.editorInitialized === 'true') {
+            console.log('CKEditor already initialized');
+            return;
+        }
+        initCKEditor('#comments', editorConfig);
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(initializeEditor, 100);
+        });
+    } else {
+        setTimeout(initializeEditor, 100);
+    }
+
+    // Additional initialization for dashboard context - but check first
+    if (isDashboard) {
+        setTimeout(() => {
+            if (document.querySelector('#comments').dataset.editorInitialized !== 'true') {
+                console.log("Dashboard context detected - force initializing editors");
+                initCKEditor('#comments', editorConfig);
+            }
+        }, 500);
+    }
+
+    // Preview function - copied from form-a pattern
+    function showPreview() {
+        console.log("Generating preview...");
+        
+        if (!previewModalF) {
+            alert("Modal not initialized. Please refresh the page.");
+            return;
+        }
+        
+        const data = new FormData(formF);
+        
+        // Get radio button values
+        let tasks = '', learning = '', challenges = '';
+        const tasksRadio = formF.querySelector('input[name="tasks"]:checked');
+        const learningRadio = formF.querySelector('input[name="learning"]:checked');
+        const challengesRadio = formF.querySelector('input[name="challenges"]:checked');
+        
+        if (tasksRadio) tasks = tasksRadio.value;
+        if (learningRadio) learning = learningRadio.value;
+        if (challengesRadio) challenges = challengesRadio.value;
+        
+        // Get CKEditor content with dashboard context handling
+        const comments = commentsEditor ? commentsEditor.getData() : 
+                        (window.formFEditors && window.formFEditors.comments ? window.formFEditors.comments.getData() : '');
+        
+        // Generate agreement preview HTML
+        const agreementChecked = formF.querySelector('input[name="faculty_agreement"]:checked');
+        const agreementHtml = `
+            <div class="mt-4 text-center">
+                <div><strong>Faculty Supervisor Agreement:</strong></div>
+                ${agreementChecked ? 
+                    '<div class="text-success mt-2"><i class="bi bi-check-circle me-1"></i>Faculty Supervisor has agreed to the terms and conditions</div>' : 
+                    '<div class="text-muted mt-2"><i class="bi bi-dash-circle me-1"></i>Agreement pending</div>'
+                }
+            </div>
+        `;
+        
+        const html = `
+            <div class="text-center mb-4">
+                <h3 class="text-primary fw-bold mb-3">Form F – Faculty Supervisor – Evaluation Form</h3>
+                <p class="small text-secondary mb-0">
+                    Faculty Supervisor to fill the form and return the signed copy to the Departmental Internship Coordinator (DIC) at the completion of the internship period.
+                </p>
+            </div>
+            
+            <div class="section-title-preview">Basic Information</div>
+            <table class="table table-bordered mb-4">
+                <tbody>
+                    <tr><th style="width: 30%; background: #f8f9fa;" class="fw-bold">Date</th><td>${displayDate}</td></tr>
+                </tbody>
+            </table>
+
+            <div class="section-title-preview">Performance Evaluation Scores</div>
+            <table class="table table-bordered mb-4">
+                <tbody>
+                    <tr><th style="width: 40%; background: #f8f9fa;" class="fw-bold">Tasks Performed</th><td class="text-center">${tasks ? `<span class="badge bg-primary">${tasks}</span>` : '<em class="text-muted">Not rated</em>'}</td></tr>
+                    <tr><th style="width: 40%; background: #f8f9fa;" class="fw-bold">Learning Experience</th><td class="text-center">${learning ? `<span class="badge bg-primary">${learning}</span>` : '<em class="text-muted">Not rated</em>'}</td></tr>
+                    <tr><th style="width: 40%; background: #f8f9fa;" class="fw-bold">Overcoming Challenges</th><td class="text-center">${challenges ? `<span class="badge bg-primary">${challenges}</span>` : '<em class="text-muted">Not rated</em>'}</td></tr>
+                </tbody>
+            </table>
+
+            <div class="section-title-preview">Additional Comments</div>
+            <div class="border rounded p-3 mb-4" style="background: #f8f9fa; min-height: 80px;">
+                ${comments || '<em class="text-muted">No comments provided</em>'}
+            </div>
+
+            ${agreementHtml}
+
+            <style>
+                .section-title-preview {
+                    font-size: 1.1rem;
+                    color: #0d6efd;
+                    border-left: 4px solid #0d6efd;
+                    padding-left: 0.75rem;
+                    margin-bottom: 0.75rem;
+                    margin-top: 1.5rem;
+                    font-weight: 600;
+                    letter-spacing: 0.5px;
+                }
+                .section-title-preview:first-of-type {
+                    margin-top: 1rem;
+                }
+                .badge {
+                    font-size: 0.9rem;
+                    padding: 0.5em 0.75em;
+                }
+                .table th {
+                    border-color: #dee2e6;
+                    vertical-align: middle;
+                }
+                .table td {
+                    border-color: #dee2e6;
+                    vertical-align: middle;
+                }
+            </style>
+        `;
+        
+        document.getElementById('previewBody').innerHTML = html;
+        
+        // Show modal with proper handling for both dashboard and standalone
+        try {
+            const modal = new bootstrap.Modal(previewModalF, {
+                backdrop: true,
+                keyboard: true
+            });
+            modal.show();
+            console.log("Preview modal shown");
+        } catch (error) {
+            console.error("Error showing modal:", error);
+            // Fallback: try direct modal show
+            if (previewModalF) {
+                previewModalF.style.display = 'block';
+                previewModalF.classList.add('show');
+                document.body.classList.add('modal-open');
+            }
+        }
+    }
+
+    // Event listeners - copied from form-a pattern
+    if (previewBtnF) {
+        previewBtnF.addEventListener('click', function(e) {
+            console.log("Preview button clicked!");
+            e.preventDefault();
+            showPreview();
+        });
+        console.log("Preview button event listener added");
+    }
+    
+    if (printBtnF) {
+        printBtnF.addEventListener('click', function(e) {
+            e.preventDefault();
+            var previewContent = document.getElementById('previewBody');
+            if (!previewContent || !previewContent.innerHTML.trim()) {
+                alert('Preview content is empty! Please click the Preview button first.');
+                return;
+            }
+            
+            // Use the working print logic from Form A
+            const modalBackdrop = document.querySelector('.modal-backdrop');
+            const modal = document.getElementById('previewModal');
+            const body = document.body;
+            
+            // Store original styles
+            const originalBodyClass = body.className;
+            const originalBackdropDisplay = modalBackdrop ? modalBackdrop.style.display : '';
+            const originalModalDisplay = modal.style.display;
+            
+            // Hide backdrop and adjust modal for printing
+            if (modalBackdrop) modalBackdrop.style.display = 'none';
+            modal.style.display = 'block';
+            modal.style.position = 'static';
+            modal.style.transform = 'none';
+            body.className = originalBodyClass.replace('modal-open', '');
+            
+            // Print the page
+            window.print();
+            
+            // Restore original styles after printing
+            setTimeout(() => {
+                if (modalBackdrop) modalBackdrop.style.display = originalBackdropDisplay;
+                modal.style.display = originalModalDisplay;
+                modal.style.position = '';
+                modal.style.transform = '';
+                body.className = originalBodyClass;
+            }, 100);
+        });
+        console.log("Print button event listener added");
+    }
+
+    // Form submission handler
+    if (formF) {
+        formF.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get CKEditor content before submission
+            if (commentsEditor) {
+                const commentsContent = commentsEditor.getData();
+                console.log('Comments content:', commentsContent);
+            }
+            
+            // Here you would normally handle form submission
+            alert('Form submitted successfully!');
+        });
+    }
+
+    // Expose editor instances globally for dashboard integration
+    if (!window.formFEditors) {
+        window.formFEditors = {};
+    }
+    
+    // Store editor reference globally when initialized
+    const originalInitCKEditor = initCKEditor;
+    initCKEditor = function(selector, config, onReady) {
+        originalInitCKEditor(selector, config, function(editor, el) {
+            if (selector === '#comments') {
+                window.formFEditors.comments = editor;
+            }
+            if (typeof onReady === 'function') onReady(editor, el);
+        });
+    };
+    </script>
+    </script>
+</body>
+</html>

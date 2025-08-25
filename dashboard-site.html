@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Site Supervisor Dashboard - AU Internship Portal</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+	<style>
+		:root { --primary:#0d6efd; --grad-a:#0066b2; --grad-b:#0099cc; }
+		body{font-family:"Poppins",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#fff;color:#1f2937;min-height:100vh;}
+		.app-header{background:linear-gradient(135deg,var(--grad-a) 0%,var(--grad-b) 100%);box-shadow:0 2px 10px rgba(0,0,0,.1);padding:.55rem .85rem;}
+		/* Profile dropdown (shared minimal) */
+		.profile-min-btn{background:transparent;border:none;border-radius:0;padding:0 .25rem 0 0;font-size:.85rem;font-weight:600;display:flex;align-items:center;gap:.4rem;color:#fff;}
+		.profile-min-btn:hover{opacity:.85;}
+		.profile-min-menu{position:absolute;top:100%;right:0;margin-top:.4rem;min-width:190px;background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:.6rem .75rem;box-shadow:0 8px 28px -4px rgba(0,0,0,.18);display:none;z-index:2000;font-size:.7rem;animation:fadeSlide .25s ease;}
+		.profile-min-menu.open{display:block;}
+		.profile-min-menu .name{font-weight:600;font-size:.72rem;color:#1e293b;margin-bottom:2px;}
+		.profile-min-menu .email{font-size:.62rem;color:#64748b;word-break:break-all;margin-bottom:.35rem;}
+		.profile-min-menu .logout-btn{border:1px solid #dc3545;background:#fff;color:#dc3545;font-size:.62rem;font-weight:600;padding:.3rem .55rem;border-radius:6px;width:100%;margin-top:.5rem;}
+		.profile-min-menu .logout-btn:hover{background:#dc3545;color:#fff;}
+		.app-header .logo-circle{background:#fff;width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;padding:2px;}
+		.app-header .logo-circle img{height:30px;width:auto;}
+		.app-header .title-btn{background:transparent;border:none;color:#fff;font-weight:600;font-size:1rem;letter-spacing:.3px;cursor:pointer;user-select:none;}
+		.app-header .title-btn:hover{text-decoration:underline;text-decoration-thickness:2px;}
+		.content-wrap{padding:1.25rem;margin-top:60px;}
+		@media (min-width:992px){.content-wrap{padding:2rem 2.5rem;}}
+		.card-lite{background:#fff;border:1px solid #eef2f7;border-radius:18px;box-shadow:0 4px 22px rgba(0,0,0,.06);transition:transform .35s cubic-bezier(.16,.8,.24,1), box-shadow .35s;position:relative;overflow:hidden;}
+		.card-lite:before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 85% 15%,rgba(13,110,253,.15),transparent 60%);} 
+		.card-lite:hover{transform:translateY(-4px);box-shadow:0 12px 34px -4px rgba(0,0,0,.12);} 
+		/* Match DIC form-requests card styling */
+		.card-lite.form-requests{position:relative;overflow:hidden;transition:transform .38s cubic-bezier(.16,.8,.24,1);} 
+		.card-lite.form-requests:before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,#f5faff 0%,#ffffff 55%);opacity:.85;} 
+		.card-lite.form-requests > *{position:relative;} 
+		.card-lite.form-requests:hover{transform:scale(1.035) translateY(-2px);} 
+		.card-lite.form-requests .mini-metrics{transition:opacity .3s ease;} 
+		.card-lite.form-requests:hover .mini-metrics{opacity:.9;} 
+		.card-lite.form-requests .see-requests-wrap{display:grid!important;grid-template-columns:1fr;opacity:0;transform:translateY(8px);pointer-events:none;transition:opacity .34s ease,transform .34s ease;} 
+		.card-lite.form-requests:hover .see-requests-wrap{opacity:1;transform:translateY(0);pointer-events:auto;transition-delay:.05s;} 
+		.card-lite .card-title{font-size:.95rem;font-weight:600;letter-spacing:.5px;text-transform:uppercase;display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem;padding-bottom:.5rem;border-bottom:1px solid #e4ecf4;} 
+		/* Metrics + info capsule (mirrors DIC style) */
+		.mini-metrics{margin-top:.25rem;}
+		.mini-metrics .col{background:#fff;border:1px solid #deebf5;border-radius:10px;padding:.55rem .25rem;box-shadow:0 2px 4px rgba(0,0,0,.04);text-align:center;position:relative;}
+		.mini-metrics .col+.col{margin-left:.35rem;}
+		@media (max-width:575.98px){.mini-metrics .col+.col{margin-left:0;}}
+		.mini-metrics .value{font-size:1.05rem;font-weight:700;}
+		.mini-metrics .label{font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.7px;margin-top:2px;color:#6b7280;}
+		.value.requests{color:#000;}
+		.value.pending{color:#dc3545;}
+		.value.approved{color:#198754;}
+		.see-requests-wrap button.btn-soft{font-weight:500;border:1px solid #c6ddf3;background:#f0f8ff;color:var(--primary);}
+		.see-requests-wrap button.btn-soft:hover{background:#e2f2ff;}
+		.info-capsule{position:relative;display:inline-flex;align-items:center;gap:.45rem;background:#e8f4ff;color:#055a96;padding:.25rem .45rem;border-radius:20px;font-size:.65rem;font-weight:600;letter-spacing:.4px;max-width:28px;overflow:hidden;white-space:nowrap;cursor:pointer;transition:max-width .45s cubic-bezier(.25,.8,.25,1),background .3s;}
+		.info-capsule i{font-size:.85rem;flex:0 0 auto;}
+		.info-capsule .label{opacity:0;transform:translateX(4px);transition:opacity .3s ease .12s,transform .3s ease .12s;}
+		.info-capsule:hover{max-width:280px;background:#d9efff;}
+		.info-capsule:hover .label{opacity:1;transform:translateX(0);} 
+		#submissionsPanel table th{background:#f8fafc;font-size:.65rem;letter-spacing:.5px;text-transform:uppercase;}
+		#submissionsPanel table td{font-size:.7rem;}
+		#submissionsPanel .badge{font-size:.55rem;}
+		#submissionsPanel .action-btn{--bs-btn-padding-y:.15rem;--bs-btn-padding-x:.4rem;--bs-btn-font-size:.55rem;}
+		.btn-soft-primary{background:#eef6ff;border:1px solid #d6e9ff;color:#0d6efd;font-weight:600;letter-spacing:.4px;font-size:.8rem;border-radius:10px;padding:.65rem .95rem;display:inline-flex;align-items:center;gap:.45rem;transition:background .3s,color .3s,transform .35s cubic-bezier(.34,1.56,.64,1);} 
+		.btn-soft-primary:hover{background:#e0f0ff;color:#0a58ca;transform:translateY(-2px);} 
+		.btn-soft-primary:active{transform:translateY(0) scale(.94);} 
+		.welcome-strip{display:flex;align-items:center;gap:.55rem;font-size:.8rem;font-weight:600;letter-spacing:.35px;color:#055a96;background:#e8f4ff;border:1px solid #c0e0fc;padding:.55rem .85rem;border-radius:10px;} 
+		/* Form container (embedded) */
+		#formCSection{display:none;}
+		#formCContainer.loading:before{content:"";position:absolute;inset:0;display:block;background:linear-gradient(120deg,rgba(255,255,255,.55),rgba(255,255,255,.9));backdrop-filter:blur(2px);}
+		.loader-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:300px;padding:2rem;}
+		/* Unified back button */
+		.dash-back-btn{background:#0d6efd;border:1px solid #0b5ed7;color:#fff;font-weight:500;display:inline-flex;align-items:center;gap:.45rem;padding:.45rem .95rem .45rem .85rem;cursor:pointer;font-size:.8rem;border-radius:8px;line-height:1;box-shadow:0 2px 4px rgba(0,0,0,.08);transition:background .25s,box-shadow .25s,transform .25s;} 
+		.dash-back-btn i{font-size:.95rem;line-height:1;} 
+		.dash-back-btn:hover{background:#0b5ed7;box-shadow:0 4px 10px -2px rgba(0,0,0,.2);} 
+		.dash-back-btn:active{transform:translateY(1px);box-shadow:0 2px 5px -2px rgba(0,0,0,.25);} 
+		.dash-back-btn:focus-visible{outline:2px solid #fff;outline-offset:2px;}
+		/* Smooth section transitions */
+		.fade-slide{animation:fadeSlide .45s cubic-bezier(.4,0,.2,1);}
+		@keyframes fadeSlide{0%{opacity:0;transform:translateY(8px);}100%{opacity:1;transform:translateY(0);}}
+		/* Make embedded form edge-to-edge */
+		.full-embed #formCContainer .container-fluid{padding-left:0!important;padding-right:0!important;}
+	</style>
+</head>
+<body>
+	<header class="app-header fixed-top d-flex align-items-center gap-2">
+		<div class="logo-circle"><img src="images/airLogo.png" alt="AU Logo"></div>
+		<button class="title-btn" id="homeTitle" type="button" aria-label="Go to dashboard">AU Internship Portal — Site Supervisor</button>
+		<div class="ms-auto d-flex align-items-center position-relative" id="profileArea">
+			<button id="profileBtn" class="profile-min-btn" type="button" aria-haspopup="true" aria-expanded="false" title="Profile"><i class="bi bi-person-circle fs-5"></i></button>
+			<div id="profileMenu" class="profile-min-menu" role="menu" aria-hidden="true">
+				<div class="name" id="profileName">Site Supervisor</div>
+				<div class="email" id="profileEmail">supervisor@example.com</div>
+				<button id="quickLogout" class="logout-btn" type="button"><i class="bi bi-box-arrow-right me-1"></i>Logout</button>
+			</div>
+		</div>
+	</header>
+
+	<main class="content-wrap" id="mainContent">
+		<!-- Home Section -->
+		<section id="homeSection" class="fade-slide">
+			<div class="welcome-strip mb-4"><i class="bi bi-info-circle"></i><span>Welcome! You are required to complete only <strong>Form C</strong> for intern evaluation.</span></div>
+			<!-- Assigned Students Overview (mirrors faculty dashboard style) -->
+			<div class="row g-4 mb-4" id="highLevelStats">
+				<div class="col-12">
+					<div class="card-lite form-requests p-3">
+						<h6 class="card-title d-flex align-items-center justify-content-between">Students
+							<span class="info-capsule"><i class="bi bi-info-circle"></i><span class="label">Overall status of interns assigned to you</span></span>
+						</h6>
+						<div class="row g-2 mini-metrics flex-nowrap flex-lg-nowrap" style="overflow-x:auto;">
+							<div class="col">
+								<div class="value" id="stat_assigned">0</div>
+								<div class="label">Assigned</div>
+							</div>
+							<div class="col">
+								<div class="value" id="stat_doing">0</div>
+								<div class="label">In Progress</div>
+							</div>
+							<div class="col">
+								<div class="value text-warning" id="stat_pendingApproval">0</div>
+								<div class="label">Pending Review</div>
+							</div>
+							<div class="col">
+								<div class="value text-danger" id="stat_pendingForms">0</div>
+								<div class="label">No Submission</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row g-4" id="formCardsRow">
+				<div class="col-12 col-md-6 col-xl-4">
+					<div class="card-lite form-requests p-3 h-100 d-flex flex-column" data-form="Form C">
+						<h6 class="card-title d-flex align-items-center justify-content-between">Form C <span class="info-capsule" data-info="Site Supervisor Evaluation"><i class="bi bi-info-circle"></i><span class="label">Site Supervisor Evaluation Form</span></span></h6>
+						<div class="row g-2 mini-metrics flex-nowrap mb-1">
+							<div class="col">
+								<div class="value requests" id="formC_requests">0</div>
+								<div class="label">Requests</div>
+							</div>
+							<div class="col">
+								<div class="value pending text-danger" id="formC_pending">0</div>
+								<div class="label">Pending</div>
+							</div>
+							<div class="col">
+								<div class="value approved text-success" id="formC_approved">0</div>
+								<div class="label">Approved</div>
+							</div>
+						</div>
+						<p class="small text-secondary flex-grow-1 mb-2">Site Supervisor Evaluation Form. Please complete at the conclusion of the internship period.</p>
+						<div class="see-requests-wrap mt-auto d-grid">
+							<div class="d-flex flex-column gap-2">
+								<button class="btn btn-soft btn-sm" id="toggleSubmissions" type="button"><i class="bi bi-eye me-1"></i>See Submissions</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-12" id="submissionsPanel" style="display:none;">
+					<div class="card-lite p-3 fade-slide">
+						<div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
+							<h6 class="mb-0">Form C Submissions</h6>
+							<button class="btn btn-outline-secondary btn-sm" id="closeSubs" type="button" title="Close"><i class="bi bi-x"></i></button>
+						</div>
+						<div class="table-responsive">
+							<table class="table table-sm align-middle mb-0">
+								<thead><tr><th style="min-width:120px;">Submitted</th><th style="min-width:80px;">Status</th><th>Actions</th></tr></thead>
+								<tbody id="formCSubsTbody"><tr><td colspan="3" class="text-center small text-muted">No submissions yet.</td></tr></tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Form C Section (embedded) -->
+		<section id="formCSection" class="fade-slide position-relative">
+			<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+				<button class="dash-back-btn" id="backToHome"><i class="bi bi-arrow-left"></i><span>Back</span></button>
+				<div class="small text-muted">Form C – Site Supervisor Evaluation</div>
+			</div>
+			<div id="formCContainer" class="position-relative"></div>
+		</section>
+	</main>
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+	<script>
+	// Profile dropdown logic
+	(function(){
+		const fallback={name:'Site Supervisor',email:'supervisor@example.com'}; let uRaw=localStorage.getItem('currentUser'); let u; try{u=uRaw?JSON.parse(uRaw):fallback;}catch{u=fallback;}
+		const set=(id,val)=>{const el=document.getElementById(id); if(el) el.textContent=val;}; set('profileName',u.name||fallback.name); set('profileEmail',u.email||fallback.email);
+		const btn=document.getElementById('profileBtn'); const menu=document.getElementById('profileMenu'); function closeMenu(){menu.classList.remove('open'); btn?.classList.remove('open');}
+		if(btn&&menu){ btn.addEventListener('click',e=>{e.stopPropagation(); const willOpen=!menu.classList.contains('open'); document.querySelectorAll('.profile-min-menu.open').forEach(m=>m.classList.remove('open')); if(willOpen){menu.classList.add('open'); btn.classList.add('open');} else closeMenu();}); document.addEventListener('click',e=>{ if(!menu.contains(e.target)&&!btn.contains(e.target)) closeMenu();}); window.addEventListener('keydown',e=>{ if(e.key==='Escape') closeMenu();}); }
+		const logout=document.getElementById('quickLogout'); if(logout){logout.addEventListener('click',()=>{localStorage.removeItem('currentUser'); window.location.href='loginForm.html';});}
+	})();
+		const homeSection = document.getElementById('homeSection');
+		const formCSection = document.getElementById('formCSection');
+		const formCContainer = document.getElementById('formCContainer');
+		const backBtn = document.getElementById('backToHome');
+		const mainContent = document.getElementById('mainContent');
+		const subsPanel = document.getElementById('submissionsPanel');
+
+		function show(section){
+			if(section==='home'){
+				formCSection.style.display='none';
+				homeSection.style.display='block';
+				window.scrollTo({top:0,behavior:'smooth'});
+				mainContent.classList.remove('full-embed');
+			} else if(section==='form-c') {
+				homeSection.style.display='none';
+				formCSection.style.display='block';
+				window.scrollTo({top:0,behavior:'smooth'});
+				mainContent.classList.add('full-embed');
+			}
+		}
+
+		async function loadFormC(){
+			formCContainer.innerHTML = '<div class="loader-wrap"><div class="spinner-border text-primary mb-3" role="status"></div><div class="small text-secondary">Loading Form C...</div></div>';
+			try {
+				const res = await fetch('form-c.html');
+				const html = await res.text();
+				// Parse & extract body
+				const parser = new DOMParser();
+				const doc = parser.parseFromString(html,'text/html');
+				let bodyContent = doc.querySelector('body')?.innerHTML || html;
+				// Strip duplicate bootstrap includes
+				bodyContent = bodyContent.replace(/<link[^>]*bootstrap[^>]*>/gi,'').replace(/<script[^>]*bootstrap[^>]*><\/script>/gi,'');
+				// Remove existing outer container spacing (we handle layout here)
+				bodyContent = bodyContent.replace(/<div class="container-fluid[^"]*"[^>]*>/,'<div class="container-fluid px-0">');
+				// Remove CKEditor / other heavy libs if any (none expected here) or allow
+				// Remove inline scripts for re-injection
+				const tempDoc = parser.parseFromString(bodyContent,'text/html');
+				const scripts = Array.from(tempDoc.querySelectorAll('script'));
+				scripts.forEach(s=>s.remove());
+				formCContainer.innerHTML = tempDoc.body.innerHTML;
+				// Execute inline scripts (if needed)
+				scripts.forEach(s=>{ if(s.textContent.trim()){ const exec=document.createElement('script'); exec.textContent=s.textContent; document.body.appendChild(exec); exec.remove(); }});
+			} catch(e){
+				console.error(e);
+				formCContainer.innerHTML = '<div class="alert alert-danger">Failed to load Form C. Please try again.</div>';
+			}
+		}
+
+		const STORAGE_KEY='siteFormCSubmissions';
+		function loadFormCSubmissions(){ const raw=localStorage.getItem(STORAGE_KEY); try{return raw?JSON.parse(raw):[];}catch{return [];} }
+		function saveFormCSubmissions(list){ localStorage.setItem(STORAGE_KEY,JSON.stringify(list)); }
+		// Assigned students (same as site-submissions page ASSIGNED_STUDENTS)
+		const ASSIGNED_STUDENTS=[
+		  { studentId:'233505', name:'Syed Muhammad Sarib' },
+		  { studentId:'233606', name:'Danish Naveed Butt' },
+		  { studentId:'233579', name:'Zahid Zafar' },
+		  { studentId:'233538', name:'Muhammad Umer' },
+		  { studentId:'233566', name:'Muhammad Ahmad Ijaz' },
+		  { studentId:'233532', name:'Muhammad Rayyan Javed' }
+		];
+		function computeStudentStats(){
+			const subs=loadFormCSubmissions();
+			const assigned=ASSIGNED_STUDENTS.length;
+			// In Progress: any student with at least one submission (any status)
+			const inProgress=new Set(subs.map(s=>s.studentId).filter(Boolean));
+			// Pending Review: submissions still pending (unique students with pending)
+			const pendingStudents=new Set(subs.filter(s=>s.status==='Pending').map(s=>s.studentId));
+			// No Submission: assigned but never submitted
+			const noSubmission=ASSIGNED_STUDENTS.filter(stu=>!subs.some(s=>s.studentId===stu.studentId)).length;
+			return {assigned,inProgress:inProgress.size,pending:pendingStudents.size,noSubmission};
+		}
+		function refreshCounters(){ const list=loadFormCSubmissions(); const set=(id,v)=>{const el=document.getElementById(id); if(el) el.textContent=v;}; set('formC_requests',list.length); set('formC_pending',list.filter(x=>x.status==='Pending').length); set('formC_approved',list.filter(x=>x.status==='Approved').length); renderSubsTable(list);} 
+		function refreshStudentStats(){ const s=computeStudentStats(); const set=(id,v)=>{const el=document.getElementById(id); if(el) el.textContent=v;}; set('stat_assigned',s.assigned); set('stat_doing',s.inProgress); set('stat_pendingApproval',s.pending); set('stat_pendingForms',s.noSubmission); }
+		function renderSubsTable(list){ const tbody=document.getElementById('formCSubsTbody'); if(!tbody) return; if(!list.length){ tbody.innerHTML='<tr><td colspan="3" class="text-center small text-muted">No submissions yet.</td></tr>'; return;} tbody.innerHTML=list.slice().reverse().map(it=>`<tr><td>${it.submittedAt}</td><td>${it.status==='Pending'?'<span class="badge text-bg-warning">Pending</span>':it.status==='Approved'?'<span class="badge text-bg-success">Approved</span>':'<span class="badge text-bg-danger">Rejected</span>'}</td><td><button class='btn btn-outline-primary btn-sm action-btn' data-action='view' data-id='${it.id}' title='View'><i class='bi bi-eye'></i></button></td></tr>`).join(''); }
+		function attachFormHandler(){ const f=formCContainer.querySelector('#formC'); if(!f) return; if(f.dataset.bound==='1') return; f.dataset.bound='1'; f.addEventListener('submit',e=>{ const list=loadFormCSubmissions(); const now=new Date(); const stamp= now.toISOString().split('T')[0]+' '+now.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}); list.push({id:'FC-'+Date.now(), submittedAt:stamp, status:'Pending'}); saveFormCSubmissions(list); refreshCounters(); }, {capture:true}); }
+		// Removed Fill / Open Form C button and related handler
+		document.getElementById('toggleSubmissions')?.addEventListener('click',()=>{ window.location.href='site-submissions.html'; });
+		document.getElementById('closeSubs')?.addEventListener('click',()=>{ subsPanel.style.display='none'; });
+		document.getElementById('formCSubsTbody')?.addEventListener('click',e=>{ const b=e.target.closest('button[data-action="view"]'); if(!b) return; alert('Placeholder: view submission '+b.getAttribute('data-id')); });
+		backBtn?.addEventListener('click',()=>{ show('home'); refreshCounters(); refreshStudentStats(); });
+		document.getElementById('homeTitle')?.addEventListener('click',()=>{ show('home'); refreshCounters(); refreshStudentStats(); });
+		show('home'); refreshCounters(); refreshStudentStats();
+	</script>
+</body>
+</html>

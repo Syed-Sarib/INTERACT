@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>h
+<meta charset="UTF-8">
+<title>Faculty Dashboard - AU Internship Portal</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<style>
+:root{ --primary:#0d6efd; --text-dark:#1f2937; }
+body{font-family:"Poppins",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#ffffff;color:var(--text-dark);min-height:100vh;}
+/* Header */
+.app-header{background:linear-gradient(135deg,#0066b2 0%,#0099cc 100%);box-shadow:0 2px 10px rgba(0,0,0,.1);padding-top:.5rem!important;padding-bottom:.5rem!important;}
+.app-header .logo-circle{background:#fff;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;padding:2px;}
+.app-header .logo-circle img{height:30px;width:auto;}
+.app-header .btn,.app-header span,.app-header i{color:#fff!important;}
+@media (min-width:576px){.app-header .logo-circle{width:40px;height:40px}.app-header .logo-circle img{height:34px}}
+/* Sidebar */
+.sidebar{background:#fff;border-right:1px solid #d0e5ff;box-shadow:0 0 15px rgba(0,0,0,.05);padding-top:10px!important;width:210px!important;height:100vh!important;overflow-y:auto!important;position:fixed;top:0;left:0;transform:translateX(-100%);transition:transform .3s ease;z-index:1050;}
+.sidebar.show{transform:translateX(0);}
+.sidebar::-webkit-scrollbar{width:8px;}
+.sidebar::-webkit-scrollbar-track{background:#f1f1f1;border-radius:4px;}
+.sidebar::-webkit-scrollbar-thumb{background:#c1c1c1;border-radius:4px;}
+.sidebar::-webkit-scrollbar-thumb:hover{background:#a8a8a8;}
+.sidebar-header{background:#0066b2;padding:.75rem;margin:-10px -16px 1rem -16px;display:flex;justify-content:space-between;align-items:center;}
+.sidebar-header h6{color:#fff!important;font-weight:600;font-size:.75rem;letter-spacing:.5px;margin:0;}
+.sidebar .nav-link{border-radius:4px;margin-bottom:3px;font-weight:500;color:#444;transition:all .2s;font-size:.97rem;padding:.5rem .75rem!important;}
+.sidebar .nav-link:hover{background:#f0f7ff;color:#0066b2;}
+.sidebar .nav-link.active{background:#0066b2;color:#fff;box-shadow:0 2px 5px rgba(0,102,178,.2);}
+.sidebar-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.3);z-index:1040;opacity:0;visibility:hidden;transition:opacity .3s ease,visibility .3s ease;}
+.sidebar-overlay.show{opacity:1;visibility:visible;}
+.btn-logout{background:#f8f9fa;color:#dc3545;border:1px solid #dc3545;transition:all .2s;font-size:.95rem;padding:.4rem .5rem;}
+.btn-logout:hover{background:#dc3545;color:#fff;}
+/* Main */
+.content-wrap{padding:1rem;margin-top:62px;}
+@media (min-width:992px){.content-wrap{padding:2rem}}
+/* Cards */
+.card-lite{background:#fff;border:1px solid #eef2f7;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,.06);transition:transform .18s ease,box-shadow .18s ease;}
+.card-lite:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(0,0,0,.08);}
+.card-lite.form-requests{position:relative;overflow:hidden;transition:transform .38s cubic-bezier(.16,.8,.24,1);}
+.card-lite.form-requests:before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,#f5faff 0%,#ffffff 55%);opacity:.85;}
+.card-lite.form-requests>*{position:relative;}
+.card-lite.form-requests:hover{transform:scale(1.035) translateY(-2px);}
+.card-lite.form-requests .card-title{font-size:.95rem;letter-spacing:.5px;text-transform:uppercase;margin-bottom:.75rem!important;padding-bottom:.5rem;border-bottom:1px solid #e4ecf4;font-weight:600;}
+.mini-metrics{margin-top:.25rem;}
+.mini-metrics .col{background:#fff;border:1px solid #deebf5;border-radius:10px;padding:.55rem .25rem;box-shadow:0 2px 4px rgba(0,0,0,.04);text-align:center;}
+.mini-metrics .col+.col{margin-left:.35rem;}
+.mini-metrics .value{font-size:1.05rem;font-weight:700;}
+.mini-metrics .label{font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.7px;margin-top:2px;color:#6b7280;}
+.value.requests{color:#000;}
+.value.pending{color:#dc3545;}
+.value.approved{color:#198754;}
+.see-requests-wrap button{font-weight:500;border:1px solid #c6ddf3;background:#f0f8ff;color:var(--primary);}
+.see-requests-wrap button:hover{background:#e2f2ff;color:var(--primary);}
+.card-lite.form-requests .see-requests-wrap{display:grid!important;opacity:0;transform:translateY(8px);pointer-events:none;transition:opacity .34s ease,transform .34s ease;}
+.card-lite.form-requests:hover .see-requests-wrap{opacity:1;transform:translateY(0);pointer-events:auto;transition-delay:.05s;}
+/* Expanding info capsules */
+.info-capsule{position:relative;display:inline-flex;align-items:center;gap:.45rem;background:#e8f4ff;color:#055a96;padding:.25rem .45rem;border-radius:20px;font-size:.65rem;font-weight:600;letter-spacing:.4px;max-width:28px;overflow:hidden;white-space:nowrap;cursor:pointer;transition:max-width .45s cubic-bezier(.25,.8,.25,1),background .3s;}
+.info-capsule i{font-size:.85rem;flex:0 0 auto;}
+.info-capsule .label{opacity:0;transform:translateX(4px);transition:opacity .3s ease .12s,transform .3s ease .12s;}
+.info-capsule:hover{max-width:360px;background:#d9efff;}
+.info-capsule:hover .label{opacity:1;transform:translateX(0);}
+.welcome-strip{display:flex;align-items:center;gap:.55rem;font-size:.8rem;font-weight:600;letter-spacing:.4px;color:#055a96;background:#e8f4ff;border:1px solid #c0e0fc;padding:.55rem .85rem;border-radius:8px;}
+/* Table */
+.table-card{border-radius:16px;overflow:hidden;border:1px solid #eef2f7;box-shadow:0 4px 24px rgba(0,0,0,.05);background:#fff;}
+.table thead th{background:#f8fafc;color:#374151;font-weight:600;}
+.section-title{font-size:1.05rem;font-weight:600;color:var(--primary);border-left:4px solid var(--primary);padding-left:.75rem;margin:1rem 0 .75rem;}
+/* Progress */
+.progress-line{display:flex;align-items:center;gap:6px;}
+.progress-line .bar{flex:1;height:8px;background:#e5eaf0;border-radius:5px;overflow:hidden;position:relative;}
+.progress-line .bar span{position:absolute;left:0;top:0;height:100%;background:linear-gradient(90deg,#3b82f6,#0d6efd);}
+.progress-line .pct{font-size:.65rem;font-weight:600;color:#334155;letter-spacing:.4px;min-width:34px;text-align:right;}
+/* Back button hover to primary */
+#backToDashboard.btn-outline-secondary:hover,#backToDashboard.btn-outline-secondary:focus{background:var(--primary);color:#fff!important;border-color:var(--primary);} 
+/* Notify feature */
+.notify-btn{border:1px solid #bcd8f0;background:#eef7ff;color:#0d6efd;font-size:.6rem;font-weight:600;padding:.3rem .6rem;border-radius:6px;letter-spacing:.4px;display:inline-flex;align-items:center;gap:4px;}
+.notify-btn:hover{background:#e0f1ff;}
+.notify-btn.notified{background:#198754!important;border-color:#198754!important;color:#fff!important;}
+.notify-btn.notified:hover{background:#157347!important;}
+.notify-badge{background:#e8f9ef;color:#137a3c;border:1px solid #c6efd8;font-size:.55rem;font-weight:600;padding:.32rem .55rem;border-radius:6px;letter-spacing:.4px;display:inline-block;}
+.notify-badge.small-muted{background:#f1f5f9;color:#506273;border-color:#d8e2eb;}
+</style>
+<style>
+  .dash-back-btn{background:#0d6efd;border:1px solid #0b5ed7;color:#fff;font-weight:500;display:inline-flex;align-items:center;gap:.45rem;padding:.45rem .95rem .45rem .85rem;cursor:pointer;font-size:.75rem;border-radius:8px;line-height:1;box-shadow:0 2px 4px rgba(0,0,0,.08);transition:background .25s,box-shadow .25s,transform .25s;}
+  .dash-back-btn i{font-size:.95rem;line-height:1;}
+  .dash-back-btn:hover{background:#0b5ed7;box-shadow:0 4px 10px -2px rgba(0,0,0,.2);} 
+  .dash-back-btn:active{transform:translateY(1px);box-shadow:0 2px 5px -2px rgba(0,0,0,.25);} 
+  .dash-back-btn:focus-visible{outline:2px solid #fff;outline-offset:2px;}
+</style>
+</head>
+<body>
+<header class="app-header navbar text-white py-1 py-sm-2 px-2 px-sm-3 fixed-top">
+  <div class="d-flex align-items-center flex-grow-1">
+    <button id="sidebarToggle" class="btn text-white me-1 me-sm-2 p-0" aria-label="Open menu">
+      <i class="bi bi-list fs-5 fs-sm-4"></i>
+    </button>
+    <div class="logo-circle me-2 me-sm-3"><img src="images/airLogo.png" alt="AU Logo" class="img-fluid"></div>
+  <button id="logoTitle" class="logo-title-btn fs-6 fs-sm-5 fw-bold" type="button" aria-label="Go to dashboard" title="Go to dashboard" style="background:transparent;border:none;color:#fff;padding:0;">AU Internship Portal — Faculty</button>
+  </div>
+  <div class="ms-auto d-flex align-items-center position-relative" id="profileArea">
+    <button id="profileBtn" class="profile-min-btn" type="button" aria-haspopup="true" aria-expanded="false" title="Profile" style="background:transparent;border:none;color:#fff;display:flex;align-items:center;gap:.4rem;">
+      <i class="bi bi-person-circle fs-5"></i>
+    </button>
+    <div id="profileMenu" class="profile-min-menu" role="menu" aria-hidden="true" style="position:absolute;top:100%;right:0;margin-top:.4rem;min-width:190px;background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:.6rem .75rem;box-shadow:0 8px 28px -4px rgba(0,0,0,.18);display:none;z-index:2000;font-size:.7rem;animation:fadeSlide .25s ease;">
+      <div class="name" id="profileName" style="font-weight:600;font-size:.72rem;color:#1e293b;margin-bottom:2px;">Faculty Member</div>
+      <div class="email" id="profileEmail" style="font-size:.62rem;color:#64748b;word-break:break-all;margin-bottom:.35rem;">faculty@example.com</div>
+      <button id="quickLogout" class="logout-btn" type="button" style="border:1px solid #dc3545;background:#fff;color:#dc3545;font-size:.62rem;font-weight:600;padding:.3rem .55rem;border-radius:6px;width:100%;margin-top:.5rem;"><i class="bi bi-box-arrow-right me-1"></i>Logout</button>
+    </div>
+  </div>
+</header>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<nav class="sidebar h-100 d-flex flex-column py-2 px-2" id="sidebar">
+  <div class="d-flex justify-content-between align-items-center mt-1 sidebar-header">
+    <h6 class="fw-semibold mb-0 small">FACULTY DASHBOARD</h6>
+    <button class="btn btn-sm text-white p-1" id="sidebarClose" title="Close sidebar"><i class="bi bi-x-lg"></i></button>
+  </div>
+  <ul class="nav flex-column w-100">
+    <li class="nav-item"><a href="#" class="nav-link active" data-section="home"><i class="bi bi-house"></i>Dashboard</a></li>
+    <li class="nav-item"><a href="#" class="nav-link" data-section="submissions"><i class="bi bi-inboxes"></i>Student Submissions</a></li>
+  </ul>
+  <div class="mt-auto px-1 pb-2">
+    <a href="#" id="logoutBtn" class="btn btn-sm w-100 btn-logout"><i class="bi bi-box-arrow-right me-1"></i>Logout</a>
+    <div class="text-center small mt-2">© 2025 AU Internship Portal</div>
+  </div>
+</nav>
+<main class="content-wrap container-fluid">
+  <section id="homeSection">
+    <div class="welcome-strip mb-3"><i class="bi bi-info-circle"></i><span>Welcome! Track and evaluate internship submissions (Forms E & F) here.</span></div>
+    <div class="row g-4 mb-4" id="highLevelStats">
+      <div class="col-12">
+        <div class="card-lite form-requests p-3">
+          <h6 class="card-title d-flex align-items-center justify-content-between">Students
+            <span class="info-capsule"><i class="bi bi-info-circle"></i><span class="label">Overall student internship status</span></span>
+          </h6>
+          <div class="row g-2 mini-metrics flex-nowrap flex-lg-nowrap" style="overflow-x:auto;">
+            <div class="col">
+              <div class="value" id="stat_assigned">0</div>
+              <div class="label">Assigned</div>
+            </div>
+            <div class="col">
+              <div class="value" id="stat_doing">0</div>
+              <div class="label">Doing Internship</div>
+            </div>
+            <div class="col">
+              <div class="value text-warning" id="stat_pendingApproval">0</div>
+              <div class="label">Pending Approval</div>
+            </div>
+            <div class="col">
+              <div class="value text-danger" id="stat_pendingForms">0</div>
+              <div class="label">Pending Forms</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row g-4 mb-3" id="formRequestsRow">
+      <div class="col-12 col-md-6 col-xl-3">
+        <div class="card-lite form-requests p-3" data-form="Form B">
+          <h6 class="card-title d-flex align-items-center justify-content-between">Form B <span class="info-capsule"><i class="bi bi-info-circle"></i><span class="label">Submission along with CV and Proposal (if any)</span></span></h6>
+          <div class="row g-2 mini-metrics flex-nowrap">
+            <div class="col"><div class="value requests" id="formB_requests">0</div><div class="label">Requests</div></div>
+            <div class="col"><div class="value pending" id="formB_pending">0</div><div class="label">Pending</div></div>
+            <div class="col"><div class="value approved" id="formB_approved">0</div><div class="label">Approved</div></div>
+          </div>
+          <div class="see-requests-wrap mt-3 d-grid"><button class="btn btn-soft btn-sm" data-action="see-requests" data-form="Form B"><i class="bi bi-eye me-1"></i>See Requests</button></div>
+        </div>
+      </div>
+      <div class="col-12 col-md-6 col-xl-3">
+        <div class="card-lite form-requests p-3" data-form="Form D">
+          <h6 class="card-title d-flex align-items-center justify-content-between">Form D <span class="info-capsule"><i class="bi bi-info-circle"></i><span class="label">Student Internship Progress Form (Fortnightly)</span></span></h6>
+          <div class="row g-2 mini-metrics flex-nowrap">
+            <div class="col"><div class="value requests" id="formD_requests">0</div><div class="label">Requests</div></div>
+            <div class="col"><div class="value pending" id="formD_pending">0</div><div class="label">Pending</div></div>
+            <div class="col"><div class="value approved" id="formD_approved">0</div><div class="label">Approved</div></div>
+          </div>
+          <div class="see-requests-wrap mt-3 d-grid"><button class="btn btn-soft btn-sm" data-action="see-requests" data-form="Form D"><i class="bi bi-eye me-1"></i>See Requests</button></div>
+        </div>
+      </div>
+      <div class="col-12 col-md-6 col-xl-3">
+        <div class="card-lite form-requests p-3" data-form="Form F">
+          <h6 class="card-title d-flex align-items-center justify-content-between">Form F <span class="info-capsule"><i class="bi bi-info-circle"></i><span class="label">Student Internship Activity Log</span></span></h6>
+          <div class="row g-2 mini-metrics flex-nowrap">
+            <div class="col"><div class="value requests" id="formF_requests">0</div><div class="label">Requests</div></div>
+            <div class="col"><div class="value pending" id="formF_pending">0</div><div class="label">Pending</div></div>
+            <div class="col"><div class="value approved" id="formF_approved">0</div><div class="label">Approved</div></div>
+          </div>
+          <div class="see-requests-wrap mt-3 d-grid"><button class="btn btn-soft btn-sm" data-action="see-requests" data-form="Form F"><i class="bi bi-eye me-1"></i>See Requests</button></div>
+        </div>
+      </div>
+      <div class="col-12 col-md-6 col-xl-3">
+        <div class="card-lite form-requests p-3" data-form="Final Report">
+          <h6 class="card-title d-flex align-items-center justify-content-between">Final Report <span class="info-capsule"><i class="bi bi-info-circle"></i><span class="label">Comprehensive Internship Report</span></span></h6>
+          <div class="row g-2 mini-metrics flex-nowrap">
+            <div class="col"><div class="value requests" id="finalReport_requests">0</div><div class="label">Requests</div></div>
+            <div class="col"><div class="value pending" id="finalReport_pending">0</div><div class="label">Pending</div></div>
+            <div class="col"><div class="value approved" id="finalReport_approved">0</div><div class="label">Approved</div></div>
+          </div>
+          <div class="see-requests-wrap mt-3 d-grid"><button class="btn btn-soft btn-sm" data-action="see-requests" data-form="Final Report"><i class="bi bi-eye me-1"></i>See Requests</button></div>
+        </div>
+      </div>
+    </div>
+    <div class="card table-card p-3 mb-4">
+      <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2">
+        <h6 class="mb-0">Student Form Progress</h6>
+        <small class="text-muted">Status per required form</small>
+      </div>
+      <div class="table-responsive">
+        <table class="table align-middle mb-0" id="studentProgressTable">
+          <thead>
+            <tr>
+              <th style="min-width:110px;">Student ID</th>
+              <th style="min-width:150px;">Student Name</th>
+              <th class="text-center">Form B</th>
+              <th class="text-center">Form D<br><small class="text-muted fw-normal">W2 W4 W6 W8</small></th>
+              <th class="text-center">Form F</th>
+              <th class="text-center">Final Report</th>
+              <th style="min-width:140px;">Progress</th>
+              <th class="text-center" style="min-width:100px;">Notify</th>
+              <th class="text-center" style="min-width:90px;">Details</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+  <section id="submissionsSection" class="d-none">
+    <div class="mb-2">
+  <button id="backToDashboard" class="dash-back-btn"><i class="bi bi-arrow-left"></i><span>Back</span></button>
+    </div>
+    <div class="card table-card p-3">
+      <div class="row g-2 align-items-end">
+        <div class="col-md-3">
+          <label class="form-label small">Filter by status</label>
+          <select id="filterStatus" class="form-select"><option value="all">All</option><option value="Pending">Pending</option><option value="Approved">Approved</option><option value="Rejected">Rejected</option></select>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label small">Filter by form</label>
+          <select id="filterForm" class="form-select">
+            <option value="all">All</option>
+            <option value="Form B">Form B</option>
+            <option value="Form D">Form D</option>
+            <option value="Form F">Form F</option>
+            <option value="Final Report">Final Report</option>
+          </select>
+        </div>
+        <div class="col-md-4"><label class="form-label small">Search</label><input type="text" id="searchText" class="form-control" placeholder="Search by name, ID, or form type"></div>
+        <div class="col-md-2 text-md-end"><button id="resetFilters" class="btn btn-outline-secondary w-100">Reset</button></div>
+      </div>
+      <div class="table-responsive mt-3">
+        <table class="table align-middle mb-0"><thead><tr><th>Student</th><th>ID</th><th>Form</th><th>Submitted</th><th>Status</th><th class="text-end">Actions</th></tr></thead><tbody id="submissionsTbody"></tbody></table>
+      </div>
+    </div>
+  </section>
+</main>
+<div class="modal fade" id="submissionPreviewModal" tabindex="-1" aria-hidden="true"><div class="modal-dialog modal-lg modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">Submission Preview</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body" id="submissionPreviewBody"></div></div></div></div>
+<div class="modal fade" id="logoutModal" tabindex="-1" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content" style="border-radius:16px;"><div class="modal-header border-0"><img src="images/airLogo.png" width="56" class="me-2" alt="AU"><h5 class="modal-title">Logout Confirmation</h5></div><div class="modal-body text-center"><p>Are you sure you want to logout?</p><div class="d-flex justify-content-center gap-2"><button type="button" id="confirmLogout" class="btn btn-success">Yes, Logout</button><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button></div></div></div></div></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Title click returns to home section
+  document.getElementById('logoTitle')?.addEventListener('click',()=>{
+    // Activate home section
+    document.querySelectorAll('nav .nav-link').forEach(l=>l.classList.remove('active'));
+    document.querySelector('nav .nav-link[data-section="home"]')?.classList.add('active');
+    document.getElementById('homeSection')?.scrollIntoView({behavior:'smooth'});
+  });
+ // Profile dropdown logic
+ (function(){
+   const fallback={name:'Faculty Member',email:'faculty@example.com'}; let uRaw=localStorage.getItem('currentUser'); let u; try{u=uRaw?JSON.parse(uRaw):fallback;}catch{u=fallback;}
+   const set=(id,val)=>{const el=document.getElementById(id); if(el) el.textContent=val;}; set('profileName',u.name||fallback.name); set('profileEmail',u.email||fallback.email);
+   const btn=document.getElementById('profileBtn'); const menu=document.getElementById('profileMenu'); function closeMenu(){menu.classList.remove('open'); btn?.classList.remove('open'); menu.style.display='none';}
+   if(btn&&menu){ btn.addEventListener('click',e=>{e.stopPropagation(); const open=menu.style.display==='block'; document.querySelectorAll('#profileMenu').forEach(m=>m!==menu&&(m.style.display='none')); if(!open){menu.style.display='block';} else closeMenu();}); document.addEventListener('click',e=>{ if(!menu.contains(e.target)&&!btn.contains(e.target)) closeMenu();}); window.addEventListener('keydown',e=>{ if(e.key==='Escape') closeMenu();}); }
+   const logout=document.getElementById('quickLogout'); if(logout){logout.addEventListener('click',()=>{localStorage.removeItem('currentUser'); window.location.href='loginForm.html';});}
+ })();
+const STORAGE_KEY='facultyDashSubmissions';
+const defaultSubmissions=[
+  {id:'RB-233511',studentName:'Abdul Wasay Sial',studentId:'233511',form:'Form B',submittedAt:'2025-05-20',status:'Approved',organization:'TechNova Solutions',internshipType:'On-Site',durationWeeks:8},
+  {id:'RB-233535',studentName:'Muhammad Ihtisham Sajjad',studentId:'233535',form:'Form B',submittedAt:'2025-05-21',status:'Approved',organization:'AeroByte Labs',internshipType:'Hybrid',durationWeeks:8},
+  {id:'RB-233543',studentName:'Muhammad Bilal Talib',studentId:'233543',form:'Form B',submittedAt:'2025-05-22',status:'Pending',organization:'CloudEdge Pvt Ltd',internshipType:'Remote',durationWeeks:8},
+  {id:'RD-233547',studentName:'Salman Khalid',studentId:'233547',form:'Form D',submittedAt:'2025-07-05',status:'Pending'},
+  {id:'RB-233549',studentName:'Ali Raza',studentId:'233549',form:'Form B',submittedAt:'2025-05-23',status:'Approved',organization:'DataSphere Analytics',internshipType:'On-Site',durationWeeks:8},
+  {id:'RB-233553',studentName:'Muhammad Maaz',studentId:'233553',form:'Form B',submittedAt:'2025-05-23',status:'Approved',organization:'NextGen Tech',internshipType:'Remote',durationWeeks:8},
+  {id:'RB-233555',studentName:'Mahneen Kamran Mirza',studentId:'233555',form:'Form B',submittedAt:'2025-05-24',status:'Pending',organization:'Innovex Labs',internshipType:'Hybrid',durationWeeks:8},
+  {id:'RB-233583',studentName:'Muhammad Faseeh Anjum',studentId:'233583',form:'Form B',submittedAt:'2025-05-24',status:'Approved',organization:'CodeCraft Studios',internshipType:'On-Site',durationWeeks:8},
+  {id:'RB-233798',studentName:'Maham Kamran Mirza',studentId:'233798',form:'Form B',submittedAt:'2025-05-25',status:'Pending',organization:'VisionSoft',internshipType:'Remote',durationWeeks:8}];
+function loadSubmissions(){const raw=localStorage.getItem(STORAGE_KEY);try{return raw?JSON.parse(raw):defaultSubmissions.slice();}catch{return defaultSubmissions.slice();}}
+function saveSubmissions(list){localStorage.setItem(STORAGE_KEY,JSON.stringify(list));}
+function setActiveSection(id){document.querySelectorAll('.sidebar .nav-link').forEach(a=>a.classList.remove('active'));const link=document.querySelector(`.sidebar .nav-link[data-section="${id}"]`);link&&link.classList.add('active');document.getElementById('homeSection').classList.toggle('d-none',id!=='home');document.getElementById('submissionsSection').classList.toggle('d-none',id!=='submissions');}
+function refreshCounters(list){
+  const forms=[
+    {key:'B',label:'Form B',ids:{req:'formB_requests',pend:'formB_pending',appr:'formB_approved'}},
+    {key:'D',label:'Form D',ids:{req:'formD_requests',pend:'formD_pending',appr:'formD_approved'}},
+    {key:'F',label:'Form F',ids:{req:'formF_requests',pend:'formF_pending',appr:'formF_approved'}},
+    {key:'FR',label:'Final Report',ids:{req:'finalReport_requests',pend:'finalReport_pending',appr:'finalReport_approved'}}
+  ];
+  const set=(id,val)=>{const el=document.getElementById(id); if(el) el.textContent=val;};
+  const latestStatus={};
+  list.forEach(sub=>{
+    const key=sub.form+':'+sub.studentId;
+    const prev=latestStatus[key];
+    if(!prev || prev==='Pending' || prev==='Rejected'){
+      if(sub.status==='Approved') latestStatus[key]='Approved';
+      else if(sub.status==='Pending' && prev!=='Approved') latestStatus[key]='Pending';
+      else if(!prev) latestStatus[key]=sub.status;
+    }
+  });
+  forms.forEach(f=>{
+    let approved=0,pending=0,requests=0;
+    studentDataset.forEach(s=>{
+      const status=latestStatus[f.label+':'+s.id];
+      if(status){
+        requests++;
+        if(status==='Approved') approved++; else if(status==='Pending') pending++;
+      }
+    });
+    set(f.ids.req,requests);
+    set(f.ids.appr,approved);
+    set(f.ids.pend,pending);
+  });
+}
+function renderSubmissions(list){
+  const tbody=document.getElementById('submissionsTbody');
+  const statusFilter=document.getElementById('filterStatus').value;
+  const formFilter=document.getElementById('filterForm').value;
+  const search=document.getElementById('searchText').value.trim().toLowerCase();
+  const filtered=list.filter(it=>{
+    const okStatus=statusFilter==='all'||it.status===statusFilter;
+    const okForm=formFilter==='all'||it.form===formFilter;
+    const hit=!search||[it.studentName,it.studentId,it.form].some(v=>v.toLowerCase().includes(search));
+    return okStatus&&okForm&&hit;
+  });
+  tbody.innerHTML=filtered.map(it=>`<tr><td>${it.studentName}</td><td>${it.studentId}</td><td>${it.form}</td><td>${it.submittedAt}</td><td>${it.status==='Pending'?'<span class="badge text-bg-warning">Pending</span>':it.status==='Approved'?'<span class="badge text-bg-success">Approved</span>':'<span class="badge text-bg-danger">Rejected</span>'}</td><td class='text-end'><div class='btn-group btn-group-sm'><button class='btn btn-outline-primary' data-action='preview' data-id='${it.id}' title='Preview'><i class="bi bi-eye"></i></button><button class='btn btn-outline-success' data-action='approve' data-id='${it.id}' title='Approve'><i class="bi bi-check2"></i></button><button class='btn btn-outline-danger' data-action='reject' data-id='${it.id}' title='Reject'><i class="bi bi-x"></i></button></div></td></tr>`).join('');
+}
+function wireSubmissionActions(list){document.getElementById('submissionsTbody').addEventListener('click',e=>{const btn=e.target.closest('button[data-action]');if(!btn)return;const id=btn.getAttribute('data-id');const action=btn.getAttribute('data-action');const record=list.find(x=>x.id===id);if(!record)return;if(action==='preview'){document.getElementById('submissionPreviewBody').innerHTML=`<p class='mb-2'><strong>${record.form}</strong> submission by <strong>${record.studentName}</strong> (${record.studentId})</p><p>Status: <em>${record.status}</em></p><p><small>Submitted: ${record.submittedAt}</small></p><hr><p class='text-muted'>No detailed content stored. Integrate form HTML or fetched data here.</p>`;new bootstrap.Modal(document.getElementById('submissionPreviewModal')).show();}if(action==='approve'){record.status='Approved';saveSubmissions(list);refreshCounters(list);renderSubmissions(list);}if(action==='reject'){record.status='Rejected';saveSubmissions(list);refreshCounters(list);renderSubmissions(list);}});}
+const studentDataset=[
+  {id:'233511',name:'Abdul Wasay Sial',email:'233511@students.au.edu.pk',phone:'92 332-7995614',forms:{B:true,D:false,F:false,FR:false},dSubs:[false,false,false,false]},
+  {id:'233535',name:'Muhammad Ihtisham Sajjad',email:'233535@students.au.edu.pk',phone:'92 317-7953504',forms:{B:true,D:false,F:false,FR:false},dSubs:[false,false,false,false]},
+  {id:'233543',name:'Muhammad Bilal Talib',email:'233543@students.au.edu.pk',phone:'92 322-6538466',forms:{B:true,D:false,F:false,FR:false},dSubs:[false,false,false,false]},
+  {id:'233547',name:'Salman Khalid',email:'233547@students.au.edu.pk',phone:'92 308-7368949',forms:{B:true,D:false,F:false,FR:false},dSubs:[false,false,false,false]},
+  {id:'233549',name:'Ali Raza',email:'233549@students.au.edu.pk',phone:'92 309-6894742',forms:{B:true,D:false,F:false,FR:false},dSubs:[false,false,false,false]},
+  {id:'233553',name:'Muhammad Maaz',email:'233553@students.au.edu.pk',phone:'92 307-1604643',forms:{B:true,D:false,F:false,FR:false},dSubs:[false,false,false,false]},
+  {id:'233555',name:'Mahneen Kamran Mirza',email:'233555@students.au.edu.pk',phone:'92 305-6305151',forms:{B:true,D:false,F:false,FR:false},dSubs:[false,false,false,false]},
+  {id:'233583',name:'Muhammad Faseeh Anjum',email:'233583@students.au.edu.pk',phone:'92 307-6036856',forms:{B:true,D:false,F:false,FR:false},dSubs:[false,false,false,false]},
+  {id:'233798',name:'Maham Kamran Mirza',email:'233798@students.au.edu.pk',phone:'92 306-1555257',forms:{B:true,D:false,F:false,FR:false},dSubs:[false,false,false,false]}
+];
+try{localStorage.setItem('facultyStudentsData', JSON.stringify(studentDataset));}catch{}
+const REQUIRED_FORMS=['B','D','F','FR'];
+const NOTIFY_KEY='facultyMissingFormNotifications';
+function loadNotifications(){try{const r=localStorage.getItem(NOTIFY_KEY);return r?JSON.parse(r):{};}catch{return {};}}
+function saveNotifications(state){localStorage.setItem(NOTIFY_KEY,JSON.stringify(state));}
+let notificationState=loadNotifications();
+function renderNotifyCell(student){
+  const st=notificationState[student.id]||{count:0,last:null};
+  const missing=REQUIRED_FORMS.filter(f=>!student.forms[f]);
+  const disabled=missing.length===0;
+  if(disabled) return "<span class='notify-badge small-muted' title='All forms submitted'><i class='bi bi-check2-all text-success'></i></span>";
+  if(st.count>0){
+    return `<button class='notify-btn notified' disabled title='Already notified'><i class="bi bi-check-circle-fill"></i> Notified</button>`;
+  }
+  return `<button class='notify-btn' data-action='notify' data-id='${student.id}' data-missing='${missing.join(',')}'><i class="bi bi-bell"></i>Notify</button>`;
+}
+function renderStudentProgress(){
+  const tbody=document.querySelector('#studentProgressTable tbody');
+  const rows=studentDataset.map(s=>{
+    const doneForms=REQUIRED_FORMS.filter(f=>s.forms[f]);
+    const progressPct=Math.round((doneForms.length/REQUIRED_FORMS.length)*100);
+    const cell=(f)=> s.forms[f]
+      ? `<i class='bi bi-check-circle-fill text-success' title='Submitted'></i>`
+      : `<i class='bi bi-x-circle-fill text-danger' title='Not Submitted'></i>`;
+    const weekLabels=[2,4,6,8];
+    const dIcons = (s.dSubs||[false,false,false,false]).map((v,i)=> v
+      ? `<i class='bi bi-check-circle-fill text-success me-1' title='Week ${weekLabels[i]} submitted'></i>`
+      : `<i class='bi bi-x-circle-fill text-danger me-1' title='Week ${weekLabels[i]} missing'></i>`).join("");
+    return `<tr>
+      <td>${s.id}</td>
+      <td>${s.name}</td>
+      <td class='text-center'>${cell('B')}</td>
+      <td class='text-center'>${dIcons}</td>
+      <td class='text-center'>${cell('F')}</td>
+      <td class='text-center'>${cell('FR')}</td>
+      <td><div class='progress-line'><div class='bar'><span style='width:${progressPct}%;'></span></div><div class='pct'>${progressPct}%</div></div></td>
+      <td class='text-center'>${progressPct===100?"<span class='notify-badge small-muted' title='All forms submitted'><i class='bi bi-check2-all text-success'></i></span>": renderNotifyCell(s)}</td>
+      <td class='text-center'><a class='btn btn-outline-primary btn-sm' href='student-detail.html?id=${s.id}' title='View details'><i class="bi bi-eye"></i></a></td>
+    </tr>`;
+  }).join('');
+  tbody.innerHTML=rows;
+}
+function computeHighLevelStats(subs){
+  const assigned=studentDataset.length;
+  const doing=studentDataset.filter(s=>s.forms.B).length;
+  const pendingApproval=subs.filter(s=>s.status==='Pending').length;
+  const pendingForms=studentDataset.reduce((acc,s)=>acc+REQUIRED_FORMS.filter(f=>!s.forms[f]).length,0);
+  const set=(id,val)=>{const el=document.getElementById(id); if(el) el.textContent=val;};
+  set('stat_assigned',assigned); set('stat_doing',doing); set('stat_pendingApproval',pendingApproval); set('stat_pendingForms',pendingForms);
+}
+const sidebar=document.getElementById('sidebar');const overlay=document.getElementById('sidebarOverlay');const sidebarClose=document.getElementById('sidebarClose');document.getElementById('sidebarToggle').addEventListener('click',()=>{sidebar.classList.add('show');overlay.classList.add('show');});overlay.addEventListener('click',()=>{sidebar.classList.remove('show');overlay.classList.remove('show');});sidebarClose.addEventListener('click',()=>{sidebar.classList.remove('show');overlay.classList.remove('show');});
+document.addEventListener('click',e=>{const link=e.target.closest('.sidebar .nav-link, a[data-section]');if(!link)return;const section=link.getAttribute('data-section');if(!section)return;e.preventDefault();sidebar.classList.remove('show');overlay.classList.remove('show');if(section==='home'){setActiveSection('home');}else if(section==='submissions'){setActiveSection('submissions');}});
+let submissions=loadSubmissions();
+refreshCounters(submissions);
+renderSubmissions(submissions);
+wireSubmissionActions(submissions);
+renderStudentProgress();
+computeHighLevelStats(submissions);
+document.getElementById('filterStatus').addEventListener('change',()=>renderSubmissions(submissions));
+document.getElementById('filterForm').addEventListener('change',()=>renderSubmissions(submissions));
+document.getElementById('searchText').addEventListener('input',()=>renderSubmissions(submissions));
+document.getElementById('resetFilters').addEventListener('click',()=>{document.getElementById('filterStatus').value='all';document.getElementById('filterForm').value='all';document.getElementById('searchText').value='';renderSubmissions(submissions);});
+document.addEventListener('click',e=>{
+  const btn=e.target.closest('button[data-action="see-requests"]');
+  if(!btn) return;
+  const form=btn.getAttribute('data-form');
+  setActiveSection('submissions');
+  document.getElementById('filterForm').value=form;
+  document.getElementById('filterStatus').value='all';
+  document.getElementById('searchText').value='';
+  renderSubmissions(submissions);
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+document.addEventListener('click',e=>{
+  const btn=e.target.closest('button[data-action="notify"]');
+  if(!btn) return;
+  const sid=btn.getAttribute('data-id');
+  const missing=btn.getAttribute('data-missing');
+  notificationState[sid]={count:(notificationState[sid]?.count||0)+1,last:Date.now(),missing:missing.split(',')};
+  saveNotifications(notificationState);
+  btn.closest('td').innerHTML = renderNotifyCell(studentDataset.find(s=>s.id===sid));
+});
+document.getElementById('backToDashboard').addEventListener('click',()=>{setActiveSection('home');window.scrollTo({top:0,behavior:'smooth'});});
+const logoutModal=new bootstrap.Modal(document.getElementById('logoutModal'));document.getElementById('logoutBtn').addEventListener('click',e=>{e.preventDefault();logoutModal.show();});document.getElementById('confirmLogout').addEventListener('click',()=>{window.location.href='loginForm.html';});
+</script>
+</body>
+</html>

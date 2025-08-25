@@ -5,6 +5,7 @@
   <title>Form E – Student Internship – Activity Log</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+  <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
   <style>
     body {
       background: #fff;
@@ -13,11 +14,13 @@
       padding: 0;
     }
     .form-card {
-      padding: 0;
+      padding: 1rem;
       background: transparent;
       border: none;
       box-shadow: none;
       border-radius: 0;
+      max-width: none;
+      width: 100%;
     }
     .section-title {
       font-size: 1.1rem;
@@ -56,16 +59,112 @@
       border-radius: 0;
     }
     
-    /* Signature Upload Styles - Minimal Custom CSS */
-    .signature-preview {
-      width: 150px;
-      height: 150px;
-      object-fit: contain;
-      display: none;
+    /* Date field readonly styling */
+    input[readonly] {
+      background-color: #e9ecef;
+      opacity: 1;
+      cursor: not-allowed;
     }
     
-    .file-upload-btn input[type="file"] {
-      display: none;
+    /* Enhanced textarea styling for better editor-like appearance */
+    textarea.form-control {
+      min-height: 120px;
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 14px;
+      line-height: 1.5;
+      resize: vertical;
+      transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+    
+    textarea.form-control:focus {
+      border-color: #0d6efd;
+      box-shadow: 0 0 0 0.2rem rgba(13,110,253,.15);
+    }
+    
+    /* CKEditor styling */
+    .ck-editor {
+      width: 100%;
+      display: block;
+    }
+    
+    .ck-editor__editable {
+      min-height: 200px;
+    }
+    
+    .ck-editor__editable_inline {
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      padding: 12px;
+    }
+    
+    .ck-editor__editable:focus {
+      border-color: #0d6efd;
+      box-shadow: 0 0 0 0.2rem rgba(13,110,253,.15);
+    }
+    
+    .ck-toolbar {
+      border: 1px solid #dee2e6;
+      border-radius: 8px 8px 0 0;
+    }
+    
+    .ck-content {
+      font-family: inherit;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    
+    /* Week editor containers */
+    .week-editor-container {
+      width: 100%;
+      min-height: 200px;
+    }
+    
+    .mobile-week-editor {
+      margin-bottom: 1rem;
+    }
+
+    /* Container adjustments for full page usage */
+    .container-fluid {
+      width: 100%;
+      max-width: none;
+      margin: 0;
+      padding: 1rem !important;
+    }
+    
+    /* Full width table improvements */
+    .table {
+      width: 100%;
+      margin-bottom: 1.5rem;
+      table-layout: fixed;
+    }
+    
+    .table td {
+      vertical-align: middle;
+      padding: 15px;
+      word-wrap: break-word;
+    }
+    
+    .table .bg-light {
+      background-color: #f8f9fa !important;
+      font-weight: 600;
+      width: 180px;
+      white-space: nowrap;
+    }
+
+    /* Weekly activities table enhancements */
+    .weekly-table {
+      width: 100%;
+      table-layout: fixed;
+    }
+
+    .weekly-table .week-column {
+      width: 150px;
+    }
+
+    .weekly-table .tasks-column {
+      width: calc(100% - 150px);
     }
     
     /* Mobile Responsive Styles */
@@ -113,6 +212,25 @@
         padding: 1rem;
         margin-bottom: 1rem;
         border-left: 3px solid #0d6efd;
+      }
+      
+      .mobile-week-card textarea {
+        min-height: 80px;
+        font-size: 14px;
+      }
+      
+      /* Mobile CKEditor adjustments */
+      .mobile-week-card .ck-editor__editable {
+        min-height: 120px;
+        font-size: 14px;
+      }
+      
+      .mobile-week-card .ck-toolbar {
+        font-size: 12px;
+      }
+      
+      .mobile-week-card .ck-toolbar .ck-button {
+        padding: 4px 6px;
       }
       
       .mobile-week-title {
@@ -193,7 +311,80 @@
     }
     
     @media print {
-      .no-print { display: none !important; }
+      /* Hide everything initially */
+      body * {
+        visibility: hidden;
+      }
+      
+      /* Set up the page */
+      @page {
+        margin: 0.5cm;
+        size: auto;
+      }
+      
+      /* Reset body styles */
+      body {
+        margin: 0;
+        padding: 0;
+        min-height: 0 !important;
+        height: auto !important;
+        background: none !important;
+      }
+      
+      /* Show only modal content */
+      #previewModal,
+      #previewContent,
+      #previewContent * {
+        visibility: visible;
+      }
+      
+      #previewModal {
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: visible !important;
+        height: auto !important;
+        page-break-after: avoid !important;
+      }
+      
+      /* Hide unnecessary elements */
+      .modal-header,
+      .modal-footer,
+      .no-print {
+        display: none !important;
+      }
+      
+      /* Clean modal formatting */
+      .modal-dialog {
+        transform: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        max-width: none !important;
+        height: auto !important;
+      }
+      
+      .modal-content {
+        border: none !important;
+        box-shadow: none !important;
+        height: auto !important;
+      }
+      
+      .modal-body {
+        padding: 1cm !important;
+        height: auto !important;
+        overflow: visible !important;
+      }
+      
+      #previewContent {
+        overflow: visible !important;
+        height: auto !important;
+        page-break-after: avoid !important;
+      }
+      
+      /* Clean form elements for print */
       .form-control, input[type="text"], textarea {
         border: none !important;
         box-shadow: none !important;
@@ -204,7 +395,8 @@
     /* Large screen optimizations */
     @media (min-width: 1200px) {
       .container-fluid {
-        padding: 2rem 4rem !important;
+        padding: 1.5rem 2rem !important;
+        max-width: none !important;
       }
       .table {
         font-size: 1rem;
@@ -212,6 +404,14 @@
       .form-control {
         font-size: 1rem;
         padding: 0.75rem 1rem;
+      }
+      textarea.form-control {
+        font-size: 1rem;
+        padding: 12px 16px;
+        min-height: 140px;
+      }
+      .ck-editor__editable {
+        min-height: 220px;
       }
       h3 {
         font-size: 2rem !important;
@@ -222,21 +422,33 @@
         margin-top: 2.5rem;
         margin-bottom: 1rem;
       }
+      .form-card {
+        padding: 1.5rem 2rem;
+      }
     }
     
     @media (min-width: 1400px) {
       .container-fluid {
-        padding: 3rem 6rem !important;
+        padding: 2rem 3rem !important;
+        max-width: none !important;
       }
       .table {
         font-size: 1.1rem;
       }
       .table td, .table th {
-        padding: 1rem !important;
+        padding: 1.2rem !important;
       }
       .form-control {
         font-size: 1.1rem;
         padding: 1rem 1.25rem;
+      }
+      textarea.form-control {
+        font-size: 1.1rem;
+        padding: 16px 20px;
+        min-height: 160px;
+      }
+      .ck-editor__editable {
+        min-height: 250px;
       }
       h3 {
         font-size: 2.5rem !important;
@@ -247,16 +459,19 @@
         margin-top: 3rem;
         margin-bottom: 1.5rem;
       }
+      .form-card {
+        padding: 2rem 3rem;
+      }
     }
   </style>
 </head>
 <body>
 
-<div class="container-fluid px-0 my-0">
+<div class="container-fluid px-1 py-0">
   <div class="row justify-content-center g-0">
     <div class="col-12">
       <form id="formE">
-        <div class="form-card px-2 px-md-4 py-3" id="printArea">
+        <div class="form-card" id="printArea">
 
           <h3 class="text-center text-primary mb-3 mb-md-4 fw-bold">Form E – Student Internship – Activity Log</h3>
 
@@ -266,24 +481,30 @@
 
           <div class="text-end small mb-3 date-container">
             <label for="dateField" class="me-2">Date:</label>
-            <input type="date" class="form-control d-inline-block" style="width: 180px;" name="date" id="dateField">
+            <input type="date" class="form-control d-inline-block" style="width: 180px;" name="date" id="dateField" readonly>
           </div>
 
           <!-- Desktop Table Layout -->
-          <div class="table-responsive">
+          <div class="table-responsive desktop-table">
             <table class="table table-bordered align-middle mb-4 desktop-table">
               <tbody>
                 <tr>
                   <td class="bg-light w-25">Student Intern Name</td>
-                  <td><input type="text" class="form-control" name="student_name" placeholder="Enter your name"></td>
-                  <td class="bg-light">Student ID & Dept.</td>
-                  <td><input type="text" class="form-control" name="student_id_dept" placeholder="ID & Dept."></td>
+                  <td colspan="3"><input type="text" class="form-control" name="student_name" placeholder="Enter your name"></td>
+                </tr>
+                <tr>
+                  <td class="bg-light w-25">Student ID</td>
+                  <td><input type="text" class="form-control" name="student_id" placeholder="Student ID"></td>
+                  <td class="bg-light w-25">Department</td>
+                  <td><input type="text" class="form-control" name="student_dept" placeholder="Department"></td>
                 </tr>
                 <tr>
                   <td class="bg-light">Host Institution</td>
-                  <td><input type="text" class="form-control" name="host_institution" placeholder="Institution name"></td>
+                  <td colspan="3"><input type="text" class="form-control" name="host_institution" placeholder="Institution name"></td>
+                </tr>
+                <tr>
                   <td class="bg-light">Site Supervisor</td>
-                  <td><input type="text" class="form-control" name="site_supervisor" placeholder="Supervisor name"></td>
+                  <td colspan="3"><input type="text" class="form-control" name="site_supervisor" placeholder="Supervisor name"></td>
                 </tr>
                 <tr>
                   <td class="bg-light">Faculty Supervisor</td>
@@ -305,8 +526,13 @@
             </div>
             
             <div class="mobile-field">
-              <label for="mobile_student_id_dept">Student ID & Dept.</label>
-              <input type="text" class="form-control" name="student_id_dept" id="mobile_student_id_dept" placeholder="ID & Dept.">
+              <label for="mobile_student_id">Student ID</label>
+              <input type="text" class="form-control" name="student_id" id="mobile_student_id" placeholder="Student ID">
+            </div>
+            
+            <div class="mobile-field">
+              <label for="mobile_student_dept">Department</label>
+              <input type="text" class="form-control" name="student_dept" id="mobile_student_dept" placeholder="Department">
             </div>
             
             <div class="mobile-field">
@@ -332,45 +558,85 @@
 
           <!-- Weekly Activities - Desktop -->
           <div class="table-responsive desktop-table">
-            <table class="table table-bordered">
+            <table class="table table-bordered weekly-table">
               <thead>
                 <tr class="week-row">
-                  <th style="width: 15%;">Weeks</th>
-                  <th>Tasks Performed</th>
+                  <th class="week-column">Weeks</th>
+                  <th class="tasks-column">Tasks Performed</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td class="week-row">Week # 1</td>
-                  <td><textarea class="form-control" name="week_1" rows="3" placeholder="Describe tasks performed in week 1..."></textarea></td>
+                  <td>
+                    <div class="week-editor-container">
+                      <div id="week1Editor" class="week-editor" data-week="week_1"></div>
+                      <textarea name="week_1" id="week_1_textarea" style="display:none;"></textarea>
+                    </div>
+                  </td>
                 </tr>
                 <tr>
                   <td class="week-row">Week # 2</td>
-                  <td><textarea class="form-control" name="week_2" rows="3" placeholder="Describe tasks performed in week 2..."></textarea></td>
+                  <td>
+                    <div class="week-editor-container">
+                      <div id="week2Editor" class="week-editor" data-week="week_2"></div>
+                      <textarea name="week_2" id="week_2_textarea" style="display:none;"></textarea>
+                    </div>
+                  </td>
                 </tr>
                 <tr>
                   <td class="week-row">Week # 3</td>
-                  <td><textarea class="form-control" name="week_3" rows="3" placeholder="Describe tasks performed in week 3..."></textarea></td>
+                  <td>
+                    <div class="week-editor-container">
+                      <div id="week3Editor" class="week-editor" data-week="week_3"></div>
+                      <textarea name="week_3" id="week_3_textarea" style="display:none;"></textarea>
+                    </div>
+                  </td>
                 </tr>
                 <tr>
                   <td class="week-row">Week # 4</td>
-                  <td><textarea class="form-control" name="week_4" rows="3" placeholder="Describe tasks performed in week 4..."></textarea></td>
+                  <td>
+                    <div class="week-editor-container">
+                      <div id="week4Editor" class="week-editor" data-week="week_4"></div>
+                      <textarea name="week_4" id="week_4_textarea" style="display:none;"></textarea>
+                    </div>
+                  </td>
                 </tr>
                 <tr>
                   <td class="week-row">Week # 5</td>
-                  <td><textarea class="form-control" name="week_5" rows="3" placeholder="Describe tasks performed in week 5..."></textarea></td>
+                  <td>
+                    <div class="week-editor-container">
+                      <div id="week5Editor" class="week-editor" data-week="week_5"></div>
+                      <textarea name="week_5" id="week_5_textarea" style="display:none;"></textarea>
+                    </div>
+                  </td>
                 </tr>
                 <tr>
                   <td class="week-row">Week # 6</td>
-                  <td><textarea class="form-control" name="week_6" rows="3" placeholder="Describe tasks performed in week 6..."></textarea></td>
+                  <td>
+                    <div class="week-editor-container">
+                      <div id="week6Editor" class="week-editor" data-week="week_6"></div>
+                      <textarea name="week_6" id="week_6_textarea" style="display:none;"></textarea>
+                    </div>
+                  </td>
                 </tr>
                 <tr>
                   <td class="week-row">Week # 7</td>
-                  <td><textarea class="form-control" name="week_7" rows="3" placeholder="Describe tasks performed in week 7..."></textarea></td>
+                  <td>
+                    <div class="week-editor-container">
+                      <div id="week7Editor" class="week-editor" data-week="week_7"></div>
+                      <textarea name="week_7" id="week_7_textarea" style="display:none;"></textarea>
+                    </div>
+                  </td>
                 </tr>
                 <tr>
                   <td class="week-row">Week # 8</td>
-                  <td><textarea class="form-control" name="week_8" rows="3" placeholder="Describe tasks performed in week 8..."></textarea></td>
+                  <td>
+                    <div class="week-editor-container">
+                      <div id="week8Editor" class="week-editor" data-week="week_8"></div>
+                      <textarea name="week_8" id="week_8_textarea" style="display:none;"></textarea>
+                    </div>
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -382,42 +648,58 @@
             
             <div class="mobile-week-card">
               <div class="mobile-week-title">Week # 1</div>
-              <textarea class="form-control" name="week_1" rows="3" placeholder="Describe tasks performed in week 1..."></textarea>
+              <div class="mobile-week-editor">
+                <div id="mobileWeek1Editor" class="week-editor" data-week="week_1_mobile"></div>
+              </div>
             </div>
             
             <div class="mobile-week-card">
               <div class="mobile-week-title">Week # 2</div>
-              <textarea class="form-control" name="week_2" rows="3" placeholder="Describe tasks performed in week 2..."></textarea>
+              <div class="mobile-week-editor">
+                <div id="mobileWeek2Editor" class="week-editor" data-week="week_2_mobile"></div>
+              </div>
             </div>
             
             <div class="mobile-week-card">
               <div class="mobile-week-title">Week # 3</div>
-              <textarea class="form-control" name="week_3" rows="3" placeholder="Describe tasks performed in week 3..."></textarea>
+              <div class="mobile-week-editor">
+                <div id="mobileWeek3Editor" class="week-editor" data-week="week_3_mobile"></div>
+              </div>
             </div>
             
             <div class="mobile-week-card">
               <div class="mobile-week-title">Week # 4</div>
-              <textarea class="form-control" name="week_4" rows="3" placeholder="Describe tasks performed in week 4..."></textarea>
+              <div class="mobile-week-editor">
+                <div id="mobileWeek4Editor" class="week-editor" data-week="week_4_mobile"></div>
+              </div>
             </div>
             
             <div class="mobile-week-card">
               <div class="mobile-week-title">Week # 5</div>
-              <textarea class="form-control" name="week_5" rows="3" placeholder="Describe tasks performed in week 5..."></textarea>
+              <div class="mobile-week-editor">
+                <div id="mobileWeek5Editor" class="week-editor" data-week="week_5_mobile"></div>
+              </div>
             </div>
             
             <div class="mobile-week-card">
               <div class="mobile-week-title">Week # 6</div>
-              <textarea class="form-control" name="week_6" rows="3" placeholder="Describe tasks performed in week 6..."></textarea>
+              <div class="mobile-week-editor">
+                <div id="mobileWeek6Editor" class="week-editor" data-week="week_6_mobile"></div>
+              </div>
             </div>
             
             <div class="mobile-week-card">
               <div class="mobile-week-title">Week # 7</div>
-              <textarea class="form-control" name="week_7" rows="3" placeholder="Describe tasks performed in week 7..."></textarea>
+              <div class="mobile-week-editor">
+                <div id="mobileWeek7Editor" class="week-editor" data-week="week_7_mobile"></div>
+              </div>
             </div>
             
             <div class="mobile-week-card">
               <div class="mobile-week-title">Week # 8</div>
-              <textarea class="form-control" name="week_8" rows="3" placeholder="Describe tasks performed in week 8..."></textarea>
+              <div class="mobile-week-editor">
+                <div id="mobileWeek8Editor" class="week-editor" data-week="week_8_mobile"></div>
+              </div>
             </div>
           </div>
 
@@ -467,9 +749,6 @@
             <button type="button" class="btn btn-primary btn-custom me-3" id="previewBtn">
               <i class="bi bi-eye me-1"></i> Preview
             </button>
-            <button type="button" class="btn btn-success btn-custom me-3" id="printBtn">
-              <i class="bi bi-printer me-1"></i> Print
-            </button>
             <button type="submit" class="btn btn-outline-primary btn-custom me-3" id="submitBtn">
               <i class="bi bi-check-circle me-1"></i> Submit
             </button>
@@ -481,9 +760,6 @@
           <div class="d-md-none btn-group-mobile">
             <button type="button" class="btn btn-primary btn-custom" id="previewBtnMobile">
               <i class="bi bi-eye me-2"></i> Preview
-            </button>
-            <button type="button" class="btn btn-success btn-custom" id="printBtnMobile">
-              <i class="bi bi-printer me-2"></i> Print
             </button>
             <button type="submit" class="btn btn-outline-primary btn-custom" id="submitBtnMobile">
               <i class="bi bi-check-circle me-2"></i> Submit
@@ -510,6 +786,9 @@
         <!-- Preview content will be injected here -->
       </div>
       <div class="modal-footer">
+        <button type="button" class="btn btn-success" id="printBtnModal">
+          <i class="bi bi-printer me-1"></i> Print
+        </button>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
@@ -555,6 +834,20 @@
 }
 #previewContent div {
   margin-bottom: 0.7rem;
+}
+
+#previewContent .section-title-preview {
+  font-weight: 600;
+  color: #0d6efd;
+  font-size: 1.15rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  border-left: 4px solid #0d6efd;
+  padding-left: 0.7rem;
+  background: #e7f1ff;
+  padding: 0.4rem 0.7rem;
+  border-radius: 6px;
+  display: inline-block;
 }
 
 /* Mobile preview styles */
@@ -615,8 +908,145 @@
 document.addEventListener('DOMContentLoaded', function() {
   const form = document.getElementById('formE');
   const previewModal = new bootstrap.Modal(document.getElementById('previewModal'));
+  
+  // Store CKEditor instances
+  const editorInstances = {};
+  const mobileEditorInstances = {};
 
-  // Signature preview function
+  // Utility: element visibility (not display:none and in the document)
+  function isVisible(el) {
+    if (!el) return false;
+    const style = window.getComputedStyle(el);
+    if (style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0') return false;
+    // Check ancestors for display:none
+    let node = el;
+    while (node) {
+      const s = window.getComputedStyle(node);
+      if (s.display === 'none' || s.visibility === 'hidden') return false;
+      node = node.parentElement;
+    }
+    return true;
+  }
+
+  // Create editor only if element is visible and not initialized yet
+  function initEditorIfVisible(selector, key, config, store, onReady) {
+    const el = document.querySelector(selector);
+    if (!el) return;
+    if (el.dataset.editorInitialized === 'true') return;
+    
+    // Skip visibility check if we're in dashboard context
+    const isDashboard = !!document.getElementById('sidebar');
+    if (!isDashboard && !isVisible(el)) return;
+
+    ClassicEditor
+      .create(el, config)
+      .then(editor => {
+        store[key] = editor;
+        el.dataset.editorInitialized = 'true';
+        if (typeof onReady === 'function') onReady(editor, el);
+      })
+      .catch(error => {
+        console.error('CKEditor init error for', selector, error);
+      });
+  }
+
+  const desktopEditorConfig = {
+    toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', '|', 'outdent', 'indent', '|', 'undo', 'redo'],
+    placeholder: 'Describe tasks performed this week...',
+    // Make editor taller for better use of space
+    initialData: '',
+  };
+
+  const mobileEditorConfig = {
+    toolbar: ['bold', 'italic', 'link', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
+    placeholder: 'Describe tasks performed this week...',
+    // Make mobile editor appropriately sized
+    initialData: '',
+  };
+
+  // Initialize editors that are currently visible (desktop or mobile)
+  function initVisibleEditors() {
+    for (let i = 1; i <= 8; i++) {
+      // Desktop editors
+      initEditorIfVisible(
+        '#week' + i + 'Editor',
+        'week_' + i,
+        desktopEditorConfig,
+        editorInstances,
+        (editor) => {
+          // Sync with hidden textarea
+          const textarea = document.getElementById('week_' + i + '_textarea');
+          if (textarea) {
+            editor.model.document.on('change:data', () => {
+              textarea.value = editor.getData();
+            });
+          }
+        }
+      );
+
+      // Mobile editors
+      initEditorIfVisible(
+        '#mobileWeek' + i + 'Editor',
+        'week_' + i + '_mobile',
+        mobileEditorConfig,
+        mobileEditorInstances,
+        (mobileEditor) => {
+          // If corresponding desktop editor exists, keep them in sync
+          const desktopKey = 'week_' + i;
+          const maybeDesktop = editorInstances[desktopKey];
+          if (maybeDesktop) {
+            // Avoid feedback loops by checking content difference
+            mobileEditor.model.document.on('change:data', () => {
+              if (mobileEditor.getData() !== maybeDesktop.getData()) {
+                maybeDesktop.setData(mobileEditor.getData());
+              }
+            });
+            maybeDesktop.model.document.on('change:data', () => {
+              if (maybeDesktop.getData() !== mobileEditor.getData()) {
+                mobileEditor.setData(maybeDesktop.getData());
+              }
+            });
+          }
+        }
+      );
+    }
+  }
+
+  // On load initialize only editors that are visible (prevents "not showing" on hidden elements)
+  initVisibleEditors();
+
+  // Also try initializing any newly-visible editors after layout settles
+  setTimeout(initVisibleEditors, 300);
+  
+  // Additional initialization for dashboard context
+  const isDashboard = !!document.getElementById('sidebar');
+  if (isDashboard) {
+    // In dashboard, force initialization after a longer delay
+    setTimeout(() => {
+      console.log("Dashboard context detected - force initializing editors");
+      initVisibleEditors();
+    }, 800);
+  }
+
+  // Re-run initialization when viewport layout switches between desktop/mobile
+  const mq = window.matchMedia('(max-width: 768px)');
+  if (mq.addEventListener) {
+    mq.addEventListener('change', () => setTimeout(initVisibleEditors, 200));
+  } else if (mq.addListener) {
+    // Safari < 14
+    mq.addListener(() => setTimeout(initVisibleEditors, 200));
+  }
+
+  // Set current date automatically
+  const dateField = document.getElementById('dateField');
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const day = String(today.getDate()).padStart(2, '0');
+  const currentDate = `${year}-${month}-${day}`;
+  dateField.value = currentDate;
+
+  // Signature preview function (kept if needed later)
   function previewSignature(input, previewId) {
     const file = input.files[0];
     const preview = document.getElementById(previewId);
@@ -650,9 +1080,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Make previewSignature globally accessible
   window.previewSignature = previewSignature;
+
+  // Validation
   const requiredFields = [
     { name: 'student_name', label: 'Student Intern Name' },
-    { name: 'student_id_dept', label: 'Student ID & Dept.' },
+    { name: 'student_id', label: 'Student ID' },
+    { name: 'student_dept', label: 'Department' },
     { name: 'host_institution', label: 'Host Institution' },
     { name: 'site_supervisor', label: 'Site Supervisor' },
     { name: 'faculty_supervisor', label: 'Faculty Supervisor' },
@@ -663,6 +1096,8 @@ document.addEventListener('DOMContentLoaded', function() {
     { name: 'week_4', label: 'Week 4 Activities' },
     { name: 'week_5', label: 'Week 5 Activities' },
     { name: 'week_6', label: 'Week 6 Activities' },
+    { name: 'week_7', label: 'Week 7 Activities' },
+    { name: 'week_8', label: 'Week 8 Activities' },
     { name: 'student_agreement', label: 'Student Agreement' },
     { name: 'site_agreement', label: 'Site Supervisor Agreement' },
     { name: 'faculty_agreement', label: 'Faculty Supervisor Agreement' }
@@ -678,50 +1113,98 @@ document.addEventListener('DOMContentLoaded', function() {
     let error = document.createElement('div');
     error.className = 'error-message';
     error.innerText = message;
-    input.parentElement.appendChild(error);
+    // Ensure message attaches to a visible container
+    const parent = input.closest('.week-editor-container') || input.parentElement;
+    parent.appendChild(error);
   }
 
   function validateForm() {
     clearValidation();
     let valid = true;
     let firstInvalid = null;
+    
     for (const field of requiredFields) {
       let input = form.querySelector(`[name="${field.name}"]`);
-      if (!input) continue;
-      if (input.type === 'checkbox') {
+      if (!input && !field.name.startsWith('week_')) continue;
+      
+      if (field.name.startsWith('week_')) {
+        const weekNum = field.name.split('_')[1];
+        
+        // Try to get editors from local instances or global instances (dashboard context)
+        const desktopEditor = editorInstances[`week_${weekNum}`] || 
+                             (window.formEEditorInstances && window.formEEditorInstances[`week_${weekNum}`]);
+        const mobileEditor = mobileEditorInstances[`week_${weekNum}_mobile`] || 
+                            (window.formEMobileEditorInstances && window.formEMobileEditorInstances[`week_${weekNum}_mobile`]);
+        const anyEditor = desktopEditor || mobileEditor;
+        
+        if (anyEditor) {
+          const content = anyEditor.getData().replace(/<[^>]*>/g, '').trim();
+          if (!content) {
+            // Find visible editor container for error message
+            const editorElement = document.querySelector(`#week${weekNum}Editor`) || document.querySelector(`#mobileWeek${weekNum}Editor`);
+            if (editorElement) {
+              const container = editorElement.closest('.week-editor-container') || editorElement.parentElement;
+              showError(container, `${field.label} is required.`);
+              if (!firstInvalid) firstInvalid = editorElement;
+              valid = false;
+            }
+          }
+        } else if (input) {
+          // Fallback to textarea value if editor not ready
+          if (!input.value.trim()) {
+            showError(input, `${field.label} is required.`);
+            if (!firstInvalid) firstInvalid = input;
+            valid = false;
+          }
+        }
+      } else if (input && input.type === 'checkbox') {
         if (!input.checked) {
           showError(input, `${field.label} must be accepted.`);
           if (!firstInvalid) firstInvalid = input;
           valid = false;
         }
-      } else if (!input.value.trim()) {
+      } else if (input && !input.value.trim()) {
         showError(input, `${field.label} is required.`);
         if (!firstInvalid) firstInvalid = input;
         valid = false;
       }
     }
+    
     if (firstInvalid) {
       firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      firstInvalid.focus();
+      if (firstInvalid.focus) firstInvalid.focus();
     }
     return valid;
   }
 
   function previewForm(e) {
-    if (!validateForm()) {
-      e.preventDefault();
-      e.stopPropagation();
-      return false;
-    }
+    // if (!validateForm()) {
+    //   e.preventDefault();
+    //   e.stopPropagation();
+    //   return false;
+    // }
     const data = new FormData(form);
     
     // Generate weekly activities preview
     let weeklyHtml = '';
     for (let i = 1; i <= 8; i++) {
-      const weekData = data.get(`week_${i}`) || '';
-      if (weekData.trim()) {
-        weeklyHtml += `<tr><td class="fw-bold">Week # ${i}</td><td>${weekData.replace(/\n/g, '<br>')}</td></tr>`;
+      // Try to get editors from local instances or global instances (dashboard context)
+      const desktopEditor = editorInstances[`week_${i}`] || 
+                           (window.formEEditorInstances && window.formEEditorInstances[`week_${i}`]);
+      const mobileEditor = mobileEditorInstances[`week_${i}_mobile`] || 
+                          (window.formEMobileEditorInstances && window.formEMobileEditorInstances[`week_${i}_mobile`]);
+      const editor = desktopEditor || mobileEditor;
+      
+      let weekData = '';
+      if (editor) {
+        weekData = editor.getData();
+      } else {
+        weekData = data.get(`week_${i}`) || '';
       }
+      
+      // Show all weeks, even if empty (with "Not filled" for empty ones)
+      const displayContent = weekData.trim() ? weekData : 'Not filled';
+      weeklyHtml += `<tr><td class="fw-bold">Week # ${i}</td><td>${displayContent}</td></tr>`;
     }
     
     // Generate agreement preview HTML
@@ -730,48 +1213,50 @@ document.addEventListener('DOMContentLoaded', function() {
     agreementHtml += '<div class="col-md-4 text-center">';
     agreementHtml += '<div><strong>Student-Intern Agreement:</strong></div>';
     const studentAgreement = form.querySelector('input[name="student_agreement"]:checked');
-    if (studentAgreement) {
-      agreementHtml += '<div class="text-success mt-2"><i class="bi bi-check-circle me-1"></i>Agreed to terms and conditions</div>';
-    } else {
-      agreementHtml += '<div class="text-danger mt-2"><i class="bi bi-x-circle me-1"></i>Agreement not accepted</div>';
-    }
+    agreementHtml += studentAgreement
+      ? '<div class="text-success mt-2"><i class="bi bi-check-circle me-1"></i>Student has agreed to the terms and conditions</div>'
+      : '<div class="text-muted mt-2"><i class="bi bi-dash-circle me-1"></i>Agreement pending</div>';
     agreementHtml += '</div>';
     
     agreementHtml += '<div class="col-md-4 text-center">';
     agreementHtml += '<div><strong>Site Supervisor Agreement:</strong></div>';
     const siteAgreement = form.querySelector('input[name="site_agreement"]:checked');
-    if (siteAgreement) {
-      agreementHtml += '<div class="text-success mt-2"><i class="bi bi-check-circle me-1"></i>Agreed to terms and conditions</div>';
-    } else {
-      agreementHtml += '<div class="text-danger mt-2"><i class="bi bi-x-circle me-1"></i>Agreement not accepted</div>';
-    }
+    agreementHtml += siteAgreement
+      ? '<div class="text-success mt-2"><i class="bi bi-check-circle me-1"></i>Site Supervisor has agreed to the terms and conditions</div>'
+      : '<div class="text-muted mt-2"><i class="bi bi-dash-circle me-1"></i>Agreement pending</div>';
     agreementHtml += '</div>';
     
     agreementHtml += '<div class="col-md-4 text-center">';
     agreementHtml += '<div><strong>Faculty Supervisor Agreement:</strong></div>';
     const facultyAgreement = form.querySelector('input[name="faculty_agreement"]:checked');
-    if (facultyAgreement) {
-      agreementHtml += '<div class="text-success mt-2"><i class="bi bi-check-circle me-1"></i>Agreed to terms and conditions</div>';
-    } else {
-      agreementHtml += '<div class="text-danger mt-2"><i class="bi bi-x-circle me-1"></i>Agreement not accepted</div>';
-    }
+    agreementHtml += facultyAgreement
+      ? '<div class="text-success mt-2"><i class="bi bi-check-circle me-1"></i>Faculty Supervisor has agreed to the terms and conditions</div>'
+      : '<div class="text-muted mt-2"><i class="bi bi-dash-circle me-1"></i>Agreement pending</div>';
     agreementHtml += '</div>';
     agreementHtml += '</div>';
     
     let html = `
-      <table class="table table-bordered">
+      <div class="text-center mb-4">
+        <h3 class="text-primary fw-bold mb-3">Form E – Student Internship – Activity Log</h3>
+        <p class="small text-secondary mb-0">
+          The Student Intern to fill the form and submit it to the Faculty Supervisor. The Faculty Supervisors are required to carefully review and evaluate the Student Intern's activity log. Please return the form by the end of internship before 10<sup>th</sup> of September every Year.
+        </p>
+      </div>
+      <div class="section-title-preview">Student & Internship Details</div>
+      <table class="table table-bordered mb-4">
         <tbody>
-          <tr><th>Date</th><td colspan="3">${data.get('date') || ''}</td></tr>
-          <tr><th>Student Intern Name</th><td>${data.get('student_name') || ''}</td>
-              <th>Student ID & Dept.</th><td>${data.get('student_id_dept') || ''}</td></tr>
-          <tr><th>Host Institution</th><td>${data.get('host_institution') || ''}</td>
-              <th>Site Supervisor</th><td>${data.get('site_supervisor') || ''}</td></tr>
-          <tr><th>Faculty Supervisor</th><td colspan="3">${data.get('faculty_supervisor') || ''}</td></tr>
-          <tr><th>Internship Completion Date</th><td colspan="3">${data.get('completion_date') || ''}</td></tr>
+          <tr><th>Date</th><td colspan="3">${data.get('date') || 'Not filled'}</td></tr>
+          <tr><th>Student Intern Name</th><td colspan="3">${data.get('student_name') || 'Not filled'}</td></tr>
+          <tr><th>Student ID</th><td>${data.get('student_id') || 'Not filled'}</td>
+              <th>Department</th><td>${data.get('student_dept') || 'Not filled'}</td></tr>
+          <tr><th>Host Institution</th><td colspan="3">${data.get('host_institution') || 'Not filled'}</td></tr>
+          <tr><th>Site Supervisor</th><td colspan="3">${data.get('site_supervisor') || 'Not filled'}</td></tr>
+          <tr><th>Faculty Supervisor</th><td colspan="3">${data.get('faculty_supervisor') || 'Not filled'}</td></tr>
+          <tr><th>Internship Completion Date</th><td colspan="3">${data.get('completion_date') || 'Not filled'}</td></tr>
         </tbody>
       </table>
-      <div class="section-title mt-4">Weekly Activities</div>
-      <table class="table table-bordered">
+      <div class="section-title-preview">Weekly Activities</div>
+      <table class="table table-bordered mb-4">
         <thead>
           <tr><th style="width: 20%;">Week</th><th>Tasks Performed</th></tr>
         </thead>
@@ -779,42 +1264,105 @@ document.addEventListener('DOMContentLoaded', function() {
           ${weeklyHtml}
         </tbody>
       </table>
-      ${signatureHtml}
+      <div class="section-title-preview">Agreements</div>
+      ${agreementHtml}
     `;
     document.getElementById('previewContent').innerHTML = html;
     previewModal.show();
     return true;
   }
 
-  function printForm(e) {
-    if (!validateForm()) {
-      e.preventDefault();
-      return false;
-    }
-    window.print();
-  }
-
   function submitForm(e) {
     e.preventDefault();
+    
+    // Sync CKEditor data to hidden textareas before validation/submit
+    for (let i = 1; i <= 8; i++) {
+      // Try to get editors from local instances or global instances (dashboard context)
+      const desktopEditor = editorInstances[`week_${i}`] || 
+                           (window.formEEditorInstances && window.formEEditorInstances[`week_${i}`]);
+      const mobileEditor = mobileEditorInstances[`week_${i}_mobile`] || 
+                          (window.formEMobileEditorInstances && window.formEMobileEditorInstances[`week_${i}_mobile`]);
+      const editor = desktopEditor || mobileEditor;
+      const textarea = document.getElementById(`week_${i}_textarea`);
+      if (editor && textarea) {
+        textarea.value = editor.getData();
+      }
+    }
+    
     if (!validateForm()) return false;
     alert('Form submitted successfully!');
+    
+    // Reset editors (both local and global instances)
+    const allEditorInstances = [
+      ...Object.values(editorInstances),
+      ...Object.values(mobileEditorInstances)
+    ];
+    if (window.formEEditorInstances) {
+      allEditorInstances.push(...Object.values(window.formEEditorInstances));
+    }
+    if (window.formEMobileEditorInstances) {
+      allEditorInstances.push(...Object.values(window.formEMobileEditorInstances));
+    }
+    
+    allEditorInstances.forEach(editor => {
+      if (editor && editor.setData) editor.setData('');
+    });
+    
     form.reset();
     clearValidation();
   }
 
   document.getElementById('previewBtn').addEventListener('click', previewForm);
-  document.getElementById('printBtn').addEventListener('click', printForm);
   
   // Mobile button events
   document.getElementById('previewBtnMobile').addEventListener('click', previewForm);
-  document.getElementById('printBtnMobile').addEventListener('click', printForm);
+  
+  // Modal print button event listener
+  document.getElementById('printBtnModal').addEventListener('click', function(e) {
+    e.preventDefault();
+    var previewContent = document.getElementById('previewContent');
+    
+    if (!previewContent || !previewContent.innerHTML.trim()) {
+      alert('Preview content is empty! Please click the Preview button first.');
+      return;
+    }
+    
+    // Use the same working print logic as Form A
+    const modalBackdrop = document.querySelector('.modal-backdrop');
+    const modal = document.getElementById('previewModal');
+    const body = document.body;
+    
+    // Store original styles
+    const originalBodyClass = body.className;
+    const originalBackdropDisplay = modalBackdrop ? modalBackdrop.style.display : '';
+    const originalModalDisplay = modal.style.display;
+    
+    // Hide backdrop and adjust modal for printing
+    if (modalBackdrop) modalBackdrop.style.display = 'none';
+    modal.style.display = 'block';
+    modal.style.position = 'static';
+    modal.style.transform = 'none';
+    body.className = originalBodyClass.replace('modal-open', '');
+    
+    // Print the page
+    window.print();
+    
+    // Restore original styles after printing
+    setTimeout(() => {
+      if (modalBackdrop) modalBackdrop.style.display = originalBackdropDisplay;
+      modal.style.display = originalModalDisplay;
+      modal.style.position = '';
+      modal.style.transform = '';
+      body.className = originalBodyClass;
+    }, 100);
+  });
   
   form.addEventListener('submit', submitForm);
   
   // Sync form values between desktop and mobile layouts
   function syncFormValues() {
     const fields = [
-      'student_name', 'student_id_dept', 'host_institution', 
+      'student_name', 'student_id', 'student_dept', 'host_institution', 
       'site_supervisor', 'faculty_supervisor', 'completion_date'
     ];
     
@@ -832,26 +1380,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
       }
     });
-    
-    // Sync textarea fields (weekly activities)
-    for (let i = 1; i <= 8; i++) {
-      const desktopTextarea = form.querySelector(`textarea[name="week_${i}"]:not([id^="mobile_"])`);
-      const mobileTextarea = form.querySelector(`textarea[name="week_${i}"]`);
-      
-      if (desktopTextarea && mobileTextarea && desktopTextarea !== mobileTextarea) {
-        desktopTextarea.addEventListener('input', () => {
-          mobileTextarea.value = desktopTextarea.value;
-        });
-        
-        mobileTextarea.addEventListener('input', () => {
-          desktopTextarea.value = mobileTextarea.value;
-        });
-      }
-    }
   }
   
   // Initialize form sync
   syncFormValues();
+  
+  // Expose editor instances globally for dashboard integration
+  window.formEEditorInstances = editorInstances;
+  window.formEMobileEditorInstances = mobileEditorInstances;
 });
 </script>
 

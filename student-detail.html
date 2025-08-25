@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Student Detail</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<style>
+:root{ --primary:#0d6efd; --text-dark:#1f2937; }
+body{font-family:"Poppins",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#ffffff;min-height:100vh;padding:1.25rem;color:var(--text-dark);} 
+/* Reuse dashboard card look */
+.card-lite{background:#fff;border:1px solid #eef2f7;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,.06);transition:transform .18s ease,box-shadow .18s ease;}
+.card-lite:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(0,0,0,.08);} 
+.card-title{font-size:.95rem;letter-spacing:.5px;text-transform:uppercase;margin:0 0 .75rem!important;padding-bottom:.5rem;border-bottom:1px solid #e4ecf4;font-weight:600;color:var(--primary);} 
+.profile-name{font-size:1.75rem;font-weight:700;letter-spacing:.4px;margin-bottom:.25rem;} 
+.badge-status{font-size:.65rem;letter-spacing:.4px;padding:.35rem .55rem;border-radius:6px;} 
+.week-icons i{font-size:1.05rem;margin-right:.4rem;} 
+.progress-line{display:flex;align-items:center;gap:6px;margin-top:.35rem;} 
+.progress-line .bar{flex:1;height:8px;background:#e5eaf0;border-radius:5px;overflow:hidden;position:relative;} 
+.progress-line .bar span{position:absolute;left:0;top:0;height:100%;background:linear-gradient(90deg,#3b82f6,#0d6efd);}  
+.meta{padding-left:0;margin:0;list-style:none;} 
+.meta li{margin-bottom:2px;font-size:.75rem;font-weight:600;letter-spacing:.35px;color:#475569;} 
+.meta strong{color:#0f172a;font-weight:600;} 
+.meta i{font-size:.85rem;} 
+.section-note{font-size:.65rem;color:#64748b;letter-spacing:.4px;} 
+.table td{vertical-align:middle;} 
+.shaded{background:#f8fafc;} 
+/* Back button hover/focus style */
+.back-btn.btn-outline-secondary:hover,
+.back-btn.btn-outline-secondary:focus{background:var(--primary);color:#fff!important;border-color:var(--primary);} 
+</style>
+</head>
+<body>
+<a href="dashboard-faculty.html" class="btn btn-outline-secondary btn-sm mb-3 back-btn"><i class="bi bi-arrow-left"></i> Back</a>
+<div id="content"></div>
+<script>
+(function(){
+  const params=new URLSearchParams(location.search);
+  const id=params.get('id');
+  const container=document.getElementById('content');
+  const raw=localStorage.getItem('facultyStudentsData');
+  let dataset=[];try{dataset=raw?JSON.parse(raw):[];}catch{}
+  const stu=dataset.find(s=>s.id===id);
+  if(!stu){container.innerHTML='<div class="alert alert-warning">Student not found.</div>';return;}
+  const REQUIRED_FORMS=['B','D','F','FR'];
+  const doneForms=REQUIRED_FORMS.filter(f=>stu.forms[f]);
+  const pct=Math.round((doneForms.length/REQUIRED_FORMS.length)*100);
+  // Find Form B submission for internship snapshot
+  let subsRaw=[];try{subsRaw=JSON.parse(localStorage.getItem('facultyDashSubmissions')||'[]');}catch{}
+  const formB=subsRaw.find(r=>r.studentId===stu.id && r.form==='Form B');
+  const snapshot={
+    organization: formB?.organization||'—',
+    internshipType: formB?.internshipType||'—',
+    durationWeeks: formB?.durationWeeks? formB.durationWeeks+ ' weeks':'—'
+  };
+  const weekLabels=[2,4,6,8];
+  const dIcons=(stu.dSubs||[false,false,false,false]).map((v,i)=> v?`<i class='bi bi-check-circle-fill text-success' title='Week ${weekLabels[i]} submitted'></i>`:`<i class='bi bi-x-circle-fill text-danger' title='Week ${weekLabels[i]} missing'></i>`).join('');
+  const formRow=(label,key)=>`<tr>
+    <td class='fw-semibold'>${label}</td>
+    <td>${stu.forms[key]?'<i class="bi bi-check-circle-fill text-success"></i>':'<i class="bi bi-x-circle-fill text-danger"></i>'}</td>
+    <td><button type='button' class='btn btn-sm btn-outline-primary view-form' data-form='${label}' data-student='${stu.id}'>View</button></td>
+  </tr>`;
+  document.title = stu.name + ' - Student Detail';
+  container.innerHTML=`
+  <div class='card-lite p-4 mb-4'>
+    <div class='profile-name'>${stu.name}</div>
+    <ul class='meta d-flex flex-wrap gap-4 mb-0'>
+      <li><i class="bi bi-hash text-primary me-1"></i><strong>ID:</strong> ${stu.id}</li>
+      <li><i class="bi bi-envelope text-primary me-1"></i><strong>Email:</strong> ${stu.email||'N/A'}</li>
+      <li><i class="bi bi-telephone text-primary me-1"></i><strong>Phone:</strong> ${(stu.phone||stu.contact||'N/A')}</li>
+    </ul>
+  </div>
+  <div class='row g-4'>
+    <div class='col-lg-6'>
+      <div class='card-lite p-4 h-100'>
+        <h6 class='card-title'>Form Status</h6>
+        <table class='table table-sm align-middle mb-3'>
+          <tbody>
+            ${formRow('Form B','B')}
+            <tr>
+              <td class='fw-semibold'>Form D (Weeks)</td>
+              <td class='week-icons'>${dIcons}</td>
+              <td><button type='button' class='btn btn-sm btn-outline-primary view-form' data-form='Form D' data-student='${stu.id}'>View</button></td>
+            </tr>
+            ${formRow('Form F','F')}
+            ${formRow('Final Report','FR')}
+          </tbody>
+        </table>
+        <h6 class='mb-2 fw-semibold text-uppercase small text-primary'>Overall Progress</h6>
+        <div class='progress-line mb-1'><div class='bar'><span style='width:${pct}%;'></span></div><div class='pct small fw-semibold ms-2'>${pct}%</div></div>
+  <p class='small text-muted mb-0'>Completion across required forms.</p>
+      </div>
+    </div>
+    <div class='col-lg-6'>
+      <div class='card-lite p-4 h-100'>
+        <h6 class='card-title'>Internship Snapshot</h6>
+        <div class='row gy-3 small'>
+          <div class='col-sm-6'><strong>Organization</strong><div class='text-muted mt-1'>${snapshot.organization}</div></div>
+          <div class='col-sm-6'><strong>Type</strong><div class='text-muted mt-1'>${snapshot.internshipType}</div></div>
+          <div class='col-sm-6'><strong>Duration</strong><div class='text-muted mt-1'>${snapshot.durationWeeks}</div></div>
+          <div class='col-sm-6'><strong>Generated</strong><div class='text-muted mt-1'>${new Date().toLocaleDateString()}</div></div>
+        </div>
+        <div class='mt-4 small text-muted'>Source: Form B submission</div>
+      </div>
+    </div>
+  </div>`;
+  // Attach view button handlers after HTML injected
+  document.querySelectorAll('.view-form').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const form=encodeURIComponent(btn.getAttribute('data-form'));
+      const student=encodeURIComponent(btn.getAttribute('data-student'));
+  window.location.href='dashboard-faculty.html?form='+form+'&student='+student;
+    });
+  });
+})();
+</script>
+</body>
+</html>

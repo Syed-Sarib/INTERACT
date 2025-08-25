@@ -164,14 +164,122 @@
     }
     
     @media print {
-      .no-print { display: none !important; }
-      .form-control, input[type="text"], textarea {
+      /* Hide everything initially */
+      body * {
+        visibility: hidden;
+      }
+      
+      /* Set up the page */
+      @page {
+        margin: 0.5cm;
+        size: auto;
+      }
+      
+      /* Reset body styles */
+      body {
+        margin: 0;
+        padding: 0;
+        min-height: 0 !important;
+        height: auto !important;
+        background: none !important;
+      }
+      
+      /* Show only modal content */
+      #previewModal,
+      #previewContent,
+      #previewContent * {
+        visibility: visible;
+      }
+      
+      #previewModal {
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: visible !important;
+        height: auto !important;
+        page-break-after: avoid !important;
+      }
+      
+      /* Hide unnecessary elements */
+      .modal-header,
+      .modal-footer,
+      .no-print {
+        display: none !important;
+      }
+      
+      /* Clean modal formatting */
+      .modal-dialog {
+        transform: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        max-width: none !important;
+        height: auto !important;
+      }
+      
+      .modal-content {
         border: none !important;
         box-shadow: none !important;
-        background: transparent !important;
+        height: auto !important;
       }
-      input[type="radio"], input[type="checkbox"] {
-        pointer-events: none;
+      
+      .modal-body {
+        padding: 1cm !important;
+        height: auto !important;
+        overflow: visible !important;
+      }
+      
+      #previewContent {
+        overflow: visible !important;
+        height: auto !important;
+        page-break-after: avoid !important;
+      }
+      
+      /* Table styles */
+      table {
+        width: 100% !important;
+        margin-bottom: 1cm !important;
+        page-break-inside: avoid !important;
+        border-collapse: collapse !important;
+        table-layout: fixed !important;
+      }
+      
+      th, td {
+        border: 1px solid #000 !important;
+        padding: 12px 8px !important;
+        text-align: left !important;
+        background: none !important;
+        vertical-align: top !important;
+      }
+      
+      th {
+        font-weight: 600 !important;
+        background-color: #f0f0f0 !important;
+      }
+      
+      /* Specific column widths for evaluation table */
+      table thead th:first-child {
+        width: 75% !important;
+      }
+      
+      table thead th:last-child {
+        width: 25% !important;
+        text-align: center !important;
+      }
+      
+      table tbody td:last-child {
+        text-align: center !important;
+        font-weight: 600 !important;
+      }
+      
+      /* Clean text styles */
+      * {
+        color: black !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        float: none !important;
       }
     }
     
@@ -225,6 +333,24 @@
         font-size: 1.1rem;
         padding: 1.5rem;
       }
+    }
+    .marks-line { 
+      margin-top: 0.5rem; 
+      font-size: 0.9rem; 
+      color: #6c757d; 
+    }
+    .marks-info {
+      margin-top: 0.75rem;
+      padding: 0.5rem;
+      background-color: #f8f9fa;
+      border-radius: 4px;
+      border-left: 3px solid #0d6efd;
+      font-size: 0.9rem;
+      color: #495057;
+    }
+    .total-marks-summary {
+      border-left: 4px solid #0d6efd;
+      background: #e7f1ff;
     }
   </style>
 </head>
@@ -290,15 +416,15 @@
             </div>
             
             <div class="col-12">
-              <label class="form-label fw-semibold">Internship Duration <small>(Select any one)</small></label>
-              <div class="d-flex gap-4 flex-wrap">
+              <label class="form-label fw-semibold">Evaluation Week(s) <small>(Select applicable)</small></label>
+              <div class="d-flex gap-4 flex-wrap" id="weekSelectionContainer">
                 <div class="form-check">
-                  <input class="form-check-input" type="radio" name="duration" value="6" id="duration6">
-                  <label class="form-check-label" for="duration6">6 Weeks</label>
+                  <input class="form-check-input" type="checkbox" name="week_6" value="6" id="week6">
+                  <label class="form-check-label" for="week6">6th Week</label>
                 </div>
                 <div class="form-check">
-                  <input class="form-check-input" type="radio" name="duration" value="8" id="duration8">
-                  <label class="form-check-label" for="duration8">8 Weeks</label>
+                  <input class="form-check-input" type="checkbox" name="week_8" value="8" id="week8">
+                  <label class="form-check-label" for="week8">8th Week</label>
                 </div>
               </div>
             </div>
@@ -576,6 +702,13 @@
                 </div>
               </div>
             </div>
+
+            <div class="col-12">
+              <div class="alert alert-primary py-2 px-3 mb-0 total-marks-summary">
+                <strong>Total Evaluation Marks:</strong>
+                <span id="totalMarksDisplay">0.00</span> / 40
+              </div>
+            </div>
           </div>
 
           <!-- Agreement Section -->
@@ -620,9 +753,6 @@
             <button type="button" class="btn btn-primary btn-custom" id="previewBtn">
               <i class="bi bi-eye me-1"></i> Preview
             </button>
-            <button type="button" class="btn btn-success btn-custom" id="printBtn">
-              <i class="bi bi-printer me-1"></i> Print
-            </button>
             <button type="submit" class="btn btn-outline-primary btn-custom" id="submitBtn">
               <i class="bi bi-check-circle me-1"></i> Submit
             </button>
@@ -648,6 +778,9 @@
         <!-- Preview content will be injected here -->
       </div>
       <div class="modal-footer">
+        <button type="button" class="btn btn-success" id="printBtnModal">
+          <i class="bi bi-printer me-1"></i> Print
+        </button>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
@@ -677,9 +810,30 @@
   word-break: break-word;
   white-space: pre-line;
   vertical-align: top;
-  padding: 10px 8px;
+  padding: 12px 10px;
+  border: 1px solid #dee2e6;
+}
+#previewContent th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #495057;
+}
+#previewContent tbody tr:nth-child(even) {
+  background-color: #f8f9fa;
 }
 #previewContent .section-title {
+  font-weight: 600;
+  color: #0d6efd;
+  font-size: 1.08rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  border-left: 4px solid #0d6efd;
+  padding-left: 0.7rem;
+  background: #e7f1ff;
+  border-radius: 6px;
+  display: inline-block;
+}
+#previewContent .section-title-preview {
   font-weight: 600;
   color: #0d6efd;
   font-size: 1.08rem;
@@ -712,12 +866,22 @@
   }
   
   #previewContent th, #previewContent td {
-    padding: 6px 4px;
+    padding: 8px 6px;
+    font-size: 0.85rem;
   }
   
   #previewContent .section-title {
     font-size: 1rem;
     margin-top: 1rem;
+  }
+  
+  /* Adjust table columns for mobile */
+  #previewContent table thead th:first-child {
+    width: 70% !important;
+  }
+  
+  #previewContent table thead th:last-child {
+    width: 30% !important;
   }
 }
 
@@ -737,17 +901,42 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   const form = document.getElementById('formC');
-  const previewModal = new bootstrap.Modal(document.getElementById('previewModal'));
-
-    // Set current date
-  const today = new Date();
-  const formattedDate = today.toISOString().split('T')[0]; // YYYY-MM-DD format
-  document.getElementById('currentDate').textContent = formattedDate;
-  document.getElementById('dateField').value = formattedDate;
+  const previewBtn = document.getElementById('previewBtn');
+  const previewModalElement = document.getElementById('previewModal');
+  const printBtn = document.getElementById('printBtnModal');
   
-  // Set supervisor date
-  document.getElementById('supervisorCurrentDate').textContent = formattedDate;
-  document.getElementById('supervisorDateField').value = formattedDate;
+  console.log("Form found:", !!form);
+  console.log("Preview button found:", !!previewBtn);
+  console.log("Modal element found:", !!previewModalElement);
+  
+  // Initialize Bootstrap modal
+  let previewModal;
+  if (previewModalElement) {
+    previewModal = new bootstrap.Modal(previewModalElement);
+    console.log("Bootstrap modal initialized");
+  }
+
+  // Set current date with null guards
+  const today = new Date();
+  const displayDate = today.toLocaleDateString('en-US', { 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
+  });
+  const formattedDate = today.toISOString().split('T')[0]; // YYYY-MM-DD
+  const currentDateEl = document.getElementById('currentDate');
+  if (currentDateEl) currentDateEl.textContent = formattedDate;
+  const dateFieldEl = document.getElementById('dateField');
+  if (dateFieldEl) dateFieldEl.value = formattedDate;
+  const supervisorCurrentDateEl = document.getElementById('supervisorCurrentDate');
+  if (supervisorCurrentDateEl) supervisorCurrentDateEl.textContent = formattedDate;
+  const supervisorDateFieldEl = document.getElementById('supervisorDateField');
+  if (supervisorDateFieldEl) supervisorDateFieldEl.value = formattedDate;
+
+  // Marks configuration
+  const MAX_TOTAL_MARKS = 40;
+  const CRITERIA_COUNT = 9;
+  const PER_CRITERION_MAX = MAX_TOTAL_MARKS / CRITERIA_COUNT; // ~4.44
 
   const requiredFields = [
     { name: 'site_supervisor', label: 'Site Supervisor' },
@@ -758,7 +947,7 @@ document.addEventListener('DOMContentLoaded', function() {
     { name: 'semester', label: 'Semester' },
     { name: 'start_date', label: 'Starting Date of Internship' },
     { name: 'end_date', label: 'Ending Date of Internship' },
-    { name: 'duration', label: 'Internship Duration' },
+    // Removed duration radio; replaced with week checkboxes validation below
     { name: 'rating_1', label: 'Rating 1' },
     { name: 'rating_2', label: 'Rating 2' },
     { name: 'rating_3', label: 'Rating 3' },
@@ -779,15 +968,17 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function showError(input, message) {
+    if (!input) return;
     input.classList.add('input-error');
     let error = document.createElement('div');
     error.className = 'error-message';
     error.innerText = message;
     if (input.type === 'radio') {
-      // For radio, show error after the last radio in the group
       const radios = form.querySelectorAll(`input[name="${input.name}"]`);
-      radios[radios.length-1].parentElement.appendChild(error);
-    } else {
+      if (radios.length > 0) {
+        radios[radios.length-1].parentElement.appendChild(error);
+      }
+    } else if (input.parentElement) {
       input.parentElement.appendChild(error);
     }
   }
@@ -800,21 +991,11 @@ document.addEventListener('DOMContentLoaded', function() {
       let input = form.querySelector(`[name="${field.name}"]`);
       if (!input) continue;
       if (input.type === 'radio') {
-        // Check if duration is selected
-        if (field.name === 'duration') {
-          const checked = form.querySelector(`input[name="duration"]:checked`);
-          if (!checked) {
-            showError(input, `${field.label} is required.`);
-            if (!firstInvalid) firstInvalid = input;
-            valid = false;
-          }
-        } else {
-          const checked = form.querySelector(`input[name="${field.name}"]:checked`);
-          if (!checked) {
-            showError(input, `${field.label} is required.`);
-            if (!firstInvalid) firstInvalid = input;
-            valid = false;
-          }
+        const checked = form.querySelector(`input[name="${field.name}"]:checked`);
+        if (!checked) {
+          showError(input, `${field.label} is required.`);
+          if (!firstInvalid) firstInvalid = input;
+          valid = false;
         }
       } else if (input.type === 'checkbox') {
         if (!input.checked) {
@@ -828,6 +1009,24 @@ document.addEventListener('DOMContentLoaded', function() {
         valid = false;
       }
     }
+
+    // Custom validation: at least one of 6th or 8th week must be selected
+    const week6 = form.querySelector('input[name="week_6"]');
+    const week8 = form.querySelector('input[name="week_8"]');
+    const week6Checked = week6 && week6.checked;
+    const week8Checked = week8 && week8.checked;
+    if (!week6Checked && !week8Checked) {
+      const container = document.getElementById('weekSelectionContainer');
+      if (container) {
+        const error = document.createElement('div');
+        error.className = 'error-message';
+        error.innerText = 'Please select at least one evaluation week (6th or 8th).';
+        container.appendChild(error);
+      }
+      if (!firstInvalid && week6) firstInvalid = week6;
+      valid = false;
+    }
+
     if (firstInvalid) {
       firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
       firstInvalid.focus();
@@ -835,37 +1034,121 @@ document.addEventListener('DOMContentLoaded', function() {
     return valid;
   }
 
-  function previewForm(e) {
-    if (!validateForm()) {
-      e.preventDefault();
-      e.stopPropagation();
-      return false;
+  // Helpers for marks
+  function getRating(i) {
+    const checked = form.querySelector(`input[name="rating_${i}"]:checked`);
+    return checked ? Number(checked.value) : null;
+  }
+  function calcMarksFromRating(r) {
+    if (!r) return 0;
+    return (r / 5) * PER_CRITERION_MAX;
+  }
+  function ensureCriterionMarksEl(i) {
+    const firstRadio = form.querySelector(`input[name="rating_${i}"]`);
+    if (!firstRadio) return null;
+    const itemContainer = firstRadio.closest('.evaluation-item') || firstRadio.closest('.form-check')?.parentElement?.closest('.evaluation-item');
+    if (!itemContainer) return null;
+    let marksEl = itemContainer.querySelector(`.marks-info[data-index="${i}"]`);
+    if (!marksEl) {
+      marksEl = document.createElement('div');
+      marksEl.className = 'small text-secondary mt-2 marks-info';
+      marksEl.setAttribute('data-index', String(i));
+      itemContainer.appendChild(marksEl);
     }
+    return marksEl;
+  }
+  function ensureTotalMarksEl() {
+    let totalEl = document.getElementById('totalMarksSummary');
+    if (!totalEl) {
+      totalEl = document.createElement('div');
+      totalEl.id = 'totalMarksSummary';
+      totalEl.className = 'text-end mt-2 fw-semibold';
+      // Insert before Agreement section if present
+      const agreement = document.querySelector('.mt-4.mb-2');
+      const container = agreement?.parentElement || form;
+      container.insertBefore(totalEl, agreement || null);
+    }
+    return totalEl;
+  }
+  function updateMarksUI() {
+    console.log("updateMarksUI called");
+    let total = 0;
+    for (let i = 1; i <= CRITERIA_COUNT; i++) {
+      const rating = getRating(i);
+      const marks = calcMarksFromRating(rating);
+      total += marks;
+      console.log(`Criterion ${i}: rating=${rating}, marks=${marks.toFixed(2)}`);
+      const el = ensureCriterionMarksEl(i);
+      if (el) {
+        el.innerHTML = `<span class="text-primary">Marks:</span> <strong>${rating ? marks.toFixed(2) : '0.00'}</strong> / ${PER_CRITERION_MAX.toFixed(2)}`;
+      }
+    }
+    // Update the existing total summary element
+    const totalMarksDisplay = document.getElementById('totalMarksDisplay');
+    if (totalMarksDisplay) {
+      totalMarksDisplay.textContent = total.toFixed(2);
+      console.log(`Total marks updated to: ${total.toFixed(2)}`);
+    } else {
+      console.log("totalMarksDisplay element not found");
+    }
+  }
+
+  // Preview function with marks
+  function showPreview() {
+    console.log("Generating preview...");
+    
+    if (!previewModal) {
+      alert("Modal not initialized. Please refresh the page.");
+      return;
+    }
+    
+    // Allow preview without validation
     const data = new FormData(form);
     
-    // Get duration value
-    let duration = data.get('duration');
-    
-    // Generate evaluation ratings preview
+    // Build evaluation week(s) string
+    const week6 = data.get('week_6');
+    const week8 = data.get('week_8');
+    let weeks = [];
+    if (week6) weeks.push('6th Week');
+    if (week8) weeks.push('8th Week');
+    const weeksStr = weeks.length ? weeks.join(', ') : '—';
+
+    // Generate evaluation ratings preview with marks
     let ratingsHtml = '';
-    for (let i = 1; i <= 9; i++) {
-      const rating = data.get(`rating_${i}`) || 'Not rated';
-      const criteria = [
-        'Arrives to work on time / Available online as per schedule',
-        'Demonstrates respect for organizational staff, policies, and norms',
-        'Shows requisite understanding and ability to learn about organizational work',
-        'Exhibits necessary skills required at the workplace',
-        'Conducts self professionally in all work-related scenarios',
-        'Takes initiative and seeks opportunities to make contributions',
-        'Completes tasks and reports to supervisor on time',
-        'Demonstrates the ability to work with others in a team',
-        'Proves to be Reliable and Dependable'
-      ];
-      ratingsHtml += `<tr><td>${i}. ${criteria[i-1]}</td><td class="text-center"><strong>${rating}</strong></td></tr>`;
+    let totalMarks = 0;
+    const criteria = [
+      'Arrives to work on time / Available online as per schedule',
+      'Demonstrates respect for organizational staff, policies, and norms',
+      'Shows requisite understanding and ability to learn about organizational work',
+      'Exhibits necessary skills required at the workplace',
+      'Conducts self professionally in all work-related scenarios',
+      'Takes initiative and seeks opportunities to make contributions',
+      'Completes tasks and reports to supervisor on time',
+      'Demonstrates the ability to work with others in a team',
+      'Proves to be Reliable and Dependable'
+    ];
+    for (let i = 1; i <= CRITERIA_COUNT; i++) {
+      const ratingVal = data.get(`rating_${i}`);
+      const ratingNum = ratingVal ? Number(ratingVal) : null;
+      const ratingDisplay = ratingNum ? `${ratingNum} out of 5` : 'Not rated';
+      const marks = calcMarksFromRating(ratingNum);
+      totalMarks += marks;
+      ratingsHtml += `<tr>
+        <td style="padding: 12px; font-weight: 500;">${i}. ${criteria[i-1]}</td>
+        <td style="text-align: center; padding: 12px; font-weight: 600; color: #0d6efd;">${ratingDisplay}</td>
+        <td style="text-align: center; padding: 12px; font-weight: 600;">${ratingNum ? marks.toFixed(2) : '0.00'} / ${PER_CRITERION_MAX.toFixed(2)}</td>
+      </tr>`;
     }
     
-    let html = `
-      <table class="table table-bordered">
+    const html = `
+      <div class="text-center mb-4">
+        <h3 class="text-primary fw-bold mb-3">Form C – Site Supervisor Evaluation Form</h3>
+        <p class="small text-secondary mb-0">
+          Site Supervisor to fill the form and return the signed copy to the Faculty Supervisor.
+        </p>
+      </div>
+      <div class="section-title-preview">Supervisor and Internship Details</div>
+      <table class="table table-bordered mb-4">
         <tbody>
           <tr><th>Date</th><td colspan="3">${data.get('date') || ''}</td></tr>
           <tr><th>Site Supervisor</th><td>${data.get('site_supervisor') || ''}</td>
@@ -876,53 +1159,104 @@ document.addEventListener('DOMContentLoaded', function() {
               <th>Semester</th><td>${data.get('semester') || ''}</td></tr>
           <tr><th>Starting Date</th><td>${data.get('start_date') || ''}</td>
               <th>Ending Date</th><td>${data.get('end_date') || ''}</td></tr>
-          <tr><th>Internship Duration</th><td colspan="3">${duration ? duration + ' Weeks' : ''}</td></tr>
+          <tr><th>Evaluation Week(s)</th><td colspan="3">${weeksStr}</td></tr>
         </tbody>
       </table>
-      <div class="section-title mt-4">Evaluation Ratings</div>
-      <table class="table table-bordered">
+      <div class="section-title-preview">Evaluation Ratings</div>
+      <table class="table table-bordered mb-2">
         <thead>
-          <tr><th>Criteria</th><th style="width: 100px;">Rating</th></tr>
+          <tr>
+            <th style="width: 60%;">Evaluation Criteria</th>
+            <th style="width: 20%; text-align: center;">Rating</th>
+            <th style="width: 20%; text-align: center;">Marks</th>
+          </tr>
         </thead>
         <tbody>
           ${ratingsHtml}
         </tbody>
       </table>
-      <div class="mt-4">
-        <div class="mt-4 text-center">
-          <div><strong>Supervisor Agreement:</strong></div>
-          <div class="text-success mt-2"><i class="bi bi-check-circle me-1"></i>Supervisor has agreed to the terms and conditions</div>
-        </div>
-        <div><strong>Date:</strong> ${data.get('supervisor_date') || formattedDate}</div>
-        <div><strong>Contact Number:</strong> ${data.get('contact_number') || ''}</div>
+      <div class="text-end fw-semibold mb-4">Total Marks: <span class="text-primary">${totalMarks.toFixed(2)}</span> / ${MAX_TOTAL_MARKS}</div>
+      <div class="mt-4 text-center">
+        <div><strong>Supervisor Agreement:</strong></div>
+        <div class="text-success mt-2"><i class="bi bi-check-circle me-1"></i>Supervisor has agreed to the terms and conditions</div>
+        <div class="mt-2"><strong>Contact Number:</strong> ${data.get('contact_number') || ''}</div>
         <div><strong>Official Email:</strong> ${data.get('official_email') || ''}</div>
       </div>
     `;
+    
     document.getElementById('previewContent').innerHTML = html;
     previewModal.show();
+    console.log("Preview modal shown!");
     return true;
   }
 
-  function printForm(e) {
-    if (!validateForm()) {
+  // Event listeners
+  if (previewBtn) {
+    previewBtn.addEventListener('click', function(e) {
+      console.log("Preview button clicked!");
       e.preventDefault();
-      return false;
-    }
-    window.print();
+      showPreview();
+    });
+    console.log("Preview button event listener added");
   }
-
-  function submitForm(e) {
-    e.preventDefault();
-    if (!validateForm()) return false;
-    alert('Form submitted successfully!');
-    form.reset();
-    clearValidation();
-  }
-
-  document.getElementById('previewBtn').addEventListener('click', previewForm);
-  document.getElementById('printBtn').addEventListener('click', printForm);
   
-  form.addEventListener('submit', submitForm);
+  if (printBtn) {
+    printBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      var previewContent = document.getElementById('previewContent');
+      if (!previewContent || !previewContent.innerHTML.trim()) {
+        alert('Preview content is empty! Please click the Preview button first.');
+        return;
+      }
+      
+      const modalBackdrop = document.querySelector('.modal-backdrop');
+      const modal = document.getElementById('previewModal');
+      const body = document.body;
+      
+      const originalBodyClass = body.className;
+      const originalBackdropDisplay = modalBackdrop ? modalBackdrop.style.display : '';
+      const originalModalDisplay = modal.style.display;
+      
+      if (modalBackdrop) modalBackdrop.style.display = 'none';
+      modal.style.display = 'block';
+      modal.style.position = 'static';
+      modal.style.transform = 'none';
+      body.className = originalBodyClass.replace('modal-open', '');
+      
+      window.print();
+      
+      setTimeout(() => {
+        if (modalBackdrop) modalBackdrop.style.display = originalBackdropDisplay;
+        modal.style.display = originalModalDisplay;
+        modal.style.position = '';
+        modal.style.transform = '';
+        body.className = originalBodyClass;
+      }, 100);
+    });
+    console.log("Print button event listener added");
+  }
+  
+  if (form) {
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      if (!validateForm()) return false;
+      alert('Form submitted successfully!');
+    });
+    console.log("Form submit event listener added");
+
+    // Add change listeners for ratings to update marks
+    for (let i = 1; i <= CRITERIA_COUNT; i++) {
+      form.querySelectorAll(`input[name="rating_${i}"]`).forEach(r => {
+        r.addEventListener('change', function() {
+          console.log(`Rating ${i} changed to: ${r.value}`);
+          updateMarksUI();
+        });
+      });
+    }
+    console.log("Rating change listeners added");
+    // Initial UI update
+    updateMarksUI();
+  }
 });
 </script>
 

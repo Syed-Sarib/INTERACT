@@ -5,6 +5,7 @@
   <title>Form D – Student Internship – Progress Form</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+  <script src="https://cdn.ckeditor.com/ckeditor5/40.2.0/classic/ckeditor.js"></script>
   <style>
     body {
       background: #fff;
@@ -179,14 +180,107 @@
     /* Minimal Custom CSS - Using Bootstrap classes */
     
     @media print {
-      .no-print { display: none !important; }
-      .form-control, input[type="text"], textarea {
+      /* Hide everything initially */
+      body * {
+        visibility: hidden;
+      }
+      
+      /* Set up the page */
+      @page {
+        margin: 0.5cm;
+        size: auto;
+      }
+      
+      /* Reset body styles */
+      body {
+        margin: 0;
+        padding: 0;
+        min-height: 0 !important;
+        height: auto !important;
+        background: none !important;
+      }
+      
+      /* Show only modal content */
+      #previewModal,
+      #previewContent,
+      #previewContent * {
+        visibility: visible;
+      }
+      
+      #previewModal {
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: visible !important;
+        height: auto !important;
+        page-break-after: avoid !important;
+      }
+      
+      /* Hide unnecessary elements */
+      .modal-header,
+      .modal-footer,
+      .no-print {
+        display: none !important;
+      }
+      
+      /* Clean modal formatting */
+      .modal-dialog {
+        transform: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        max-width: none !important;
+        height: auto !important;
+      }
+      
+      .modal-content {
         border: none !important;
         box-shadow: none !important;
-        background: transparent !important;
+        height: auto !important;
       }
-      input[type="radio"] {
-        pointer-events: none;
+      
+      .modal-body {
+        padding: 1cm !important;
+        height: auto !important;
+        overflow: visible !important;
+      }
+      
+      #previewContent {
+        overflow: visible !important;
+        height: auto !important;
+        page-break-after: avoid !important;
+        background: white !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: 0 !important;
+      }
+      
+      /* Ensure tables print correctly */
+      #previewContent table {
+        page-break-inside: avoid;
+        background: white !important;
+        border-collapse: collapse !important;
+      }
+      
+      #previewContent th,
+      #previewContent td {
+        border: 1px solid #000 !important;
+        padding: 8px !important;
+        background: white !important;
+      }
+      
+      /* Clean section titles */
+      #previewContent .section-title {
+        background: none !important;
+        border: none !important;
+        color: #000 !important;
+        font-weight: bold !important;
+        margin-top: 1cm !important;
+        margin-bottom: 0.5cm !important;
+        padding: 0 !important;
+        border-radius: 0 !important;
       }
     }
     
@@ -264,12 +358,15 @@
               <tr>
                 <td class="bg-light w-25">Student Intern Name</td>
                 <td><input type="text" class="form-control" name="student_name" placeholder="Enter your name"></td>
-                <td class="bg-light">Student ID and Dept.</td>
-                <td><input type="text" class="form-control" name="student_id_dept" placeholder="ID & Dept."></td>
+                <td class="bg-light">Student ID</td>
+                <td><input type="text" class="form-control" name="student_id" placeholder="Student ID"></td>
               </tr>
               <tr>
+                <td class="bg-light">Department</td>
+                <td><input type="text" class="form-control" name="student_dept" placeholder="Department"></td>
                 <td class="bg-light">Host Institution</td>
                 <td><input type="text" class="form-control" name="host_institution" placeholder="Institution name"></td>
+              </tr>
                 <td class="bg-light">Site Supervisor</td>
                 <td><input type="text" class="form-control" name="site_supervisor" placeholder="Supervisor name"></td>
               </tr>
@@ -292,8 +389,12 @@
                   <label for="week4">4<sup>th</sup> Wk</label>
                 </td>
                 <td class="text-center">
-                  <input type="radio" class="square-radio me-1" name="report_week" value="6th8th" id="week68">
-                  <label for="week68">6<sup>th</sup>/8<sup>th</sup> Wk</label>
+                  <input type="radio" class="square-radio me-1" name="report_week" value="6th" id="week6">
+                  <label for="week6">6<sup>th</sup> Wk</label>
+                </td>
+                <td class="text-center">
+                  <input type="radio" class="square-radio me-1" name="report_week" value="8th" id="week8">
+                  <label for="week8">8<sup>th</sup> Wk</label>
                 </td>
               </tr>
             </tbody>
@@ -307,8 +408,13 @@
             </div>
             
             <div class="mobile-field">
-              <label for="mobile_student_id_dept">Student ID and Dept.</label>
-              <input type="text" class="form-control" name="student_id_dept" id="mobile_student_id_dept" placeholder="ID & Dept.">
+              <label for="mobile_student_id">Student ID</label>
+              <input type="text" class="form-control" name="student_id" id="mobile_student_id" placeholder="Student ID">
+            </div>
+            
+            <div class="mobile-field">
+              <label for="mobile_student_dept">Department</label>
+              <input type="text" class="form-control" name="student_dept" id="mobile_student_dept" placeholder="Department">
             </div>
             
             <div class="mobile-field">
@@ -343,21 +449,25 @@
                   <label for="mobile_week4">4<sup>th</sup> Wk</label>
                 </div>
                 <div class="mobile-radio-item">
-                  <input type="radio" class="square-radio" name="report_week" value="6th8th" id="mobile_week68">
-                  <label for="mobile_week68">6<sup>th</sup>/8<sup>th</sup> Wk</label>
+                  <input type="radio" class="square-radio" name="report_week" value="6th" id="mobile_week6">
+                  <label for="mobile_week6">6<sup>th</sup> Wk</label>
+                </div>
+                <div class="mobile-radio-item">
+                  <input type="radio" class="square-radio" name="report_week" value="8th" id="mobile_week8">
+                  <label for="mobile_week8">8<sup>th</sup> Wk</label>
                 </div>
               </div>
             </div>
           </div>
 
           <div class="section-title">a) <u>Tasks Assigned & Performed</u> <span class="text-muted small">(Includes assigned duties and completed tasks)</span></div>
-          <textarea class="form-control mb-4" name="tasks_assigned" rows="4" placeholder="Describe tasks assigned and performed..."></textarea>
+          <div id="tasks_assigned_editor" class="mb-4" style="min-height: 150px;"></div>
 
           <div class="section-title">b) <u>Learning Experience</u> <span class="text-muted small">(Skills and Knowledge gained)</span></div>
-          <textarea class="form-control mb-4" name="learning_experience" rows="4" placeholder="Describe your learning experience..."></textarea>
+          <div id="learning_experience_editor" class="mb-4" style="min-height: 150px;"></div>
 
           <div class="section-title">c) <u>Limitations & Challenges</u> <span class="text-muted small">(Challenges, limitations, and obstacles)</span></div>
-          <textarea class="form-control mb-4" name="limitations_challenges" rows="4" placeholder="Describe any limitations or challenges..."></textarea>
+          <div id="limitations_challenges_editor" class="mb-4" style="min-height: 150px;"></div>
 
           <div class="mt-4 mb-2">
             <div class="bg-light rounded p-3 mb-3 border-start border-primary border-3">
@@ -378,9 +488,6 @@
             <button type="button" class="btn btn-primary btn-custom me-3" id="previewBtn">
               <i class="bi bi-eye me-1" ></i> Preview
             </button>
-            <button type="button" class="btn btn-success btn-custom me-3" id="printBtn">
-              <i class="bi bi-printer me-1"></i> Print
-            </button>
             <button type="submit" class="btn btn-outline-primary btn-custom me-3" id="submitBtn">
               <i class="bi bi-check-circle me-1"></i> Submit
             </button>
@@ -392,9 +499,6 @@
           <div class="d-md-none btn-group-mobile">
             <button type="button" class="btn btn-primary btn-custom" id="previewBtnMobile">
               <i class="bi bi-eye me-2"></i> Preview
-            </button>
-            <button type="button" class="btn btn-success btn-custom" id="printBtnMobile">
-              <i class="bi bi-printer me-2"></i> Print
             </button>
             <button type="submit" class="btn btn-outline-primary btn-custom" id="submitBtnMobile">
               <i class="bi bi-check-circle me-2"></i> Submit
@@ -421,6 +525,9 @@
         <!-- Preview content will be injected here -->
       </div>
       <div class="modal-footer">
+        <button type="button" class="btn btn-success" id="printBtnModal">
+          <i class="bi bi-printer me-1"></i> Print
+        </button>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
@@ -464,6 +571,26 @@
   border-radius: 6px;
   display: inline-block;
 }
+#previewContent .section-title-preview {
+  font-weight: 600;
+  color: #0d6efd;
+  font-size: 1.08rem;
+  margin-top: 1rem;
+  margin-bottom: 0.2rem;
+  padding-left: 0.7rem;
+  border-left: none;
+  background: none;
+  border-radius: 0;
+  display: inline-block;
+}
+#previewContent .content-box {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 0.375rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  min-height: 60px;
+}
 #previewContent div {
   margin-bottom: 0.7rem;
 }
@@ -504,6 +631,30 @@
   margin-top: 2px;
   margin-bottom: 4px;
 }
+
+/* CKEditor styling */
+.ck-editor__editable_inline {
+  min-height: 120px;
+  border: 1px solid #dee2e6;
+  border-radius: 0.375rem;
+}
+.ck-editor__editable_inline:focus {
+  border-color: #86b7fe;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+.ck.ck-editor__main > .ck.ck-editor__editable {
+  background: #fff;
+}
+.ck-toolbar {
+  border-top-left-radius: 0.375rem;
+  border-top-right-radius: 0.375rem;
+}
+.editor-error {
+  border-color: #dc3545 !important;
+}
+.editor-error .ck-editor__editable_inline {
+  border-color: #dc3545;
+}
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -512,36 +663,102 @@ document.addEventListener('DOMContentLoaded', function() {
   const form = document.getElementById('formD');
   const previewModal = new bootstrap.Modal(document.getElementById('previewModal'));
 
+  // CKEditor instances
+  let tasksEditor, learningEditor, limitationsEditor;
+
+  // Initialize CKEditor instances
+  ClassicEditor
+    .create(document.querySelector('#tasks_assigned_editor'), {
+      placeholder: 'Describe tasks assigned and performed...',
+      toolbar: ['heading', '|', 'bold', 'italic', 'underline', '|', 'bulletedList', 'numberedList', '|', 'outdent', 'indent', '|', 'undo', 'redo']
+    })
+    .then(editor => {
+      tasksEditor = editor;
+    })
+    .catch(error => {
+      console.error('Error initializing tasks editor:', error);
+    });
+
+  ClassicEditor
+    .create(document.querySelector('#learning_experience_editor'), {
+      placeholder: 'Describe your learning experience...',
+      toolbar: ['heading', '|', 'bold', 'italic', 'underline', '|', 'bulletedList', 'numberedList', '|', 'outdent', 'indent', '|', 'undo', 'redo']
+    })
+    .then(editor => {
+      learningEditor = editor;
+    })
+    .catch(error => {
+      console.error('Error initializing learning editor:', error);
+    });
+
+  ClassicEditor
+    .create(document.querySelector('#limitations_challenges_editor'), {
+      placeholder: 'Describe any limitations or challenges...',
+      toolbar: ['heading', '|', 'bold', 'italic', 'underline', '|', 'bulletedList', 'numberedList', '|', 'outdent', 'indent', '|', 'undo', 'redo']
+    })
+    .then(editor => {
+      limitationsEditor = editor;
+    })
+    .catch(error => {
+      console.error('Error initializing limitations editor:', error);
+    });
+
   const requiredFields = [
     { name: 'student_name', label: 'Student Intern Name' },
-    { name: 'student_id_dept', label: 'Student ID and Dept.' },
+    { name: 'student_id', label: 'Student ID' },
+    { name: 'student_dept', label: 'Department' },
     { name: 'host_institution', label: 'Host Institution' },
     { name: 'site_supervisor', label: 'Site Supervisor' },
     { name: 'faculty_supervisor', label: 'Faculty Supervisor' },
     { name: 'reporting_period', label: 'Reporting Period' },
     { name: 'report_week', label: 'Progress Report Number' },
-    { name: 'tasks_assigned', label: 'Tasks Assigned & Performed' },
-    { name: 'learning_experience', label: 'Learning Experience' },
-    { name: 'limitations_challenges', label: 'Limitations & Challenges' },
+    { name: 'tasks_assigned', label: 'Tasks Assigned & Performed', editor: true },
+    { name: 'learning_experience', label: 'Learning Experience', editor: true },
+    { name: 'limitations_challenges', label: 'Limitations & Challenges', editor: true },
     { name: 'student_agreement', label: 'Student Agreement' }
   ];
 
   function clearValidation() {
     form.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
     form.querySelectorAll('.error-message').forEach(el => el.remove());
+    // Clear editor errors
+    document.querySelectorAll('.ck-editor').forEach(el => el.classList.remove('editor-error'));
   }
 
   function showError(input, message) {
-    input.classList.add('input-error');
+    if (input) {
+      input.classList.add('input-error');
+      let error = document.createElement('div');
+      error.className = 'error-message';
+      error.innerText = message;
+      if (input.type === 'radio') {
+        // For radio, show error after the last radio in the group
+        const radios = form.querySelectorAll(`input[name="${input.name}"]`);
+        radios[radios.length-1].parentElement.appendChild(error);
+      } else {
+        input.parentElement.appendChild(error);
+      }
+    }
+  }
+
+  function showEditorError(editorContainer, message) {
+    editorContainer.classList.add('editor-error');
     let error = document.createElement('div');
     error.className = 'error-message';
     error.innerText = message;
-    if (input.type === 'radio') {
-      // For radio, show error after the last radio in the group
-      const radios = form.querySelectorAll(`input[name="${input.name}"]`);
-      radios[radios.length-1].parentElement.appendChild(error);
-    } else {
-      input.parentElement.appendChild(error);
+    editorContainer.parentElement.appendChild(error);
+  }
+
+  function getEditorContent(editorName) {
+    switch(editorName) {
+      case 'tasks_assigned':
+        return tasksEditor ? tasksEditor.getData() : '';
+      case 'learning_experience':
+        return learningEditor ? learningEditor.getData() : '';
+      case 'limitations_challenges':
+        return limitationsEditor ? limitationsEditor.getData() : '';
+      default:
+        return '';
     }
   }
 
@@ -549,49 +766,82 @@ document.addEventListener('DOMContentLoaded', function() {
     clearValidation();
     let valid = true;
     let firstInvalid = null;
+    
     for (const field of requiredFields) {
-      let input = form.querySelector(`[name="${field.name}"]`);
-      if (!input) continue;
-      if (input.type === 'radio') {
-        const checked = form.querySelector(`input[name="${field.name}"]:checked`);
-        if (!checked) {
+      if (field.editor) {
+        // Handle CKEditor fields
+        const content = getEditorContent(field.name);
+        const plainText = content.replace(/<[^>]*>/g, '').trim(); // Strip HTML tags
+        if (!plainText) {
+          const editorContainer = document.querySelector(`#${field.name}_editor`).parentElement.querySelector('.ck-editor');
+          if (editorContainer) {
+            showEditorError(editorContainer, `${field.label} is required.`);
+            if (!firstInvalid) firstInvalid = editorContainer;
+            valid = false;
+          }
+        }
+      } else {
+        // Handle regular form fields
+        let input = form.querySelector(`[name="${field.name}"]`);
+        if (!input) continue;
+        if (input.type === 'radio') {
+          const checked = form.querySelector(`input[name="${field.name}"]:checked`);
+          if (!checked) {
+            showError(input, `${field.label} is required.`);
+            if (!firstInvalid) firstInvalid = input;
+            valid = false;
+          }
+        } else if (input.type === 'checkbox') {
+          if (!input.checked) {
+            showError(input, `${field.label} must be accepted.`);
+            if (!firstInvalid) firstInvalid = input;
+            valid = false;
+          }
+        } else if (!input.value.trim()) {
           showError(input, `${field.label} is required.`);
           if (!firstInvalid) firstInvalid = input;
           valid = false;
         }
-      } else if (input.type === 'checkbox') {
-        if (!input.checked) {
-          showError(input, `${field.label} must be accepted.`);
-          if (!firstInvalid) firstInvalid = input;
-          valid = false;
-        }
-      } else if (!input.value.trim()) {
-        showError(input, `${field.label} is required.`);
-        if (!firstInvalid) firstInvalid = input;
-        valid = false;
       }
     }
+    
     if (firstInvalid) {
       firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      firstInvalid.focus();
+      if (firstInvalid.focus) firstInvalid.focus();
     }
     return valid;
   }
 
   function previewForm(e) {
-    if (!validateForm()) {
-      // Prevent modal from opening
-      e.preventDefault();
-      e.stopPropagation();
-      return false;
-    }
+    // Comment out validation to allow preview without form completion
+    // if (!validateForm()) {
+    //   // Prevent modal from opening
+    //   e.preventDefault();
+    //   e.stopPropagation();
+    //   return false;
+    // }
     const data = new FormData(form);
+    
+    // Get CKEditor content
+    const tasksContent = getEditorContent('tasks_assigned');
+    const learningContent = getEditorContent('learning_experience');
+    const limitationsContent = getEditorContent('limitations_challenges');
+    
     let html = `
-      <table class="table table-bordered">
+      <div class="text-center mb-4">
+        <h3 class="text-primary fw-bold mb-3">Form D – Student Internship – Progress Form</h3>
+        <p class="small text-secondary mb-0">
+          Student Intern to fill the form and return the signed copy to the Faculty Supervisor during the 2nd, 4th, and 6th/8th weeks of the internship period.
+        </p>
+      </div>
+      <div class="section-title-preview">Student and Internship Details</div>
+      <table class="table table-bordered mb-4">
         <tbody>
           <tr><th>Date</th><td colspan="3">${data.get('date') || ''}</td></tr>
           <tr><th>Student Intern Name</th><td>${data.get('student_name') || ''}</td>
-              <th>Student ID and Dept.</th><td>${data.get('student_id_dept') || ''}</td></tr>
+              <th>Host Institution</th><td>${data.get('host_institution') || ''}</td></tr>
+          <tr><th>Student ID</th><td>${data.get('student_id') || ''}</td>
+              <th>Department</th><td>${data.get('student_dept') || ''}</td></tr>
           <tr><th>Host Institution</th><td>${data.get('host_institution') || ''}</td>
               <th>Site Supervisor</th><td>${data.get('site_supervisor') || ''}</td></tr>
           <tr><th>Faculty Supervisor</th><td>${data.get('faculty_supervisor') || ''}</td>
@@ -602,12 +852,12 @@ document.addEventListener('DOMContentLoaded', function() {
           </tr>
         </tbody>
       </table>
-      <div class="section-title mt-4">a) Tasks Assigned & Performed</div>
-      <div>${(data.get('tasks_assigned') || '').replace(/\n/g, '<br>')}</div>
-      <div class="section-title mt-4">b) Learning Experience</div>
-      <div>${(data.get('learning_experience') || '').replace(/\n/g, '<br>')}</div>
-      <div class="section-title mt-4">c) Limitations & Challenges</div>
-      <div>${(data.get('limitations_challenges') || '').replace(/\n/g, '<br>')}</div>
+      <div class="section-title-preview">a) Tasks Assigned & Performed</div>
+      <div class="content-box">${tasksContent || 'No content provided'}</div>
+      <div class="section-title-preview">b) Learning Experience</div>
+      <div class="content-box">${learningContent || 'No content provided'}</div>
+      <div class="section-title-preview">c) Limitations & Challenges</div>
+      <div class="content-box">${limitationsContent || 'No content provided'}</div>
       <div class="mt-4 text-center">
         <div><strong>Student Agreement:</strong></div>
         <div class="text-success mt-2"><i class="bi bi-check-circle me-1"></i>Student has agreed to the terms and conditions</div>
@@ -619,11 +869,42 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function printForm(e) {
-    if (!validateForm()) {
-      e.preventDefault();
-      return false;
+    e.preventDefault();
+    
+    var previewContent = document.getElementById('previewContent');
+    if (!previewContent || !previewContent.innerHTML.trim()) {
+      alert('Preview content is empty! Please click the Preview button first.');
+      return;
     }
+    
+    // Use the working print logic from Form A
+    const modalBackdrop = document.querySelector('.modal-backdrop');
+    const modal = document.getElementById('previewModal');
+    const body = document.body;
+    
+    // Store original styles
+    const originalBodyClass = body.className;
+    const originalBackdropDisplay = modalBackdrop ? modalBackdrop.style.display : '';
+    const originalModalDisplay = modal.style.display;
+    
+    // Hide backdrop and adjust modal for printing
+    if (modalBackdrop) modalBackdrop.style.display = 'none';
+    modal.style.display = 'block';
+    modal.style.position = 'static';
+    modal.style.transform = 'none';
+    body.className = originalBodyClass.replace('modal-open', '');
+    
+    // Print the page
     window.print();
+    
+    // Restore original styles after printing
+    setTimeout(() => {
+      if (modalBackdrop) modalBackdrop.style.display = originalBackdropDisplay;
+      modal.style.display = originalModalDisplay;
+      modal.style.position = '';
+      modal.style.transform = '';
+      body.className = originalBodyClass;
+    }, 100);
   }
 
   function submitForm(e) {
@@ -632,22 +913,25 @@ document.addEventListener('DOMContentLoaded', function() {
     // You can replace this with actual submit logic
     alert('Form submitted successfully!');
     form.reset();
+    // Clear CKEditor instances
+    if (tasksEditor) tasksEditor.setData('');
+    if (learningEditor) learningEditor.setData('');
+    if (limitationsEditor) limitationsEditor.setData('');
     clearValidation();
   }
 
   document.getElementById('previewBtn').addEventListener('click', previewForm);
-  document.getElementById('printBtn').addEventListener('click', printForm);
+  document.getElementById('printBtnModal').addEventListener('click', printForm);
   
   // Mobile button events
   document.getElementById('previewBtnMobile').addEventListener('click', previewForm);
-  document.getElementById('printBtnMobile').addEventListener('click', printForm);
   
   form.addEventListener('submit', submitForm);
   
   // Sync form values between desktop and mobile layouts
   function syncFormValues() {
     const fields = [
-      'student_name', 'student_id_dept', 'host_institution', 
+      'student_name', 'student_id', 'student_dept', 'host_institution', 
       'site_supervisor', 'faculty_supervisor', 'reporting_period'
     ];
     
@@ -670,18 +954,22 @@ document.addEventListener('DOMContentLoaded', function() {
     const desktopRadios = form.querySelectorAll('input[name="report_week"]:not([id^="mobile_"])');
     const mobileRadios = form.querySelectorAll('input[name="report_week"][id^="mobile_"]');
     
-    desktopRadios.forEach((radio, index) => {
+    desktopRadios.forEach(radio => {
       radio.addEventListener('change', () => {
-        if (radio.checked && mobileRadios[index]) {
-          mobileRadios[index].checked = true;
+        if (radio.checked) {
+          mobileRadios.forEach(mobileRadio => {
+            mobileRadio.checked = (mobileRadio.value === radio.value);
+          });
         }
       });
     });
     
-    mobileRadios.forEach((radio, index) => {
+    mobileRadios.forEach(radio => {
       radio.addEventListener('change', () => {
-        if (radio.checked && desktopRadios[index]) {
-          desktopRadios[index].checked = true;
+        if (radio.checked) {
+          desktopRadios.forEach(desktopRadio => {
+            desktopRadio.checked = (desktopRadio.value === radio.value);
+          });
         }
       });
     });
